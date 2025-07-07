@@ -1,0 +1,20 @@
+# Build directories
+build/
+*.deb
+
+# Claude Code files
+CLAUDE.md
+.claude/
+
+# OpenFOAM build artifacts
+*.dep
+*.o
+platforms/
+
+# IDE files
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
