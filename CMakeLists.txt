@@ -5,19 +5,21 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Find OpenFOAM libraries (Ubuntu package installation)
-find_library(OPENFOAM_LIB OpenFOAM PATHS /usr/lib/openfoam/openfoam12/lib)
-find_library(FINITE_VOLUME_LIB finiteVolume PATHS /usr/lib/openfoam/openfoam12/lib)
-find_library(MESH_TOOLS_LIB meshTools PATHS /usr/lib/openfoam/openfoam12/lib)
+# Find OpenFOAM libraries (installed in /opt/openfoam12)
+find_library(OPENFOAM_LIB OpenFOAM PATHS /opt/openfoam12/platforms/linux64GccDPInt32Opt/lib)
+find_library(FINITE_VOLUME_LIB finiteVolume PATHS /opt/openfoam12/platforms/linux64GccDPInt32Opt/lib)
+find_library(MESH_TOOLS_LIB meshTools PATHS /opt/openfoam12/platforms/linux64GccDPInt32Opt/lib)
 
 if(NOT OPENFOAM_LIB)
     message(FATAL_ERROR "OpenFOAM library not found. Please install openfoam12 package.")
 endif()
 
 # Include OpenFOAM headers
-include_directories(/usr/lib/openfoam/openfoam12/src)
-include_directories(/usr/lib/openfoam/openfoam12/src/finiteVolume/lnInclude)
-include_directories(/usr/lib/openfoam/openfoam12/src/meshTools/lnInclude)
+include_directories(/opt/openfoam12/src)
+include_directories(/opt/openfoam12/src/OpenFOAM/lnInclude)
+include_directories(/opt/openfoam12/src/OSspecific/POSIX/lnInclude)
+include_directories(/opt/openfoam12/src/finiteVolume/lnInclude)
+include_directories(/opt/openfoam12/src/meshTools/lnInclude)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Find dependencies

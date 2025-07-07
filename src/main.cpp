@@ -1,10 +1,14 @@
-#include "fvCFD.H"
+#include "argList.H"
+#include "Time.H"
+#include "foamVersion.H"
 #include <iostream>
+
+using namespace Foam;
 
 int main(int argc, char* argv[])
 {
     std::cout << "🚀 OpenFOAM MCP Server v1.0.0" << std::endl;
-    std::cout << "OpenFOAM version: " << Foam::foamVersion::version.c_str() << std::endl;
+    std::cout << "OpenFOAM version: " << Foam::FOAMversion << std::endl;
     
     // Test OpenFOAM integration
     Foam::Info << "✅ OpenFOAM integration: Working!" << Foam::endl;
