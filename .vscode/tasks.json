@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build MCP Server",
+            "type": "shell",
+            "command": "mkdir -p build && cd build && cmake .. && make -j$(nproc)",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always"
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Run MCP Server",
+            "type": "shell",
+            "command": "cd build && ./openfoam-mcp-server",
+            "group": "test",
+            "dependsOn": "Build MCP Server"
+        },
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "rm -rf build && mkdir build && cd build && cmake .. && make -j$(nproc)",
+            "group": "build"
+        },
+        {
+            "label": "Test OpenFOAM - Cavity Tutorial",
+            "type": "shell",
+            "command": "cp -r /usr/share/openfoam/tutorials/incompressible/icoFoam/cavity /tmp/ && echo '✅ Cavity tutorial ready at /tmp/cavity'",
+            "group": "test"
+        },
+        {
+            "label": "Format Code",
+            "type": "shell",
+            "command": "find src -name '*.cpp' -o -name '*.hpp' | xargs clang-format -i",
+            "group": "build"
+        }
+    ]
+}

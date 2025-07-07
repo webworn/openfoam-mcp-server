@@ -1,0 +1,200 @@
+{
+  "name": "OpenFOAM MCP Server",
+  "description": "World's first native OpenFOAM Model Context Protocol server for AI-CFD integration",
+  "version": "1.0.0-dev",
+  
+  "project": {
+    "type": "cpp",
+    "language": "cpp20",
+    "build_system": "cmake",
+    "domain": "computational_fluid_dynamics",
+    "frameworks": ["openfoam", "mcp", "json-rpc"],
+    "target_platforms": ["linux", "container", "cloud"]
+  },
+
+  "context": {
+    "primary_files": [
+      "src/**/*.cpp",
+      "src/**/*.hpp", 
+      "src/**/*.H",
+      "src/**/*.C",
+      "CMakeLists.txt",
+      "CLAUDE.md",
+      "README.md"
+    ],
+    
+    "include_patterns": [
+      "src/mcp/**",
+      "src/openfoam/**", 
+      "src/tools/**",
+      "tests/**",
+      "examples/**",
+      ".devcontainer/**",
+      ".vscode/**"
+    ],
+    
+    "exclude_patterns": [
+      "build/**",
+      "*.o",
+      "*.so", 
+      "*.a",
+      ".git/**",
+      "**/.DS_Store",
+      "**/Thumbs.db",
+      "**/*.tmp",
+      "**/core.*"
+    ],
+
+    "openfoam_context": {
+      "version": "12",
+      "distribution": "foundation",
+      "source_path": "/usr/lib/openfoam/openfoam12/src",
+      "library_path": "/usr/lib/openfoam/openfoam12/lib",
+      "tutorials_path": "/usr/share/openfoam/tutorials",
+      "etc_path": "/usr/lib/openfoam/openfoam12/etc",
+      "key_headers": [
+        "fvCFD.H",
+        "Time.H", 
+        "fvMesh.H",
+        "volFields.H",
+        "surfaceFields.H",
+        "dictionary.H",
+        "IOobject.H"
+      ],
+      "common_libraries": [
+        "OpenFOAM",
+        "finiteVolume", 
+        "meshTools",
+        "sampling",
+        "fileFormats"
+      ]
+    }
+  },
+
+  "ai_instructions": {
+    "role": "You are an expert C++ developer specializing in OpenFOAM CFD simulation software and Model Context Protocol (MCP) implementation. You understand both the technical aspects of computational fluid dynamics and modern AI integration patterns.",
+    
+    "domain_expertise": [
+      "OpenFOAM C++ API and object model",
+      "Computational Fluid Dynamics physics and numerics", 
+      "Model Context Protocol (MCP) specification",
+      "JSON-RPC 2.0 protocol implementation",
+      "High-performance C++ for scientific computing",
+      "CFD solver selection and configuration",
+      "Mesh generation and quality assessment",
+      "Turbulence modeling and boundary conditions"
+    ],
+
+    "coding_guidelines": {
+      "style": "OpenFOAM coding standards with modern C++20 features",
+      "naming": "OpenFOAM camelCase for member functions, PascalCase for classes",
+      "memory_management": "Prefer OpenFOAM autoPtr and tmp<> over raw pointers",
+      "error_handling": "Use OpenFOAM FatalError for critical errors, proper exception safety",
+      "performance": "Optimize for large mesh operations, minimize memory allocation",
+      "physics_validation": "Always validate CFD physics parameters and assumptions"
+    },
+
+    "response_patterns": {
+      "code_generation": "Generate complete, compilable C++ code with proper OpenFOAM integration",
+      "error_explanation": "Explain both technical and physics reasons for issues",
+      "optimization_suggestions": "Provide both algorithmic and OpenFOAM-specific optimizations", 
+      "architecture_advice": "Consider MCP protocol requirements and OpenFOAM object lifecycle",
+      "physics_guidance": "Validate CFD setup for physical correctness and best practices"
+    }
+  },
+
+  "common_tasks": {
+    "mcp_tool_creation": {
+      "description": "Create new MCP tools for OpenFOAM operations",
+      "template": "src/tools/",
+      "pattern": "Inherit from MCPTool base class, implement OpenFOAM integration, validate physics",
+      "example": "incompressible_flow_tool.cpp"
+    },
+    
+    "openfoam_integration": {
+      "description": "Integrate with OpenFOAM classes and objects",
+      "key_patterns": [
+        "Use autoPtr<> for automatic memory management",
+        "Source OpenFOAM environment before compilation", 
+        "Handle OpenFOAM dictionary objects for configuration",
+        "Implement proper field access and manipulation"
+      ]
+    },
+    
+    "physics_validation": {
+      "description": "Validate CFD physics and parameters",
+      "checks": [
+        "Reynolds number range for turbulence models",
+        "Mach number limits for compressibility assumptions",
+        "Boundary condition compatibility",
+        "Mesh quality metrics",
+        "Convergence criteria appropriateness"
+      ]
+    },
+
+    "performance_optimization": {
+      "description": "Optimize for CFD workloads",
+      "focus_areas": [
+        "Large mesh handling (1M+ cells)",
+        "Memory-efficient field operations", 
+        "Parallel processing with OpenMPI",
+        "Efficient data serialization for MCP responses",
+        "Real-time monitoring without performance impact"
+      ]
+    }
+  },
+
+  "quick_commands": {
+    "build": "mkdir -p build && cd build && cmake .. && make -j$(nproc)",
+    "test": "cd build && ctest --output-on-failure", 
+    "clean": "rm -rf build && mkdir build",
+    "format": "find src -name '*.cpp' -o -name '*.hpp' | xargs clang-format -i",
+    "openfoam_env": "source /usr/lib/openfoam/openfoam12/etc/bashrc",
+    "cavity_test": "cp -r /usr/share/openfoam/tutorials/incompressible/icoFoam/cavity /tmp/ && cd /tmp/cavity"
+  },
+
+  "development_context": {
+    "environment": "GitHub Codespaces with VS Code Desktop",
+    "openfoam_installation": "Ubuntu package (openfoam12)", 
+    "build_tools": ["cmake", "ninja", "gcc", "clang"],
+    "debugging": ["gdb", "valgrind", "perf"],
+    "dependencies": ["nlohmann-json", "sqlite3", "boost", "openfoam-libs"]
+  },
+
+  "project_goals": {
+    "short_term": [
+      "Implement core MCP protocol handlers",
+      "Create basic OpenFOAM case manipulation tools",
+      "Add physics validation for common flow types",
+      "Build real-time simulation monitoring"
+    ],
+    
+    "medium_term": [
+      "Advanced CFD workflow automation",
+      "Intelligent solver and scheme selection", 
+      "Mesh optimization and adaptation",
+      "Multi-physics simulation support"
+    ],
+    
+    "long_term": [
+      "AI-driven CFD optimization",
+      "Automatic mesh generation from geometry",
+      "Physics-aware error detection and correction",
+      "Integration with cloud HPC resources"
+    ]
+  },
+
+  "knowledge_base": {
+    "openfoam_docs": "https://www.openfoam.com/documentation/",
+    "mcp_spec": "https://modelcontextprotocol.io/introduction",
+    "cfd_theory": "Computational Fluid Dynamics principles and best practices",
+    "cpp_standards": "Modern C++20 features and OpenFOAM coding conventions"
+  },
+
+  "collaboration": {
+    "team_context": "Solo developer building revolutionary CFD-AI integration",
+    "communication_style": "Technical precision with CFD domain expertise",
+    "code_review_focus": ["Physics correctness", "Performance optimization", "OpenFOAM best practices", "MCP compliance"],
+    "documentation_level": "Professional-grade with API docs and usage examples"
+  }
+}
