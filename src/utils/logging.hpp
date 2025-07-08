@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM MCP Server
    \\    /   O peration     | Logging Utilities
-    \\  /    A nd           | 
+    \\  /    A nd           |
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
@@ -11,13 +11,13 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef logging_H
-#define logging_H
+    #define logging_H
 
-#include <string>
-#include <iostream>
-#include <chrono>
-#include <iomanip>
-#include <sstream>
+    #include <chrono>
+    #include <iomanip>
+    #include <iostream>
+    #include <sstream>
+    #include <string>
 
 namespace Foam
 {
@@ -42,37 +42,53 @@ enum class LogLevel
 
 class Logger
 {
-private:
-    
+  private:
     static LogLevel currentLevel_;
-    
+
     static std::string getCurrentTimestamp();
     static std::string levelToString(LogLevel level);
 
-public:
-    
-    static void setLogLevel(LogLevel level) { currentLevel_ = level; }
-    static LogLevel getLogLevel() { return currentLevel_; }
-    
+  public:
+    static void setLogLevel(LogLevel level)
+    {
+        currentLevel_ = level;
+    }
+    static LogLevel getLogLevel()
+    {
+        return currentLevel_;
+    }
+
     static void log(LogLevel level, const std::string& message);
-    
-    static void debug(const std::string& message) { log(LogLevel::DEBUG, message); }
-    static void info(const std::string& message) { log(LogLevel::INFO, message); }
-    static void warning(const std::string& message) { log(LogLevel::WARNING, message); }
-    static void error(const std::string& message) { log(LogLevel::ERROR, message); }
+
+    static void debug(const std::string& message)
+    {
+        log(LogLevel::DEBUG, message);
+    }
+    static void info(const std::string& message)
+    {
+        log(LogLevel::INFO, message);
+    }
+    static void warning(const std::string& message)
+    {
+        log(LogLevel::WARNING, message);
+    }
+    static void error(const std::string& message)
+    {
+        log(LogLevel::ERROR, message);
+    }
 };
 
 /*---------------------------------------------------------------------------*\
                         Convenience Macros
 \*---------------------------------------------------------------------------*/
 
-#define LOG_DEBUG(msg) Foam::MCP::Logger::debug(msg)
-#define LOG_INFO(msg) Foam::MCP::Logger::info(msg)
-#define LOG_WARNING(msg) Foam::MCP::Logger::warning(msg)
-#define LOG_ERROR(msg) Foam::MCP::Logger::error(msg)
+    #define LOG_DEBUG(msg) Foam::MCP::Logger::debug(msg)
+    #define LOG_INFO(msg) Foam::MCP::Logger::info(msg)
+    #define LOG_WARNING(msg) Foam::MCP::Logger::warning(msg)
+    #define LOG_ERROR(msg) Foam::MCP::Logger::error(msg)
 
-} // End namespace MCP
-} // End namespace Foam
+}  // End namespace MCP
+}  // End namespace Foam
 
 #endif
 

@@ -1,0 +1,59 @@
+# Doxyfile for OpenFOAM MCP Server
+
+# Project information
+PROJECT_NAME           = "OpenFOAM MCP Server"
+PROJECT_NUMBER         = "1.0.0"
+PROJECT_BRIEF          = "Model Context Protocol server for OpenFOAM CFD analysis"
+
+# Input/Output settings
+INPUT                  = src/
+OUTPUT_DIRECTORY       = docs/
+RECURSIVE              = YES
+EXCLUDE_PATTERNS       = */build/* */.*
+
+# HTML output
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_HEADER            = 
+HTML_FOOTER            = 
+HTML_STYLESHEET        = 
+HTML_EXTRA_STYLESHEET  = 
+HTML_TIMESTAMP         = YES
+
+# Source code
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+STRIP_CODE_COMMENTS    = NO
+
+# Graphs and diagrams
+HAVE_DOT               = YES
+CLASS_GRAPH            = YES
+COLLABORATION_GRAPH    = YES
+INCLUDE_GRAPH          = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+
+# Other formats
+GENERATE_LATEX         = NO
+GENERATE_RTF           = NO
+GENERATE_MAN           = NO
+GENERATE_XML           = NO
+
+# Preprocessor
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+PREDEFINED             = __cplusplus \
+                        "FOAM_EXPORT=" \
+                        "FOAM_DEPRECATED(x)=" \
+                        "FOAM_INLINE=inline"
+
+# Warnings
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = NO
