@@ -179,12 +179,16 @@ std::vector<json> HeatTransferTool::formatResults(const HeatTransferInput& input
 
     // Add warning if OpenFOAM failed
     if (!results.success && !results.errorMessage.empty()) {
-        content.push_back(
-            json{{"type", "text"},
-                 {"text",
-                  "⚠️  OpenFOAM simulation failed, but theoretical calculations were provided."}});
-        content.push_back(
-            json{{"type", "text"}, {"text", "Error details: " + results.errorMessage}});
+        json warning;
+        warning["type"] = "text";
+        warning["text"] =
+            "⚠️  OpenFOAM simulation failed, but theoretical calculations were provided.";
+        content.push_back(warning);
+
+        json error;
+        error["type"] = "text";
+        error["text"] = "Error details: " + results.errorMessage;
+        content.push_back(error);
     }
 
     // JSON resource with detailed results
