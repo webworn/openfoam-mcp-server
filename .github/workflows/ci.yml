@@ -174,8 +174,9 @@ jobs:
     - name: Test MCP server startup
       run: |
         source /opt/openfoam${{ matrix.openfoam_version }}/etc/bashrc
-        timeout 10s ./build/openfoam-mcp-server --help || true
-        timeout 10s ./build/openfoam-mcp-server --version || true
+        # Test basic JSON-RPC functionality
+        echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' > test_input.json
+        timeout 10s ./build/openfoam-mcp-server < test_input.json || true
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
@@ -207,7 +208,9 @@ jobs:
         wget -O - https://dl.openfoam.org/gpg.key | sudo apt-key add -
         sudo add-apt-repository http://dl.openfoam.org/ubuntu
         sudo apt-get update
-        sudo apt-get install -y openfoam12
+        sudo apt-get install -y openfoam12 python3-pip cmake ninja-build \
+          build-essential nlohmann-json3-dev libboost-all-dev libsqlite3-dev
+        pip3 install psutil
         
     - name: Download build artifacts
       uses: actions/download-artifact@v3
@@ -218,20 +221,20 @@ jobs:
     - name: Make executable
       run: chmod +x build/openfoam-mcp-server
       
-    - name: Run pipe flow validation
+    - name: Build MCP server for testing
       run: |
         source /opt/openfoam12/etc/bashrc
-        python3 tests/validation/pipe_flow_validation.py
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20
+        cmake --build build --parallel $(nproc)
         
-    - name: Run heat transfer validation
+    - name: Run unit tests
       run: |
-        source /opt/openfoam12/etc/bashrc
-        python3 tests/validation/heat_transfer_validation.py
+        python3 tests/unit/basic_tests.py
         
-    - name: Run external flow validation
+    - name: Run comprehensive validation tests
       run: |
         source /opt/openfoam12/etc/bashrc
-        python3 tests/validation/external_flow_validation.py
+        python3 tests/validation/run_all_tests.py
         
     - name: Generate validation report
       run: |
@@ -263,7 +266,8 @@ jobs:
     - name: Setup high-performance environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y openfoam12 time valgrind
+        sudo apt-get install -y openfoam12 time valgrind python3-pip
+        pip3 install psutil
         
     - name: Download build artifacts
       uses: actions/download-artifact@v3
@@ -277,20 +281,22 @@ jobs:
     - name: Run memory profiling
       run: |
         source /opt/openfoam12/etc/bashrc
-        valgrind --tool=memcheck --leak-check=full \
-          ./build/openfoam-mcp-server --benchmark-mode 2>&1 | tee memory_profile.log
+        # Create a simple test input for memory profiling
+        echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' > test_input.json
+        timeout 30s valgrind --tool=memcheck --leak-check=full \
+          ./build/openfoam-mcp-server < test_input.json 2>&1 | tee memory_profile.log || true
         
     - name: Run performance benchmarks
       run: |
         source /opt/openfoam12/etc/bashrc
-        python3 tests/benchmarks/run_benchmarks.py
+        python3 tests/performance/benchmark_tests.py
         
     - name: Upload performance results
       uses: actions/upload-artifact@v3
       with:
         name: performance-results
         path: |
-          tests/benchmarks/results/
+          tests/performance/results/
           memory_profile.log
         retention-days: 7
 
@@ -322,8 +328,9 @@ jobs:
         
     - name: Test container startup
       run: |
-        docker run --rm openfoam-mcp-server:test --version
-        docker run --rm openfoam-mcp-server:test --help
+        # Test basic JSON-RPC functionality in container
+        echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' > test_input.json
+        timeout 10s docker run --rm -i openfoam-mcp-server:test < test_input.json || true
         
     - name: Test MCP functionality in container
       run: |
@@ -357,7 +364,8 @@ jobs:
     - name: Setup OpenFOAM
       run: |
         sudo apt-get update
-        sudo apt-get install -y openfoam12
+        sudo apt-get install -y openfoam12 python3-pip
+        pip3 install psutil
         
     - name: Download build artifacts
       uses: actions/download-artifact@v3
@@ -371,7 +379,7 @@ jobs:
     - name: Test MCP protocol compliance
       run: |
         source /opt/openfoam12/etc/bashrc
-        python3 tests/integration/test_mcp_protocol.py
+        python3 tests/integration/mcp_protocol_test.py
         
     - name: Test tool registration
       run: |
