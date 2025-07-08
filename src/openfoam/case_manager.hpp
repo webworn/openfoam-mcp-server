@@ -14,21 +14,18 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef case_manager_H
-    #define case_manager_H
+#define case_manager_H
 
-    #include <nlohmann/json.hpp>
+#include <chrono>
+#include <filesystem>
+#include <map>
+#include <memory>
+#include <nlohmann/json.hpp>
+#include <string>
+#include <vector>
 
-    #include <chrono>
-    #include <filesystem>
-    #include <map>
-    #include <memory>
-    #include <string>
-    #include <vector>
-
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 using json = nlohmann::json;
 namespace fs = std::filesystem;
@@ -37,8 +34,7 @@ namespace fs = std::filesystem;
                         Struct CaseParameters
 \*---------------------------------------------------------------------------*/
 
-struct CaseParameters
-{
+struct CaseParameters {
     std::string caseName;
     std::string solver;
     std::string caseType;
@@ -50,17 +46,19 @@ struct CaseParameters
     std::map<std::string, std::string> numericalSchemes;
 
     CaseParameters()
-        : caseName("case"), solver("simpleFoam"), caseType("steady"), endTime(1000.0),
-          deltaTime(1.0), writeInterval(100)
-    {}
+        : caseName("case"),
+          solver("simpleFoam"),
+          caseType("steady"),
+          endTime(1000.0),
+          deltaTime(1.0),
+          writeInterval(100) {}
 };
 
 /*---------------------------------------------------------------------------*\
                         Struct CaseResult
 \*---------------------------------------------------------------------------*/
 
-struct CaseResult
-{
+struct CaseResult {
     std::string caseId;
     std::string status;
     int exitCode;
@@ -72,16 +70,13 @@ struct CaseResult
 
     CaseResult() : status("unknown"), exitCode(-1), executionTime(0) {}
 
-    bool isSuccess() const
-    {
+    bool isSuccess() const {
         return status == "completed" && exitCode == 0;
     }
-    bool isRunning() const
-    {
+    bool isRunning() const {
         return status == "running";
     }
-    bool isFailed() const
-    {
+    bool isFailed() const {
         return status == "failed" || exitCode != 0;
     }
 };
@@ -90,9 +85,8 @@ struct CaseResult
                         Class CaseManager Declaration
 \*---------------------------------------------------------------------------*/
 
-class CaseManager
-{
-  private:
+class CaseManager {
+   private:
     fs::path workingDirectory_;
     std::map<std::string, std::unique_ptr<CaseResult>> caseResults_;
 
@@ -116,7 +110,7 @@ class CaseManager
 
     void cleanup(const std::string& caseId);
 
-  public:
+   public:
     CaseManager();
     explicit CaseManager(const fs::path& workingDir);
     ~CaseManager();
@@ -132,8 +126,7 @@ class CaseManager
     bool deleteCaseData(const std::string& caseId);
 
     void setWorkingDirectory(const fs::path& workingDir);
-    fs::path getWorkingDirectory() const
-    {
+    fs::path getWorkingDirectory() const {
         return workingDirectory_;
     }
 

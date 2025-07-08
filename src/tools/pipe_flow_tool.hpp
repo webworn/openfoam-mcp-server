@@ -14,25 +14,22 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef pipe_flow_tool_H
-    #define pipe_flow_tool_H
+#define pipe_flow_tool_H
 
-    #include "../mcp/server.hpp"
-    #include "../openfoam/pipe_flow.hpp"
+#include <memory>
 
-    #include <memory>
+#include "../mcp/server.hpp"
+#include "../openfoam/pipe_flow.hpp"
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         Class PipeFlowTool Declaration
 \*---------------------------------------------------------------------------*/
 
-class PipeFlowTool
-{
-  private:
+class PipeFlowTool {
+   private:
     std::unique_ptr<PipeFlowAnalyzer> analyzer_;
 
     std::string formatResultsForUser(const PipeFlowResults& results) const;
@@ -41,25 +38,22 @@ class PipeFlowTool
     std::string generateRecommendations(const PipeFlowInput& input,
                                         const PipeFlowResults& results) const;
 
-  public:
+   public:
     PipeFlowTool();
     explicit PipeFlowTool(std::unique_ptr<PipeFlowAnalyzer> analyzer);
     ~PipeFlowTool() = default;
 
-    static std::string getName()
-    {
+    static std::string getName() {
         return "run_pipe_flow";
     }
 
-    static std::string getDescription()
-    {
+    static std::string getDescription() {
         return "Analyze pipe flow using OpenFOAM CFD simulation. Calculates Reynolds number, "
                "friction factor, pressure drop, and wall shear stress for steady or transient "
                "flow in circular pipes. Supports both laminar and turbulent flow regimes.";
     }
 
-    static json getInputSchema()
-    {
+    static json getInputSchema() {
         PipeFlowAnalyzer analyzer;
         return analyzer.getInputSchema();
     }

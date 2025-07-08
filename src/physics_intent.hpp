@@ -16,17 +16,15 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef physics_intent_H
-    #define physics_intent_H
+#define physics_intent_H
 
-    #include <map>
-    #include <memory>
-    #include <string>
-    #include <vector>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 // Forward declarations
 class OpenFOAMCase;
@@ -35,12 +33,10 @@ class OpenFOAMCase;
                        Class PhysicsIntent Declaration
 \*---------------------------------------------------------------------------*/
 
-class PhysicsIntent
-{
-  public:
+class PhysicsIntent {
+   public:
     // Physics categories that users commonly want to simulate
-    enum class PhysicsType
-    {
+    enum class PhysicsType {
         INCOMPRESSIBLE_FLOW,  // "Flow around a car", "Pipe flow", "Mixing"
         COMPRESSIBLE_FLOW,    // "Supersonic jet", "Shock waves", "Nozzle flow"
         HEAT_TRANSFER,        // "Cooling analysis", "Heat exchanger"
@@ -52,8 +48,7 @@ class PhysicsIntent
     };
 
     // Engineering objectives that drive simulation setup
-    enum class Objective
-    {
+    enum class Objective {
         DESIGN_OPTIMIZATION,   // Need accurate forces, efficiency metrics
         FLOW_VISUALIZATION,    // Need good visual quality, flow patterns
         ENGINEERING_ANALYSIS,  // Need engineering accuracy, reliable results
@@ -63,15 +58,14 @@ class PhysicsIntent
     };
 
     // Accuracy vs Speed preferences
-    enum class Preference
-    {
+    enum class Preference {
         MAXIMUM_ACCURACY,  // Don't care about time, need best results
         BALANCED,          // Good balance of accuracy and speed
         FAST_TURNAROUND,   // Need results quickly, accuracy is secondary
         PRODUCTION_READY   // Robust, reliable, suitable for daily use
     };
 
-  private:
+   private:
     // User intent data
     PhysicsType physicsType_;
     Objective objective_;
@@ -89,7 +83,7 @@ class PhysicsIntent
     int recommendedCells_;
     double maxCourantNumber_;
 
-  public:
+   public:
     // Constructors
     PhysicsIntent() = default;
 
@@ -99,42 +93,33 @@ class PhysicsIntent
     bool setObjectiveFromRequirements(const std::string& requirements);
 
     // Physics parameter setters (from user input)
-    void setReynoldsNumber(double Re)
-    {
+    void setReynoldsNumber(double Re) {
         physicalParams_["Re"] = Re;
     }
-    void setMachNumber(double Ma)
-    {
+    void setMachNumber(double Ma) {
         physicalParams_["Ma"] = Ma;
     }
-    void setVelocity(double U)
-    {
+    void setVelocity(double U) {
         physicalParams_["U"] = U;
     }
-    void setPressure(double p)
-    {
+    void setPressure(double p) {
         physicalParams_["p"] = p;
     }
-    void setTemperature(double T)
-    {
+    void setTemperature(double T) {
         physicalParams_["T"] = T;
     }
-    void setCharacteristicLength(double L)
-    {
+    void setCharacteristicLength(double L) {
         physicalParams_["L"] = L;
     }
 
     // Geometry and boundary information
-    void setGeometryType(const std::string& type)
-    {
+    void setGeometryType(const std::string& type) {
         textParams_["geometry"] = type;
     }
-    void setInletCondition(const std::string& condition)
-    {
+    void setInletCondition(const std::string& condition) {
         textParams_["inlet"] = condition;
     }
-    void setWallCondition(const std::string& condition)
-    {
+    void setWallCondition(const std::string& condition) {
         textParams_["wall"] = condition;
     }
 
@@ -175,11 +160,9 @@ class PhysicsIntent
                      Class UserRequirement Declaration
 \*---------------------------------------------------------------------------*/
 
-class UserRequirement
-{
-  public:
-    struct FlowCondition
-    {
+class UserRequirement {
+   public:
+    struct FlowCondition {
         std::string description;    // "High speed flow", "Natural convection"
         double velocity = -1;       // m/s, -1 means not specified
         double pressure = -1;       // Pa
@@ -187,16 +170,14 @@ class UserRequirement
         std::string fluid = "air";  // Default fluid
     };
 
-    struct GeometryInfo
-    {
+    struct GeometryInfo {
         std::string type;                   // "cylinder", "airfoil", "pipe", "custom"
         std::string file;                   // STL file path if custom
         double characteristicLength = -1;   // Characteristic dimension
         std::vector<std::string> surfaces;  // Named surfaces for BCs
     };
 
-    struct SimulationGoal
-    {
+    struct SimulationGoal {
         std::string primaryGoal;           // "drag_force", "heat_transfer", "mixing"
         std::vector<std::string> outputs;  // What user wants to see
         double targetAccuracy = 0.05;      // 5% default

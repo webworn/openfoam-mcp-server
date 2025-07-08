@@ -17,33 +17,27 @@ Description
 #include <sstream>
 #include <stdexcept>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         JSON Conversion Functions
 \*---------------------------------------------------------------------------*/
 
-void to_json(json& j, const ExternalFlowInput& input)
-{
-    j = json{
-        {"vehicleType",          input.vehicleType         },
-        {"velocity",             input.velocity            },
-        {"characteristicLength", input.characteristicLength},
-        {"frontalArea",          input.frontalArea         },
-        {"altitude",             input.altitude            },
-        {"fluidType",            input.fluidType           },
-        {"objective",            input.objective           },
-        {"density",              input.density             },
-        {"viscosity",            input.viscosity           },
-        {"temperature",          input.temperature         }
-    };
+void to_json(json& j, const ExternalFlowInput& input) {
+    j = json{{"vehicleType", input.vehicleType},
+             {"velocity", input.velocity},
+             {"characteristicLength", input.characteristicLength},
+             {"frontalArea", input.frontalArea},
+             {"altitude", input.altitude},
+             {"fluidType", input.fluidType},
+             {"objective", input.objective},
+             {"density", input.density},
+             {"viscosity", input.viscosity},
+             {"temperature", input.temperature}};
 }
 
-void from_json(const json& j, ExternalFlowInput& input)
-{
+void from_json(const json& j, ExternalFlowInput& input) {
     j.at("vehicleType").get_to(input.vehicleType);
     j.at("velocity").get_to(input.velocity);
     j.at("characteristicLength").get_to(input.characteristicLength);
@@ -64,30 +58,26 @@ void from_json(const json& j, ExternalFlowInput& input)
         j.at("temperature").get_to(input.temperature);
 }
 
-void to_json(json& j, const ExternalFlowResults& results)
-{
-    j = json{
-        {"reynoldsNumber",          results.reynoldsNumber         },
-        {"machNumber",              results.machNumber             },
-        {"dragCoefficient",         results.dragCoefficient        },
-        {"liftCoefficient",         results.liftCoefficient        },
-        {"dragForce",               results.dragForce              },
-        {"liftForce",               results.liftForce              },
-        {"pressureCoefficient",     results.pressureCoefficient    },
-        {"skinFrictionCoefficient", results.skinFrictionCoefficient},
-        {"flowRegime",              results.flowRegime             },
-        {"compressibilityRegime",   results.compressibilityRegime  },
-        {"caseId",                  results.caseId                 },
-        {"success",                 results.success                }
-    };
+void to_json(json& j, const ExternalFlowResults& results) {
+    j = json{{"reynoldsNumber", results.reynoldsNumber},
+             {"machNumber", results.machNumber},
+             {"dragCoefficient", results.dragCoefficient},
+             {"liftCoefficient", results.liftCoefficient},
+             {"dragForce", results.dragForce},
+             {"liftForce", results.liftForce},
+             {"pressureCoefficient", results.pressureCoefficient},
+             {"skinFrictionCoefficient", results.skinFrictionCoefficient},
+             {"flowRegime", results.flowRegime},
+             {"compressibilityRegime", results.compressibilityRegime},
+             {"caseId", results.caseId},
+             {"success", results.success}};
 
     if (!results.errorMessage.empty()) {
         j["errorMessage"] = results.errorMessage;
     }
 }
 
-void from_json(const json& j, ExternalFlowResults& results)
-{
+void from_json(const json& j, ExternalFlowResults& results) {
     j.at("reynoldsNumber").get_to(results.reynoldsNumber);
     j.at("machNumber").get_to(results.machNumber);
     j.at("dragCoefficient").get_to(results.dragCoefficient);
@@ -112,11 +102,9 @@ void from_json(const json& j, ExternalFlowResults& results)
 ExternalFlowAnalyzer::ExternalFlowAnalyzer() : caseManager_(std::make_unique<CaseManager>()) {}
 
 ExternalFlowAnalyzer::ExternalFlowAnalyzer(std::unique_ptr<CaseManager> caseManager)
-    : caseManager_(std::move(caseManager))
-{}
+    : caseManager_(std::move(caseManager)) {}
 
-void ExternalFlowAnalyzer::validateInput(const ExternalFlowInput& input)
-{
+void ExternalFlowAnalyzer::validateInput(const ExternalFlowInput& input) {
     if (input.velocity <= 0) {
         throw std::invalid_argument("Velocity must be positive");
     }
@@ -154,8 +142,7 @@ void ExternalFlowAnalyzer::validateInput(const ExternalFlowInput& input)
     }
 }
 
-CaseParameters ExternalFlowAnalyzer::createCaseParameters(const ExternalFlowInput& input)
-{
+CaseParameters ExternalFlowAnalyzer::createCaseParameters(const ExternalFlowInput& input) {
     CaseParameters params;
     params.caseName = "external_flow_analysis";
 
@@ -184,8 +171,7 @@ CaseParameters ExternalFlowAnalyzer::createCaseParameters(const ExternalFlowInpu
     return params;
 }
 
-ExternalFlowResults ExternalFlowAnalyzer::analyze(const ExternalFlowInput& input)
-{
+ExternalFlowResults ExternalFlowAnalyzer::analyze(const ExternalFlowInput& input) {
     ExternalFlowResults results;
 
     try {
@@ -234,8 +220,7 @@ ExternalFlowResults ExternalFlowAnalyzer::analyze(const ExternalFlowInput& input
 }
 
 ExternalFlowResults ExternalFlowAnalyzer::processResults(const std::string& caseId,
-                                                         const ExternalFlowInput& input)
-{
+                                                         const ExternalFlowInput& input) {
     ExternalFlowResults results;
 
     CaseResult caseResult = caseManager_->getCaseResult(caseId);
@@ -266,9 +251,8 @@ ExternalFlowResults ExternalFlowAnalyzer::processResults(const std::string& case
     return results;
 }
 
-double
-ExternalFlowAnalyzer::calculateTheoreticalDragCoefficient(const ExternalFlowInput& input) const
-{
+double ExternalFlowAnalyzer::calculateTheoreticalDragCoefficient(
+    const ExternalFlowInput& input) const {
     double Re = input.getReynoldsNumber();
 
     if (input.vehicleType == "car") {
@@ -285,8 +269,8 @@ ExternalFlowAnalyzer::calculateTheoreticalDragCoefficient(const ExternalFlowInpu
     return 1.0;  // Default fallback
 }
 
-double ExternalFlowAnalyzer::calculateSkinFrictionCoefficient(const ExternalFlowInput& input) const
-{
+double ExternalFlowAnalyzer::calculateSkinFrictionCoefficient(
+    const ExternalFlowInput& input) const {
     double Re = input.getReynoldsNumber();
 
     if (input.isLaminar()) {
@@ -296,8 +280,7 @@ double ExternalFlowAnalyzer::calculateSkinFrictionCoefficient(const ExternalFlow
     }
 }
 
-double ExternalFlowAnalyzer::getCarDragCoefficient(double Re, double aspect_ratio) const
-{
+double ExternalFlowAnalyzer::getCarDragCoefficient(double Re, double aspect_ratio) const {
     // Typical car drag coefficients based on shape
     double base_cd = 0.35;  // Modern car baseline
 
@@ -316,10 +299,8 @@ double ExternalFlowAnalyzer::getCarDragCoefficient(double Re, double aspect_rati
     return base_cd;
 }
 
-double ExternalFlowAnalyzer::getAircraftDragCoefficient(double Re,
-                                                        double Ma,
-                                                        const std::string& airfoil_type) const
-{
+double ExternalFlowAnalyzer::getAircraftDragCoefficient(double Re, double Ma,
+                                                        const std::string& airfoil_type) const {
     // Airfoil drag coefficient estimation
     double cd_friction = calculateSkinFrictionCoefficient({});
     double cd_pressure = 0.01;  // Base pressure drag for airfoil
@@ -332,8 +313,7 @@ double ExternalFlowAnalyzer::getAircraftDragCoefficient(double Re,
     return cd_friction + cd_pressure;
 }
 
-double ExternalFlowAnalyzer::getBuildingDragCoefficient(double Re, double height_to_width) const
-{
+double ExternalFlowAnalyzer::getBuildingDragCoefficient(double Re, double height_to_width) const {
     // Building drag coefficients
     double base_cd = 1.3;  // Typical building
 
@@ -346,8 +326,7 @@ double ExternalFlowAnalyzer::getBuildingDragCoefficient(double Re, double height
     return base_cd;
 }
 
-double ExternalFlowAnalyzer::getCylinderDragCoefficient(double Re) const
-{
+double ExternalFlowAnalyzer::getCylinderDragCoefficient(double Re) const {
     // Cylinder drag coefficient vs Reynolds number
     if (Re < 1) {
         return 24.0 / Re;  // Stokes flow
@@ -362,8 +341,7 @@ double ExternalFlowAnalyzer::getCylinderDragCoefficient(double Re) const
     }
 }
 
-std::string ExternalFlowAnalyzer::determineFlowRegime(const ExternalFlowInput& input) const
-{
+std::string ExternalFlowAnalyzer::determineFlowRegime(const ExternalFlowInput& input) const {
     if (input.isLaminar()) {
         return "laminar";
     } else if (input.isTurbulent()) {
@@ -373,9 +351,8 @@ std::string ExternalFlowAnalyzer::determineFlowRegime(const ExternalFlowInput& i
     }
 }
 
-std::string
-ExternalFlowAnalyzer::determineCompressibilityRegime(const ExternalFlowInput& input) const
-{
+std::string ExternalFlowAnalyzer::determineCompressibilityRegime(
+    const ExternalFlowInput& input) const {
     double Ma = input.getMachNumber();
 
     if (Ma < 0.3) {
@@ -389,10 +366,9 @@ ExternalFlowAnalyzer::determineCompressibilityRegime(const ExternalFlowInput& in
     }
 }
 
-json ExternalFlowAnalyzer::getInputSchema() const
-{
+json ExternalFlowAnalyzer::getInputSchema() const {
     return json{
-        {"type",                 "object"                                           },
+        {"type", "object"},
         {"properties",
          {{"vehicleType",
            {{"type", "string"},
@@ -448,38 +424,32 @@ json ExternalFlowAnalyzer::getInputSchema() const
             {"minimum", 200},
             {"maximum", 400},
             {"default", 288.15},
-            {"description", "Temperature in K"}}}}                                  },
-        {"required",             {"vehicleType", "velocity", "characteristicLength"}},
-        {"additionalProperties", false                                              }
-    };
+            {"description", "Temperature in K"}}}}},
+        {"required", {"vehicleType", "velocity", "characteristicLength"}},
+        {"additionalProperties", false}};
 }
 
-ExternalFlowInput ExternalFlowAnalyzer::parseInput(const json& inputJson)
-{
+ExternalFlowInput ExternalFlowAnalyzer::parseInput(const json& inputJson) {
     ExternalFlowInput input;
     from_json(inputJson, input);
     return input;
 }
 
-json ExternalFlowAnalyzer::resultsToJson(const ExternalFlowResults& results)
-{
+json ExternalFlowAnalyzer::resultsToJson(const ExternalFlowResults& results) {
     json j;
     to_json(j, results);
     return j;
 }
 
-void ExternalFlowAnalyzer::setWorkingDirectory(const std::string& workingDir)
-{
+void ExternalFlowAnalyzer::setWorkingDirectory(const std::string& workingDir) {
     caseManager_->setWorkingDirectory(workingDir);
 }
 
-std::vector<std::string> ExternalFlowAnalyzer::listActiveCases() const
-{
+std::vector<std::string> ExternalFlowAnalyzer::listActiveCases() const {
     return caseManager_->listCases();
 }
 
-bool ExternalFlowAnalyzer::deleteCaseData(const std::string& caseId)
-{
+bool ExternalFlowAnalyzer::deleteCaseData(const std::string& caseId) {
     return caseManager_->deleteCaseData(caseId);
 }
 

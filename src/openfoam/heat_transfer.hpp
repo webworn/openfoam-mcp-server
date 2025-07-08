@@ -9,21 +9,17 @@
 #ifndef HEAT_TRANSFER_HPP
 #define HEAT_TRANSFER_HPP
 
-#include <nlohmann/json.hpp>
-
 #include <map>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 using json = nlohmann::json;
 
-struct HeatTransferInput
-{
+struct HeatTransferInput {
     // Geometry and regions
     std::string analysisType;     // "electronics_cooling", "heat_exchanger", "building", "engine"
     double characteristicLength;  // m (chip size, tube diameter, room size)
@@ -56,8 +52,7 @@ struct HeatTransferInput
     double endTime;    // s (for transient)
 };
 
-struct HeatTransferResults
-{
+struct HeatTransferResults {
     // Temperature analysis
     double maxTemperature;       // K
     double minTemperature;       // K
@@ -95,9 +90,8 @@ struct HeatTransferResults
     std::string errorMessage;
 };
 
-class HeatTransferAnalyzer
-{
-  public:
+class HeatTransferAnalyzer {
+   public:
     HeatTransferAnalyzer();
     ~HeatTransferAnalyzer() = default;
 
@@ -122,7 +116,7 @@ class HeatTransferAnalyzer
     std::vector<std::string> getRecommendations(const HeatTransferInput& input,
                                                 const HeatTransferResults& results) const;
 
-  private:
+   private:
     // Internal calculation methods
     double calculateReynoldsNumber(const HeatTransferInput& input) const;
     double calculatePrandtlNumber(const HeatTransferInput& input) const;

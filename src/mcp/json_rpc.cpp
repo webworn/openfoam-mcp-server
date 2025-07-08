@@ -14,29 +14,22 @@ Description
 
 #include <iostream>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         JSON Conversion Functions
 \*---------------------------------------------------------------------------*/
 
-void to_json(json& j, const JsonRpcError& error)
-{
-    j = json{
-        {"code",    error.code   },
-        {"message", error.message}
-    };
+void to_json(json& j, const JsonRpcError& error) {
+    j = json{{"code", error.code}, {"message", error.message}};
 
     if (error.data.has_value()) {
         j["data"] = error.data.value();
     }
 }
 
-void from_json(const json& j, JsonRpcError& error)
-{
+void from_json(const json& j, JsonRpcError& error) {
     j.at("code").get_to(error.code);
     j.at("message").get_to(error.message);
 
@@ -49,8 +42,7 @@ void from_json(const json& j, JsonRpcError& error)
                         JsonRpcHandler Implementation
 \*---------------------------------------------------------------------------*/
 
-bool JsonRpcHandler::validateJsonRpcMessage(const json& message) const
-{
+bool JsonRpcHandler::validateJsonRpcMessage(const json& message) const {
     if (!message.is_object()) {
         return false;
     }
@@ -62,8 +54,7 @@ bool JsonRpcHandler::validateJsonRpcMessage(const json& message) const
     return true;
 }
 
-JsonRpcMessage JsonRpcHandler::parseMessage(const json& message) const
-{
+JsonRpcMessage JsonRpcHandler::parseMessage(const json& message) const {
     JsonRpcMessage msg;
 
     if (!validateJsonRpcMessage(message)) {
@@ -105,40 +96,27 @@ JsonRpcMessage JsonRpcHandler::parseMessage(const json& message) const
     return msg;
 }
 
-json JsonRpcHandler::createResponse(const json& id, const json& result) const
-{
-    return json{
-        {"jsonrpc", "2.0" },
-        {"id",      id    },
-        {"result",  result}
-    };
+json JsonRpcHandler::createResponse(const json& id, const json& result) const {
+    return json{{"jsonrpc", "2.0"}, {"id", id}, {"result", result}};
 }
 
-json JsonRpcHandler::createErrorResponse(const json& id, const JsonRpcError& error) const
-{
+json JsonRpcHandler::createErrorResponse(const json& id, const JsonRpcError& error) const {
     json errorJson;
     to_json(errorJson, error);
 
-    return json{
-        {"jsonrpc", "2.0"    },
-        {"id",      id       },
-        {"error",   errorJson}
-    };
+    return json{{"jsonrpc", "2.0"}, {"id", id}, {"error", errorJson}};
 }
 
-void JsonRpcHandler::registerRequestHandler(const std::string& method, RequestHandler handler)
-{
+void JsonRpcHandler::registerRequestHandler(const std::string& method, RequestHandler handler) {
     requestHandlers_[method] = handler;
 }
 
 void JsonRpcHandler::registerNotificationHandler(const std::string& method,
-                                                 NotificationHandler handler)
-{
+                                                 NotificationHandler handler) {
     notificationHandlers_[method] = handler;
 }
 
-std::string JsonRpcHandler::processMessage(const std::string& messageStr)
-{
+std::string JsonRpcHandler::processMessage(const std::string& messageStr) {
     try {
         json message = json::parse(messageStr);
         json response = processJsonMessage(message);
@@ -154,8 +132,7 @@ std::string JsonRpcHandler::processMessage(const std::string& messageStr)
     }
 }
 
-json JsonRpcHandler::processJsonMessage(const json& message)
-{
+json JsonRpcHandler::processJsonMessage(const json& message) {
     JsonRpcMessage msg = parseMessage(message);
 
     if (!msg.isValid()) {
@@ -197,18 +174,15 @@ json JsonRpcHandler::processJsonMessage(const json& message)
     return createErrorResponse(msg.id.value_or(nullptr), JsonRpcError::invalidRequest());
 }
 
-bool JsonRpcHandler::hasRequestHandler(const std::string& method) const
-{
+bool JsonRpcHandler::hasRequestHandler(const std::string& method) const {
     return requestHandlers_.find(method) != requestHandlers_.end();
 }
 
-bool JsonRpcHandler::hasNotificationHandler(const std::string& method) const
-{
+bool JsonRpcHandler::hasNotificationHandler(const std::string& method) const {
     return notificationHandlers_.find(method) != notificationHandlers_.end();
 }
 
-std::vector<std::string> JsonRpcHandler::getRegisteredMethods() const
-{
+std::vector<std::string> JsonRpcHandler::getRegisteredMethods() const {
     std::vector<std::string> methods;
 
     for (const auto& [method, handler] : requestHandlers_) {

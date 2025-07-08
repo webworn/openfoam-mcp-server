@@ -9,36 +9,31 @@
 #ifndef HEAT_TRANSFER_TOOL_HPP
 #define HEAT_TRANSFER_TOOL_HPP
 
+#include <nlohmann/json.hpp>
+
 #include "mcp/server.hpp"
 #include "openfoam/case_manager.hpp"
 #include "openfoam/heat_transfer.hpp"
 
-#include <nlohmann/json.hpp>
-
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 using json = nlohmann::json;
 
-class HeatTransferTool
-{
-  private:
+class HeatTransferTool {
+   private:
     HeatTransferAnalyzer analyzer_;
     std::unique_ptr<CaseManager> caseManager_;
 
-  public:
+   public:
     HeatTransferTool();
     ~HeatTransferTool() = default;
 
     // MCP tool interface
-    static std::string getName()
-    {
+    static std::string getName() {
         return "analyze_heat_transfer";
     }
-    static std::string getDescription()
-    {
+    static std::string getDescription() {
         return "Analyze conjugate heat transfer using OpenFOAM chtMultiRegionFoam solver. "
                "Supports electronics cooling, heat exchangers, building thermal analysis, and "
                "engine cooling. "
@@ -57,7 +52,7 @@ class HeatTransferTool
     std::string generateApplicationGuidance(const HeatTransferInput& input,
                                             const HeatTransferResults& results) const;
 
-  private:
+   private:
     // Input validation and conversion
     HeatTransferInput parseInput(const json& arguments);
     bool validateInputParameters(const HeatTransferInput& input) const;

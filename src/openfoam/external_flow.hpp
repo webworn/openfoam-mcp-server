@@ -14,19 +14,16 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef external_flow_H
-    #define external_flow_H
+#define external_flow_H
 
-    #include "case_manager.hpp"
+#include <memory>
+#include <nlohmann/json.hpp>
+#include <string>
 
-    #include <nlohmann/json.hpp>
+#include "case_manager.hpp"
 
-    #include <memory>
-    #include <string>
-
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 using json = nlohmann::json;
 
@@ -34,8 +31,7 @@ using json = nlohmann::json;
                         Struct ExternalFlowInput
 \*---------------------------------------------------------------------------*/
 
-struct ExternalFlowInput
-{
+struct ExternalFlowInput {
     std::string vehicleType;      // "car", "aircraft", "building", "cylinder"
     double velocity;              // m/s
     double characteristicLength;  // m (length for car, chord for aircraft, height for building)
@@ -50,7 +46,8 @@ struct ExternalFlowInput
     double temperature;  // K
 
     ExternalFlowInput()
-        : vehicleType("car"), velocity(30.0)  // 30 m/s ~ 108 km/h highway speed
+        : vehicleType("car"),
+          velocity(30.0)  // 30 m/s ~ 108 km/h highway speed
           ,
           characteristicLength(4.0)  // 4m typical car length
           ,
@@ -58,41 +55,37 @@ struct ExternalFlowInput
           ,
           altitude(0.0)  // sea level
           ,
-          fluidType("air"), objective("drag_analysis"), density(1.225)  // air at sea level
+          fluidType("air"),
+          objective("drag_analysis"),
+          density(1.225)  // air at sea level
           ,
           viscosity(1.5e-5)  // air kinematic viscosity
           ,
           temperature(288.15)  // 15°C
     {}
 
-    double getReynoldsNumber() const
-    {
+    double getReynoldsNumber() const {
         return velocity * characteristicLength / viscosity;
     }
 
-    double getMachNumber() const
-    {
+    double getMachNumber() const {
         double speedOfSound = std::sqrt(1.4 * 287.0 * temperature);  // air at temperature
         return velocity / speedOfSound;
     }
 
-    bool isLaminar() const
-    {
+    bool isLaminar() const {
         return getReynoldsNumber() < 500000;  // external flow transition much higher
     }
 
-    bool isTurbulent() const
-    {
+    bool isTurbulent() const {
         return getReynoldsNumber() > 1000000;
     }
 
-    bool isCompressible() const
-    {
+    bool isCompressible() const {
         return getMachNumber() > 0.3;
     }
 
-    bool isHighSpeed() const
-    {
+    bool isHighSpeed() const {
         return getMachNumber() > 0.8;
     }
 };
@@ -101,8 +94,7 @@ struct ExternalFlowInput
                         Struct ExternalFlowResults
 \*---------------------------------------------------------------------------*/
 
-struct ExternalFlowResults
-{
+struct ExternalFlowResults {
     double reynoldsNumber;
     double machNumber;
     double dragCoefficient;
@@ -118,19 +110,25 @@ struct ExternalFlowResults
     std::string errorMessage;
 
     ExternalFlowResults()
-        : reynoldsNumber(0), machNumber(0), dragCoefficient(0), liftCoefficient(0), dragForce(0),
-          liftForce(0), pressureCoefficient(0), skinFrictionCoefficient(0), flowRegime("unknown"),
-          compressibilityRegime("unknown"), success(false)
-    {}
+        : reynoldsNumber(0),
+          machNumber(0),
+          dragCoefficient(0),
+          liftCoefficient(0),
+          dragForce(0),
+          liftForce(0),
+          pressureCoefficient(0),
+          skinFrictionCoefficient(0),
+          flowRegime("unknown"),
+          compressibilityRegime("unknown"),
+          success(false) {}
 };
 
 /*---------------------------------------------------------------------------*\
                         Class ExternalFlowAnalyzer Declaration
 \*---------------------------------------------------------------------------*/
 
-class ExternalFlowAnalyzer
-{
-  private:
+class ExternalFlowAnalyzer {
+   private:
     std::unique_ptr<CaseManager> caseManager_;
 
     void validateInput(const ExternalFlowInput& input);
@@ -153,7 +151,7 @@ class ExternalFlowAnalyzer
     double getBuildingDragCoefficient(double Re, double height_to_width) const;
     double getCylinderDragCoefficient(double Re) const;
 
-  public:
+   public:
     ExternalFlowAnalyzer();
     explicit ExternalFlowAnalyzer(std::unique_ptr<CaseManager> caseManager);
     ~ExternalFlowAnalyzer() = default;

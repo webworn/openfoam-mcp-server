@@ -12,10 +12,8 @@ Description
 
 #include "logging.hpp"
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         Logger Implementation
@@ -23,8 +21,7 @@ namespace MCP
 
 LogLevel Logger::currentLevel_ = LogLevel::INFO;
 
-std::string Logger::getCurrentTimestamp()
-{
+std::string Logger::getCurrentTimestamp() {
     auto now = std::chrono::system_clock::now();
     auto time_t = std::chrono::system_clock::to_time_t(now);
 
@@ -33,8 +30,7 @@ std::string Logger::getCurrentTimestamp()
     return ss.str();
 }
 
-std::string Logger::levelToString(LogLevel level)
-{
+std::string Logger::levelToString(LogLevel level) {
     switch (level) {
         case LogLevel::DEBUG:
             return "DEBUG";
@@ -49,8 +45,7 @@ std::string Logger::levelToString(LogLevel level)
     }
 }
 
-void Logger::log(LogLevel level, const std::string& message)
-{
+void Logger::log(LogLevel level, const std::string& message) {
     if (level < currentLevel_) {
         return;
     }

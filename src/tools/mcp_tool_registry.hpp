@@ -14,18 +14,16 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef mcp_tool_registry_H
-    #define mcp_tool_registry_H
+#define mcp_tool_registry_H
 
-    #include <functional>
-    #include <map>
-    #include <memory>
-    #include <string>
-    #include <vector>
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 // Forward declarations
 class MCPTool;
@@ -35,8 +33,7 @@ class PhysicsIntent;
                         Enum ToolCategory
 \*---------------------------------------------------------------------------*/
 
-enum class ToolCategory
-{
+enum class ToolCategory {
     // Flow Analysis
     EXTERNAL_FLOW,      // Cars, aircraft, buildings
     INTERNAL_FLOW,      // Pipes, ducts, pumps
@@ -75,8 +72,7 @@ enum class ToolCategory
                      Struct ToolCapability
 \*---------------------------------------------------------------------------*/
 
-struct ToolCapability
-{
+struct ToolCapability {
     std::string name;
     std::string description;
     std::vector<std::string> keywords;
@@ -92,9 +88,8 @@ struct ToolCapability
                    Class MCPToolRegistry Declaration
 \*---------------------------------------------------------------------------*/
 
-class MCPToolRegistry
-{
-  private:
+class MCPToolRegistry {
+   private:
     // Registry of all available tools
     std::map<std::string, ToolCapability> tools_;
 
@@ -104,7 +99,7 @@ class MCPToolRegistry
     // Keyword-to-tool mappings for natural language understanding
     std::map<std::string, std::vector<std::string>> keywordMap_;
 
-  public:
+   public:
     // Constructor - registers all tools
     MCPToolRegistry();
 
@@ -126,7 +121,7 @@ class MCPToolRegistry
     std::vector<std::string> interpretUserRequest(const std::string& request) const;
     std::string explainToolChoice(const std::string& toolName, const std::string& request) const;
 
-  private:
+   private:
     // Tool registration methods
     void registerExternalFlowTools();
     void registerInternalFlowTools();
@@ -149,8 +144,7 @@ class MCPToolRegistry
 \*---------------------------------------------------------------------------*/
 
 // External Flow Analysis Tools
-namespace ExternalFlow
-{
+namespace ExternalFlow {
 // analyze_vehicle_aerodynamics
 const ToolCapability VEHICLE_AERODYNAMICS = {
     "analyze_vehicle_aerodynamics",
@@ -161,8 +155,7 @@ const ToolCapability VEHICLE_AERODYNAMICS = {
     ToolCategory::EXTERNAL_FLOW,
     3,
     7200,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_aircraft_aerodynamics
 const ToolCapability AIRCRAFT_AERODYNAMICS = {
@@ -174,8 +167,7 @@ const ToolCapability AIRCRAFT_AERODYNAMICS = {
     ToolCategory::EXTERNAL_FLOW,
     4,
     14400,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_building_wind_loads
 const ToolCapability BUILDING_WIND_LOADS = {
@@ -187,8 +179,7 @@ const ToolCapability BUILDING_WIND_LOADS = {
     ToolCategory::EXTERNAL_FLOW,
     3,
     10800,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_sports_aerodynamics
 const ToolCapability SPORTS_AERODYNAMICS = {
@@ -200,25 +191,21 @@ const ToolCapability SPORTS_AERODYNAMICS = {
     ToolCategory::EXTERNAL_FLOW,
     2,
     3600,
-    "engineering"
-};
+    "engineering"};
 }  // namespace ExternalFlow
 
 // Internal Flow Analysis Tools
-namespace InternalFlow
-{
+namespace InternalFlow {
 // analyze_pipe_flow
-const ToolCapability PIPE_FLOW = {
-    "analyze_pipe_flow",
-    "Pressure drop and flow analysis in pipes, ducts, and conduits",
-    {"pipe", "duct", "conduit", "pressure drop", "flow rate"},
-    {"simpleFoam", "pimpleFoam"},
-    {"HVAC", "plumbing", "process", "oil gas"},
-    ToolCategory::INTERNAL_FLOW,
-    1,
-    900,
-    "engineering"
-};
+const ToolCapability PIPE_FLOW = {"analyze_pipe_flow",
+                                  "Pressure drop and flow analysis in pipes, ducts, and conduits",
+                                  {"pipe", "duct", "conduit", "pressure drop", "flow rate"},
+                                  {"simpleFoam", "pimpleFoam"},
+                                  {"HVAC", "plumbing", "process", "oil gas"},
+                                  ToolCategory::INTERNAL_FLOW,
+                                  1,
+                                  900,
+                                  "engineering"};
 
 // analyze_pump_performance
 const ToolCapability PUMP_PERFORMANCE = {
@@ -230,8 +217,7 @@ const ToolCapability PUMP_PERFORMANCE = {
     ToolCategory::INTERNAL_FLOW,
     3,
     5400,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_valve_flow
 const ToolCapability VALVE_FLOW = {
@@ -243,26 +229,22 @@ const ToolCapability VALVE_FLOW = {
     ToolCategory::INTERNAL_FLOW,
     2,
     1800,
-    "engineering"
-};
+    "engineering"};
 
 // optimize_duct_design
-const ToolCapability DUCT_DESIGN = {
-    "optimize_duct_design",
-    "HVAC duct design optimization for minimum pressure loss",
-    {"duct", "HVAC", "ventilation", "air flow", "design"},
-    {"simpleFoam", "buoyantSimpleFoam"},
-    {"HVAC", "building services", "ventilation"},
-    ToolCategory::INTERNAL_FLOW,
-    2,
-    3600,
-    "engineering"
-};
+const ToolCapability DUCT_DESIGN = {"optimize_duct_design",
+                                    "HVAC duct design optimization for minimum pressure loss",
+                                    {"duct", "HVAC", "ventilation", "air flow", "design"},
+                                    {"simpleFoam", "buoyantSimpleFoam"},
+                                    {"HVAC", "building services", "ventilation"},
+                                    ToolCategory::INTERNAL_FLOW,
+                                    2,
+                                    3600,
+                                    "engineering"};
 }  // namespace InternalFlow
 
 // Compressible Flow Tools
-namespace CompressibleFlow
-{
+namespace CompressibleFlow {
 // analyze_supersonic_flow
 const ToolCapability SUPERSONIC_FLOW = {
     "analyze_supersonic_flow",
@@ -273,8 +255,7 @@ const ToolCapability SUPERSONIC_FLOW = {
     ToolCategory::COMPRESSIBLE_FLOW,
     4,
     18000,
-    "research"
-};
+    "research"};
 
 // analyze_nozzle_flow
 const ToolCapability NOZZLE_FLOW = {
@@ -286,8 +267,7 @@ const ToolCapability NOZZLE_FLOW = {
     ToolCategory::COMPRESSIBLE_FLOW,
     3,
     7200,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_transonic_flow
 const ToolCapability TRANSONIC_FLOW = {
@@ -299,13 +279,11 @@ const ToolCapability TRANSONIC_FLOW = {
     ToolCategory::COMPRESSIBLE_FLOW,
     4,
     14400,
-    "engineering"
-};
+    "engineering"};
 }  // namespace CompressibleFlow
 
 // Multiphase Flow Tools
-namespace MultiphaseFlow
-{
+namespace MultiphaseFlow {
 // analyze_free_surface_flow
 const ToolCapability FREE_SURFACE_FLOW = {
     "analyze_free_surface_flow",
@@ -316,21 +294,18 @@ const ToolCapability FREE_SURFACE_FLOW = {
     ToolCategory::MULTIPHASE_FLOW,
     3,
     10800,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_bubble_flow
-const ToolCapability BUBBLE_FLOW = {
-    "analyze_bubble_flow",
-    "Bubbly flow analysis using Eulerian-Eulerian approach",
-    {"bubble", "bubbly", "gas liquid", "two phase", "Eulerian"},
-    {"twoPhaseEulerFoam", "multiphaseEulerFoam"},
-    {"chemical", "process", "water treatment"},
-    ToolCategory::MULTIPHASE_FLOW,
-    4,
-    14400,
-    "engineering"
-};
+const ToolCapability BUBBLE_FLOW = {"analyze_bubble_flow",
+                                    "Bubbly flow analysis using Eulerian-Eulerian approach",
+                                    {"bubble", "bubbly", "gas liquid", "two phase", "Eulerian"},
+                                    {"twoPhaseEulerFoam", "multiphaseEulerFoam"},
+                                    {"chemical", "process", "water treatment"},
+                                    ToolCategory::MULTIPHASE_FLOW,
+                                    4,
+                                    14400,
+                                    "engineering"};
 
 // analyze_cavitation
 const ToolCapability CAVITATION = {
@@ -342,8 +317,7 @@ const ToolCapability CAVITATION = {
     ToolCategory::MULTIPHASE_FLOW,
     4,
     18000,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_spray_injection
 const ToolCapability SPRAY_INJECTION = {
@@ -355,25 +329,21 @@ const ToolCapability SPRAY_INJECTION = {
     ToolCategory::MULTIPHASE_FLOW,
     4,
     21600,
-    "engineering"
-};
+    "engineering"};
 }  // namespace MultiphaseFlow
 
 // Heat Transfer Tools
-namespace HeatTransfer
-{
+namespace HeatTransfer {
 // analyze_heat_exchanger
-const ToolCapability HEAT_EXCHANGER = {
-    "analyze_heat_exchanger",
-    "Heat exchanger thermal and hydraulic performance analysis",
-    {"heat exchanger", "thermal", "cooling", "heating", "HX"},
-    {"chtMultiRegionFoam", "conjugateHeatFoam"},
-    {"HVAC", "process", "power", "automotive"},
-    ToolCategory::HEAT_TRANSFER,
-    3,
-    10800,
-    "engineering"
-};
+const ToolCapability HEAT_EXCHANGER = {"analyze_heat_exchanger",
+                                       "Heat exchanger thermal and hydraulic performance analysis",
+                                       {"heat exchanger", "thermal", "cooling", "heating", "HX"},
+                                       {"chtMultiRegionFoam", "conjugateHeatFoam"},
+                                       {"HVAC", "process", "power", "automotive"},
+                                       ToolCategory::HEAT_TRANSFER,
+                                       3,
+                                       10800,
+                                       "engineering"};
 
 // analyze_natural_convection
 const ToolCapability NATURAL_CONVECTION = {
@@ -385,8 +355,7 @@ const ToolCapability NATURAL_CONVECTION = {
     ToolCategory::HEAT_TRANSFER,
     2,
     5400,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_electronics_cooling
 const ToolCapability ELECTRONICS_COOLING = {
@@ -398,21 +367,18 @@ const ToolCapability ELECTRONICS_COOLING = {
     ToolCategory::HEAT_TRANSFER,
     3,
     7200,
-    "engineering"
-};
+    "engineering"};
 
 // analyze_solar_thermal
-const ToolCapability SOLAR_THERMAL = {
-    "analyze_solar_thermal",
-    "Solar thermal collector and concentrator analysis",
-    {"solar", "thermal collector", "concentrator", "renewable"},
-    {"chtMultiRegionFoam", "solarLoadFoam"},
-    {"renewable energy", "solar", "thermal"},
-    ToolCategory::HEAT_TRANSFER,
-    3,
-    9000,
-    "engineering"
-};
+const ToolCapability SOLAR_THERMAL = {"analyze_solar_thermal",
+                                      "Solar thermal collector and concentrator analysis",
+                                      {"solar", "thermal collector", "concentrator", "renewable"},
+                                      {"chtMultiRegionFoam", "solarLoadFoam"},
+                                      {"renewable energy", "solar", "thermal"},
+                                      ToolCategory::HEAT_TRANSFER,
+                                      3,
+                                      9000,
+                                      "engineering"};
 }  // namespace HeatTransfer
 
 // Continue with other categories...

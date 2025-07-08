@@ -14,19 +14,16 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef pipe_flow_H
-    #define pipe_flow_H
+#define pipe_flow_H
 
-    #include "case_manager.hpp"
+#include <memory>
+#include <nlohmann/json.hpp>
+#include <string>
 
-    #include <nlohmann/json.hpp>
+#include "case_manager.hpp"
 
-    #include <memory>
-    #include <string>
-
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 using json = nlohmann::json;
 
@@ -34,8 +31,7 @@ using json = nlohmann::json;
                         Struct PipeFlowInput
 \*---------------------------------------------------------------------------*/
 
-struct PipeFlowInput
-{
+struct PipeFlowInput {
     double velocity;    // m/s
     double diameter;    // m
     double length;      // m
@@ -44,26 +40,26 @@ struct PipeFlowInput
     std::string fluid;  // "air", "water", etc.
 
     PipeFlowInput()
-        : velocity(1.0), diameter(0.1), length(1.0), viscosity(1e-5), density(1.225), fluid("air")
-    {}
+        : velocity(1.0),
+          diameter(0.1),
+          length(1.0),
+          viscosity(1e-5),
+          density(1.225),
+          fluid("air") {}
 
-    double getReynoldsNumber() const
-    {
+    double getReynoldsNumber() const {
         return velocity * diameter / viscosity;
     }
 
-    bool isLaminar() const
-    {
+    bool isLaminar() const {
         return getReynoldsNumber() < 2300;
     }
 
-    bool isTurbulent() const
-    {
+    bool isTurbulent() const {
         return getReynoldsNumber() > 4000;
     }
 
-    bool isTransitional() const
-    {
+    bool isTransitional() const {
         double Re = getReynoldsNumber();
         return Re >= 2300 && Re <= 4000;
     }
@@ -73,8 +69,7 @@ struct PipeFlowInput
                         Struct PipeFlowResults
 \*---------------------------------------------------------------------------*/
 
-struct PipeFlowResults
-{
+struct PipeFlowResults {
     double reynoldsNumber;
     double frictionFactor;
     double pressureDrop;
@@ -87,18 +82,22 @@ struct PipeFlowResults
     std::string errorMessage;
 
     PipeFlowResults()
-        : reynoldsNumber(0), frictionFactor(0), pressureDrop(0), wallShearStress(0), maxVelocity(0),
-          averageVelocity(0), flowRegime("unknown"), success(false)
-    {}
+        : reynoldsNumber(0),
+          frictionFactor(0),
+          pressureDrop(0),
+          wallShearStress(0),
+          maxVelocity(0),
+          averageVelocity(0),
+          flowRegime("unknown"),
+          success(false) {}
 };
 
 /*---------------------------------------------------------------------------*\
                         Class PipeFlowAnalyzer Declaration
 \*---------------------------------------------------------------------------*/
 
-class PipeFlowAnalyzer
-{
-  private:
+class PipeFlowAnalyzer {
+   private:
     std::unique_ptr<CaseManager> caseManager_;
 
     void validateInput(const PipeFlowInput& input);
@@ -113,7 +112,7 @@ class PipeFlowAnalyzer
     std::string generateAnalysisReport(const PipeFlowInput& input,
                                        const PipeFlowResults& results) const;
 
-  public:
+   public:
     PipeFlowAnalyzer();
     explicit PipeFlowAnalyzer(std::unique_ptr<CaseManager> caseManager);
     ~PipeFlowAnalyzer() = default;

@@ -16,10 +16,8 @@ Description
 #include <iomanip>
 #include <sstream>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         ExternalFlowTool Implementation
@@ -28,11 +26,9 @@ namespace MCP
 ExternalFlowTool::ExternalFlowTool() : analyzer_(std::make_unique<ExternalFlowAnalyzer>()) {}
 
 ExternalFlowTool::ExternalFlowTool(std::unique_ptr<ExternalFlowAnalyzer> analyzer)
-    : analyzer_(std::move(analyzer))
-{}
+    : analyzer_(std::move(analyzer)) {}
 
-ToolResult ExternalFlowTool::execute(const json& arguments)
-{
+ToolResult ExternalFlowTool::execute(const json& arguments) {
     ToolResult result;
 
     try {
@@ -59,15 +55,14 @@ ToolResult ExternalFlowTool::execute(const json& arguments)
         }
 
         json resultsJson = ExternalFlowAnalyzer::resultsToJson(analysisResults);
-        result.content.push_back(json{
-            {"type",     "resource"            },
-            {"resource",
-             {{"uri", "openfoam://external_flow/" + analysisResults.caseId},
-              {"name", "External Flow Analysis Results"},
-              {"description", "Complete OpenFOAM external flow aerodynamics analysis results"},
-              {"mimeType", "application/json"}}},
-            {"text",     resultsJson.dump(2)   }
-        });
+        result.content.push_back(
+            json{{"type", "resource"},
+                 {"resource",
+                  {{"uri", "openfoam://external_flow/" + analysisResults.caseId},
+                   {"name", "External Flow Analysis Results"},
+                   {"description", "Complete OpenFOAM external flow aerodynamics analysis results"},
+                   {"mimeType", "application/json"}}},
+                 {"text", resultsJson.dump(2)}});
 
     } catch (const std::exception& e) {
         result.addErrorContent("Error executing external flow analysis: " + std::string(e.what()));
@@ -76,8 +71,7 @@ ToolResult ExternalFlowTool::execute(const json& arguments)
     return result;
 }
 
-std::string ExternalFlowTool::formatResultsForUser(const ExternalFlowResults& results) const
-{
+std::string ExternalFlowTool::formatResultsForUser(const ExternalFlowResults& results) const {
     std::ostringstream output;
 
     output << "🚗 **OpenFOAM External Flow Analysis Results**\n\n";
@@ -127,8 +121,7 @@ std::string ExternalFlowTool::formatResultsForUser(const ExternalFlowResults& re
 }
 
 std::string ExternalFlowTool::generatePhysicsExplanation(const ExternalFlowInput& input,
-                                                         const ExternalFlowResults& results) const
-{
+                                                         const ExternalFlowResults& results) const {
     std::ostringstream explanation;
 
     explanation << "📚 **Aerodynamics Physics Explanation:**\n\n";
@@ -176,8 +169,7 @@ std::string ExternalFlowTool::generatePhysicsExplanation(const ExternalFlowInput
 }
 
 std::string ExternalFlowTool::generateRecommendations(const ExternalFlowInput& input,
-                                                      const ExternalFlowResults& results) const
-{
+                                                      const ExternalFlowResults& results) const {
     std::ostringstream recommendations;
 
     recommendations << "💡 **Engineering Recommendations:**\n\n";
@@ -246,9 +238,8 @@ std::string ExternalFlowTool::generateRecommendations(const ExternalFlowInput& i
     return recommendations.str();
 }
 
-std::string ExternalFlowTool::generateApplicationGuidance(const ExternalFlowInput& input,
-                                                          const ExternalFlowResults& results) const
-{
+std::string ExternalFlowTool::generateApplicationGuidance(
+    const ExternalFlowInput& input, const ExternalFlowResults& results) const {
     std::ostringstream guidance;
 
     guidance << "🎯 **Application-Specific Guidance:**\n\n";
@@ -299,18 +290,15 @@ std::string ExternalFlowTool::generateApplicationGuidance(const ExternalFlowInpu
     return guidance.str();
 }
 
-void ExternalFlowTool::setWorkingDirectory(const std::string& workingDir)
-{
+void ExternalFlowTool::setWorkingDirectory(const std::string& workingDir) {
     analyzer_->setWorkingDirectory(workingDir);
 }
 
-std::vector<std::string> ExternalFlowTool::listActiveCases() const
-{
+std::vector<std::string> ExternalFlowTool::listActiveCases() const {
     return analyzer_->listActiveCases();
 }
 
-bool ExternalFlowTool::deleteCaseData(const std::string& caseId)
-{
+bool ExternalFlowTool::deleteCaseData(const std::string& caseId) {
     return analyzer_->deleteCaseData(caseId);
 }
 
@@ -318,13 +306,11 @@ bool ExternalFlowTool::deleteCaseData(const std::string& caseId)
                         Tool Registration Helper
 \*---------------------------------------------------------------------------*/
 
-void registerExternalFlowTool(McpServer& server)
-{
+void registerExternalFlowTool(McpServer& server) {
     auto tool = std::make_shared<ExternalFlowTool>();
 
     server.registerTool(
-        ExternalFlowTool::getName(),
-        ExternalFlowTool::getDescription(),
+        ExternalFlowTool::getName(), ExternalFlowTool::getDescription(),
         ExternalFlowTool::getInputSchema(),
         [tool](const json& arguments) -> ToolResult { return tool->execute(arguments); });
 }

@@ -1,20 +1,18 @@
+#include <exception>
+#include <iostream>
+
 #include "argList.H"
 #include "foamVersion.H"
-#include "Time.H"
-
 #include "mcp/server.hpp"
+#include "Time.H"
 #include "tools/external_flow_tool.hpp"
 #include "tools/heat_transfer_tool.hpp"
 #include "tools/pipe_flow_tool.hpp"
 
-#include <exception>
-#include <iostream>
-
 using namespace Foam;
 using namespace Foam::MCP;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     std::cerr << "🚀 OpenFOAM MCP Server v1.0.0" << std::endl;
     std::cerr << "OpenFOAM version: " << Foam::FOAMversion << std::endl;
 

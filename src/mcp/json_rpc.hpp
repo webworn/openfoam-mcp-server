@@ -14,21 +14,18 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef json_rpc_H
-    #define json_rpc_H
+#define json_rpc_H
 
-    #include <nlohmann/json.hpp>
+#include <functional>
+#include <map>
+#include <memory>
+#include <nlohmann/json.hpp>
+#include <optional>
+#include <string>
+#include <vector>
 
-    #include <functional>
-    #include <map>
-    #include <memory>
-    #include <optional>
-    #include <string>
-    #include <vector>
-
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 using json = nlohmann::json;
 
@@ -36,20 +33,13 @@ using json = nlohmann::json;
                         Enum MessageType
 \*---------------------------------------------------------------------------*/
 
-enum class MessageType
-{
-    REQUEST,
-    RESPONSE,
-    NOTIFICATION,
-    INVALID
-};
+enum class MessageType { REQUEST, RESPONSE, NOTIFICATION, INVALID };
 
 /*---------------------------------------------------------------------------*\
                         Struct JsonRpcMessage
 \*---------------------------------------------------------------------------*/
 
-struct JsonRpcMessage
-{
+struct JsonRpcMessage {
     MessageType type;
     std::string jsonrpc;
     std::optional<json> id;
@@ -60,20 +50,16 @@ struct JsonRpcMessage
 
     JsonRpcMessage() : type(MessageType::INVALID), jsonrpc("2.0") {}
 
-    bool isRequest() const
-    {
+    bool isRequest() const {
         return type == MessageType::REQUEST;
     }
-    bool isResponse() const
-    {
+    bool isResponse() const {
         return type == MessageType::RESPONSE;
     }
-    bool isNotification() const
-    {
+    bool isNotification() const {
         return type == MessageType::NOTIFICATION;
     }
-    bool isValid() const
-    {
+    bool isValid() const {
         return type != MessageType::INVALID;
     }
 };
@@ -82,39 +68,32 @@ struct JsonRpcMessage
                         Struct JsonRpcError
 \*---------------------------------------------------------------------------*/
 
-struct JsonRpcError
-{
+struct JsonRpcError {
     int code;
     std::string message;
     std::optional<json> data;
 
-    static JsonRpcError parseError()
-    {
+    static JsonRpcError parseError() {
         return {-32700, "Parse error", std::nullopt};
     }
 
-    static JsonRpcError invalidRequest()
-    {
+    static JsonRpcError invalidRequest() {
         return {-32600, "Invalid Request", std::nullopt};
     }
 
-    static JsonRpcError methodNotFound()
-    {
+    static JsonRpcError methodNotFound() {
         return {-32601, "Method not found", std::nullopt};
     }
 
-    static JsonRpcError invalidParams()
-    {
+    static JsonRpcError invalidParams() {
         return {-32602, "Invalid params", std::nullopt};
     }
 
-    static JsonRpcError internalError()
-    {
+    static JsonRpcError internalError() {
         return {-32603, "Internal error", std::nullopt};
     }
 
-    static JsonRpcError serverError(int code, const std::string& message)
-    {
+    static JsonRpcError serverError(int code, const std::string& message) {
         return {code, message, std::nullopt};
     }
 };
@@ -123,13 +102,12 @@ struct JsonRpcError
                         Class JsonRpcHandler Declaration
 \*---------------------------------------------------------------------------*/
 
-class JsonRpcHandler
-{
-  public:
+class JsonRpcHandler {
+   public:
     using RequestHandler = std::function<json(const json& params)>;
     using NotificationHandler = std::function<void(const json& params)>;
 
-  private:
+   private:
     std::map<std::string, RequestHandler> requestHandlers_;
     std::map<std::string, NotificationHandler> notificationHandlers_;
 
@@ -138,7 +116,7 @@ class JsonRpcHandler
     json createResponse(const json& id, const json& result) const;
     json createErrorResponse(const json& id, const JsonRpcError& error) const;
 
-  public:
+   public:
     JsonRpcHandler() = default;
     ~JsonRpcHandler() = default;
 

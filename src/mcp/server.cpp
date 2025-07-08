@@ -15,28 +15,22 @@ Description
 #include <iostream>
 #include <sstream>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         JSON Conversion Functions
 \*---------------------------------------------------------------------------*/
 
-void to_json(json& j, const ServerInfo& info)
-{
-    j = json{
-        {"name",        info.name       },
-        {"version",     info.version    },
-        {"description", info.description},
-        {"author",      info.author     },
-        {"homepage",    info.homepage   }
-    };
+void to_json(json& j, const ServerInfo& info) {
+    j = json{{"name", info.name},
+             {"version", info.version},
+             {"description", info.description},
+             {"author", info.author},
+             {"homepage", info.homepage}};
 }
 
-void from_json(const json& j, ServerInfo& info)
-{
+void from_json(const json& j, ServerInfo& info) {
     j.at("name").get_to(info.name);
     j.at("version").get_to(info.version);
 
@@ -48,27 +42,19 @@ void from_json(const json& j, ServerInfo& info)
         j.at("homepage").get_to(info.homepage);
 }
 
-void to_json(json& j, const Tool& tool)
-{
+void to_json(json& j, const Tool& tool) {
     j = json{
-        {"name",        tool.name       },
-        {"description", tool.description},
-        {"inputSchema", tool.inputSchema}
-    };
+        {"name", tool.name}, {"description", tool.description}, {"inputSchema", tool.inputSchema}};
 }
 
-void from_json(const json& j, Tool& tool)
-{
+void from_json(const json& j, Tool& tool) {
     j.at("name").get_to(tool.name);
     j.at("description").get_to(tool.description);
     j.at("inputSchema").get_to(tool.inputSchema);
 }
 
-void to_json(json& j, const ToolResult& result)
-{
-    j = json{
-        {"content", result.content}
-    };
+void to_json(json& j, const ToolResult& result) {
+    j = json{{"content", result.content}};
 
     if (result.isError) {
         j["isError"] = true;
@@ -80,19 +66,18 @@ void to_json(json& j, const ToolResult& result)
 \*---------------------------------------------------------------------------*/
 
 McpServer::McpServer()
-    : jsonRpcHandler_(std::make_unique<JsonRpcHandler>()), initialized_(false), running_(false),
-      protocolVersion_("2024-11-05")
-{
+    : jsonRpcHandler_(std::make_unique<JsonRpcHandler>()),
+      initialized_(false),
+      running_(false),
+      protocolVersion_("2024-11-05") {
     setupStandardHandlers();
 }
 
-McpServer::~McpServer()
-{
+McpServer::~McpServer() {
     stop();
 }
 
-void McpServer::setupStandardHandlers()
-{
+void McpServer::setupStandardHandlers() {
     jsonRpcHandler_->registerRequestHandler(
         "initialize", [this](const json& params) { return handleInitialize(params); });
 
@@ -109,8 +94,7 @@ void McpServer::setupStandardHandlers()
         "ping", [this](const json& params) { return handlePing(params); });
 }
 
-json McpServer::handleInitialize(const json& params)
-{
+json McpServer::handleInitialize(const json& params) {
     if (!params.contains("protocolVersion")) {
         throw std::runtime_error("Missing protocolVersion in initialize request");
     }
@@ -121,36 +105,29 @@ json McpServer::handleInitialize(const json& params)
         clientCapabilities_ = clientCapabilitiesFromJson(params["capabilities"]);
     }
 
-    json response = json{
-        {"protocolVersion", protocolVersion_                       },
-        {"capabilities",    capabilitiesToJson(serverCapabilities_)},
-        {"serverInfo",      serverInfo_                            }
-    };
+    json response = json{{"protocolVersion", protocolVersion_},
+                         {"capabilities", capabilitiesToJson(serverCapabilities_)},
+                         {"serverInfo", serverInfo_}};
 
     return response;
 }
 
-void McpServer::handleInitialized(const json& params)
-{
+void McpServer::handleInitialized(const json& params) {
     initialized_.store(true);
     std::cerr << "MCP server initialized successfully" << std::endl;
 }
 
-json McpServer::handleToolsList(const json& params)
-{
+json McpServer::handleToolsList(const json& params) {
     json toolsArray = json::array();
 
     for (const auto& [name, tool] : tools_) {
         toolsArray.push_back(tool);
     }
 
-    return json{
-        {"tools", toolsArray}
-    };
+    return json{{"tools", toolsArray}};
 }
 
-json McpServer::handleToolsCall(const json& params)
-{
+json McpServer::handleToolsCall(const json& params) {
     if (!params.contains("name")) {
         throw std::runtime_error("Missing tool name in tools/call request");
     }
@@ -168,19 +145,15 @@ json McpServer::handleToolsCall(const json& params)
     return json(result);
 }
 
-json McpServer::handlePing(const json& params)
-{
+json McpServer::handlePing(const json& params) {
     return json::object();
 }
 
-json McpServer::capabilitiesToJson(const ServerCapabilities& caps) const
-{
+json McpServer::capabilitiesToJson(const ServerCapabilities& caps) const {
     json j = json::object();
 
     if (caps.tools.listChanged) {
-        j["tools"] = json{
-            {"listChanged", true}
-        };
+        j["tools"] = json{{"listChanged", true}};
     }
 
     if (caps.resources.subscribe || caps.resources.listChanged) {
@@ -193,9 +166,7 @@ json McpServer::capabilitiesToJson(const ServerCapabilities& caps) const
     }
 
     if (caps.prompts.listChanged) {
-        j["prompts"] = json{
-            {"listChanged", true}
-        };
+        j["prompts"] = json{{"listChanged", true}};
     }
 
     if (caps.logging.enabled) {
@@ -205,8 +176,7 @@ json McpServer::capabilitiesToJson(const ServerCapabilities& caps) const
     return j;
 }
 
-ClientCapabilities McpServer::clientCapabilitiesFromJson(const json& caps) const
-{
+ClientCapabilities McpServer::clientCapabilitiesFromJson(const json& caps) const {
     ClientCapabilities clientCaps;
 
     if (caps.contains("roots") && caps["roots"].contains("listChanged")) {
@@ -224,17 +194,13 @@ ClientCapabilities McpServer::clientCapabilitiesFromJson(const json& caps) const
     return clientCaps;
 }
 
-void McpServer::registerTool(const std::string& name,
-                             const std::string& description,
-                             const json& inputSchema,
-                             ToolHandler handler)
-{
+void McpServer::registerTool(const std::string& name, const std::string& description,
+                             const json& inputSchema, ToolHandler handler) {
     tools_[name] = Tool(name, description, inputSchema);
     toolHandlers_[name] = handler;
 }
 
-void McpServer::start()
-{
+void McpServer::start() {
     running_.store(true);
     std::cerr << "OpenFOAM MCP Server started. Listening on stdin..." << std::endl;
 
@@ -243,14 +209,12 @@ void McpServer::start()
     }
 }
 
-void McpServer::stop()
-{
+void McpServer::stop() {
     running_.store(false);
     std::cerr << "OpenFOAM MCP Server stopped." << std::endl;
 }
 
-void McpServer::processStdinMessage()
-{
+void McpServer::processStdinMessage() {
     std::string line;
     if (std::getline(std::cin, line)) {
         if (line.empty()) {
@@ -268,8 +232,7 @@ void McpServer::processStdinMessage()
     }
 }
 
-std::vector<std::string> McpServer::getRegisteredTools() const
-{
+std::vector<std::string> McpServer::getRegisteredTools() const {
     std::vector<std::string> toolNames;
 
     for (const auto& [name, tool] : tools_) {

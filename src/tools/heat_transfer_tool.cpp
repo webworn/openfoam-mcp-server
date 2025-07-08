@@ -11,10 +11,8 @@
 #include <iomanip>
 #include <sstream>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                       HeatTransferTool Implementation
@@ -22,8 +20,7 @@ namespace MCP
 
 HeatTransferTool::HeatTransferTool() : caseManager_(std::make_unique<CaseManager>()) {}
 
-ToolResult HeatTransferTool::execute(const json& arguments)
-{
+ToolResult HeatTransferTool::execute(const json& arguments) {
     ToolResult result;
 
     try {
@@ -71,8 +68,7 @@ ToolResult HeatTransferTool::execute(const json& arguments)
     return result;
 }
 
-HeatTransferInput HeatTransferTool::parseInput(const json& arguments)
-{
+HeatTransferInput HeatTransferTool::parseInput(const json& arguments) {
     HeatTransferInput input = {};
 
     // Required parameters
@@ -103,19 +99,16 @@ HeatTransferInput HeatTransferTool::parseInput(const json& arguments)
     return input;
 }
 
-bool HeatTransferTool::validateInputParameters(const HeatTransferInput& input) const
-{
+bool HeatTransferTool::validateInputParameters(const HeatTransferInput& input) const {
     return analyzer_.validateInput(input);
 }
 
-std::string HeatTransferTool::setupOpenFOAMCase(const HeatTransferInput& input)
-{
+std::string HeatTransferTool::setupOpenFOAMCase(const HeatTransferInput& input) {
     CaseParameters params = createCaseParameters(input);
     return caseManager_->createCase(params);
 }
 
-CaseParameters HeatTransferTool::createCaseParameters(const HeatTransferInput& input) const
-{
+CaseParameters HeatTransferTool::createCaseParameters(const HeatTransferInput& input) const {
     CaseParameters params;
     params.caseName = "heat_transfer_analysis";
     params.solver = "chtMultiRegionFoam";
@@ -134,8 +127,7 @@ CaseParameters HeatTransferTool::createCaseParameters(const HeatTransferInput& i
 }
 
 std::vector<json> HeatTransferTool::formatResults(const HeatTransferInput& input,
-                                                  const HeatTransferResults& results) const
-{
+                                                  const HeatTransferResults& results) const {
     std::vector<json> content;
 
     // Main results summary
@@ -172,62 +164,47 @@ std::vector<json> HeatTransferTool::formatResults(const HeatTransferInput& input
         summary << "📁 **Case ID:** " << results.caseId << "\n";
     }
 
-    content.push_back(json{
-        {"type", "text"       },
-        {"text", summary.str()}
-    });
+    content.push_back(json{{"type", "text"}, {"text", summary.str()}});
 
     // Physics explanation
-    content.push_back(json{
-        {"type", "text"},
-        {"text", generateThermalExplanation(input, results)}
-    });
+    content.push_back(json{{"type", "text"}, {"text", generateThermalExplanation(input, results)}});
 
     // Design recommendations
-    content.push_back(json{
-        {"type", "text"},
-        {"text", generateDesignRecommendations(input, results)}
-    });
+    content.push_back(
+        json{{"type", "text"}, {"text", generateDesignRecommendations(input, results)}});
 
     // Application-specific guidance
-    content.push_back(json{
-        {"type", "text"},
-        {"text", generateApplicationGuidance(input, results)}
-    });
+    content.push_back(
+        json{{"type", "text"}, {"text", generateApplicationGuidance(input, results)}});
 
     // Add warning if OpenFOAM failed
     if (!results.success && !results.errorMessage.empty()) {
-        content.push_back(json{
-            {"type", "text"                                                                   },
-            {"text",
-             "⚠️  OpenFOAM simulation failed, but theoretical calculations were provided."}
-        });
-        content.push_back(json{
-            {"type", "text"                                  },
-            {"text", "Error details: " + results.errorMessage}
-        });
+        content.push_back(
+            json{{"type", "text"},
+                 {"text",
+                  "⚠️  OpenFOAM simulation failed, but theoretical calculations were provided."}});
+        content.push_back(
+            json{{"type", "text"}, {"text", "Error details: " + results.errorMessage}});
     }
 
     // JSON resource with detailed results
     std::string resourceUri = results.success ? "openfoam://heat_transfer/" + results.caseId
                                               : "theoretical://heat_transfer/analysis";
 
-    content.push_back(json{
-        {"type",     "resource"                       },
-        {"resource",
-         json{{"uri", resourceUri},
-              {"name", "Heat Transfer Analysis Results"},
-              {"description", "Complete OpenFOAM conjugate heat transfer analysis results"},
-              {"mimeType", "application/json"}}       },
-        {"text",     analyzer_.toJson(results).dump(2)}
-    });
+    content.push_back(
+        json{{"type", "resource"},
+             {"resource",
+              json{{"uri", resourceUri},
+                   {"name", "Heat Transfer Analysis Results"},
+                   {"description", "Complete OpenFOAM conjugate heat transfer analysis results"},
+                   {"mimeType", "application/json"}}},
+             {"text", analyzer_.toJson(results).dump(2)}});
 
     return content;
 }
 
 std::string HeatTransferTool::generateThermalExplanation(const HeatTransferInput& input,
-                                                         const HeatTransferResults& results) const
-{
+                                                         const HeatTransferResults& results) const {
     std::ostringstream explanation;
     explanation << "🔥 **Heat Transfer Physics Explanation:**\n\n";
 
@@ -258,8 +235,8 @@ std::string HeatTransferTool::generateThermalExplanation(const HeatTransferInput
     return explanation.str();
 }
 
-std::string HeatTransferTool::generateDimensionlessNumbers(const HeatTransferResults& results) const
-{
+std::string HeatTransferTool::generateDimensionlessNumbers(
+    const HeatTransferResults& results) const {
     std::ostringstream numbers;
     numbers << "**Key Dimensionless Numbers:**\n";
 
@@ -296,10 +273,8 @@ std::string HeatTransferTool::generateDimensionlessNumbers(const HeatTransferRes
     return numbers.str();
 }
 
-std::string
-HeatTransferTool::generateDesignRecommendations(const HeatTransferInput& input,
-                                                const HeatTransferResults& results) const
-{
+std::string HeatTransferTool::generateDesignRecommendations(
+    const HeatTransferInput& input, const HeatTransferResults& results) const {
     std::ostringstream recommendations;
     recommendations << "💡 **Thermal Design Recommendations:**\n\n";
 
@@ -344,9 +319,8 @@ HeatTransferTool::generateDesignRecommendations(const HeatTransferInput& input,
     return recommendations.str();
 }
 
-std::string HeatTransferTool::generateApplicationGuidance(const HeatTransferInput& input,
-                                                          const HeatTransferResults& results) const
-{
+std::string HeatTransferTool::generateApplicationGuidance(
+    const HeatTransferInput& input, const HeatTransferResults& results) const {
     std::ostringstream guidance;
     guidance << "🎯 **Application-Specific Guidance:**\n\n";
 
@@ -381,104 +355,86 @@ std::string HeatTransferTool::generateApplicationGuidance(const HeatTransferInpu
     return guidance.str();
 }
 
-json HeatTransferTool::getInputSchema()
-{
+json HeatTransferTool::getInputSchema() {
     return json{
-        {"type",                 "object"                                                               },
-        {"required",             json::array({"analysisType", "characteristicLength", "heatGeneration"})},
-        {"additionalProperties", false                                                                  },
+        {"type", "object"},
+        {"required", json::array({"analysisType", "characteristicLength", "heatGeneration"})},
+        {"additionalProperties", false},
         {"properties",
-         json{{"analysisType",
-               json{{"type", "string"},
-                    {"enum",
-                     json::array({"electronics_cooling", "heat_exchanger", "building", "engine"})},
-                    {"default", "electronics_cooling"},
-                    {"description", "Type of heat transfer analysis"}}},
+         json{{"analysisType", json{{"type", "string"},
+                                    {"enum", json::array({"electronics_cooling", "heat_exchanger",
+                                                          "building", "engine"})},
+                                    {"default", "electronics_cooling"},
+                                    {"description", "Type of heat transfer analysis"}}},
               {"characteristicLength",
                json{{"type", "number"},
                     {"minimum", 0.001},
                     {"maximum", 10.0},
                     {"description",
                      "Characteristic length in m (chip size, tube diameter, room dimension)"}}},
-              {"heatGeneration",
-               json{{"type", "number"},
-                    {"minimum", 0.1},
-                    {"maximum", 10000.0},
-                    {"description", "Heat generation in W"}}},
-              {"ambientTemperature",
-               json{{"type", "number"},
-                    {"minimum", 200.0},
-                    {"maximum", 400.0},
-                    {"default", 298.15},
-                    {"description", "Ambient temperature in K"}}},
-              {"maxAllowableTemp",
-               json{{"type", "number"},
-                    {"minimum", 300.0},
-                    {"maximum", 500.0},
-                    {"default", 358.15},
-                    {"description", "Maximum allowable temperature in K"}}},
-              {"inletVelocity",
-               json{{"type", "number"},
-                    {"minimum", 0.1},
-                    {"maximum", 50.0},
-                    {"default", 2.0},
-                    {"description", "Coolant inlet velocity in m/s"}}},
-              {"inletTemperature",
-               json{{"type", "number"},
-                    {"minimum", 200.0},
-                    {"maximum", 400.0},
-                    {"default", 298.15},
-                    {"description", "Coolant inlet temperature in K"}}},
-              {"coolantType",
-               json{{"type", "string"},
-                    {"enum", json::array({"air", "water", "oil"})},
-                    {"default", "air"},
-                    {"description", "Type of cooling fluid"}}},
-              {"fluidRegions",
-               json{{"type", "string"},
-                    {"default", "air"},
-                    {"description", "Comma-separated list of fluid region names"}}},
-              {"solidRegions",
-               json{{"type", "string"},
-                    {"default", "chip,heatsink"},
-                    {"description", "Comma-separated list of solid region names"}}},
-              {"targetAccuracy",
-               json{{"type", "number"},
-                    {"minimum", 0.1},
-                    {"maximum", 10.0},
-                    {"default", 1.0},
-                    {"description", "Target temperature accuracy in K"}}},
-              {"couplingMode",
-               json{{"type", "string"},
-                    {"enum", json::array({"weak", "strong"})},
-                    {"default", "strong"},
-                    {"description", "Fluid-solid coupling mode"}}},
-              {"steadyState",
-               json{{"type", "boolean"},
-                    {"default", true},
-                    {"description", "Steady state or transient analysis"}}},
-              {"timeStep",
-               json{{"type", "number"},
-                    {"minimum", 0.001},
-                    {"maximum", 1.0},
-                    {"default", 0.01},
-                    {"description", "Time step for transient analysis in s"}}},
-              {"endTime",
-               json{{"type", "number"},
-                    {"minimum", 1.0},
-                    {"maximum", 1000.0},
-                    {"default", 100.0},
-                    {"description", "End time for transient analysis in s"}}}}                          }
-    };
+              {"heatGeneration", json{{"type", "number"},
+                                      {"minimum", 0.1},
+                                      {"maximum", 10000.0},
+                                      {"description", "Heat generation in W"}}},
+              {"ambientTemperature", json{{"type", "number"},
+                                          {"minimum", 200.0},
+                                          {"maximum", 400.0},
+                                          {"default", 298.15},
+                                          {"description", "Ambient temperature in K"}}},
+              {"maxAllowableTemp", json{{"type", "number"},
+                                        {"minimum", 300.0},
+                                        {"maximum", 500.0},
+                                        {"default", 358.15},
+                                        {"description", "Maximum allowable temperature in K"}}},
+              {"inletVelocity", json{{"type", "number"},
+                                     {"minimum", 0.1},
+                                     {"maximum", 50.0},
+                                     {"default", 2.0},
+                                     {"description", "Coolant inlet velocity in m/s"}}},
+              {"inletTemperature", json{{"type", "number"},
+                                        {"minimum", 200.0},
+                                        {"maximum", 400.0},
+                                        {"default", 298.15},
+                                        {"description", "Coolant inlet temperature in K"}}},
+              {"coolantType", json{{"type", "string"},
+                                   {"enum", json::array({"air", "water", "oil"})},
+                                   {"default", "air"},
+                                   {"description", "Type of cooling fluid"}}},
+              {"fluidRegions", json{{"type", "string"},
+                                    {"default", "air"},
+                                    {"description", "Comma-separated list of fluid region names"}}},
+              {"solidRegions", json{{"type", "string"},
+                                    {"default", "chip,heatsink"},
+                                    {"description", "Comma-separated list of solid region names"}}},
+              {"targetAccuracy", json{{"type", "number"},
+                                      {"minimum", 0.1},
+                                      {"maximum", 10.0},
+                                      {"default", 1.0},
+                                      {"description", "Target temperature accuracy in K"}}},
+              {"couplingMode", json{{"type", "string"},
+                                    {"enum", json::array({"weak", "strong"})},
+                                    {"default", "strong"},
+                                    {"description", "Fluid-solid coupling mode"}}},
+              {"steadyState", json{{"type", "boolean"},
+                                   {"default", true},
+                                   {"description", "Steady state or transient analysis"}}},
+              {"timeStep", json{{"type", "number"},
+                                {"minimum", 0.001},
+                                {"maximum", 1.0},
+                                {"default", 0.01},
+                                {"description", "Time step for transient analysis in s"}}},
+              {"endTime", json{{"type", "number"},
+                               {"minimum", 1.0},
+                               {"maximum", 1000.0},
+                               {"default", 100.0},
+                               {"description", "End time for transient analysis in s"}}}}}};
 }
 
-void registerHeatTransferTool(McpServer& server)
-{
+void registerHeatTransferTool(McpServer& server) {
     auto tool = std::make_shared<HeatTransferTool>();
 
     server.registerTool(
-        HeatTransferTool::getName(),
-        HeatTransferTool::getDescription(),
+        HeatTransferTool::getName(), HeatTransferTool::getDescription(),
         HeatTransferTool::getInputSchema(),
         [tool](const json& arguments) -> ToolResult { return tool->execute(arguments); });
 }

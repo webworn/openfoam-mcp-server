@@ -15,24 +15,21 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #ifndef universal_cfd_analyzer_H
-    #define universal_cfd_analyzer_H
+#define universal_cfd_analyzer_H
 
-    #include <map>
-    #include <memory>
-    #include <string>
-    #include <vector>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         Enum PhysicsCategory
 \*---------------------------------------------------------------------------*/
 
-enum class PhysicsCategory
-{
+enum class PhysicsCategory {
     INCOMPRESSIBLE_EXTERNAL,  // Cars, aircraft, buildings
     INCOMPRESSIBLE_INTERNAL,  // Pipes, pumps, valves
     COMPRESSIBLE_FLOW,        // Supersonic, gas dynamics
@@ -54,8 +51,7 @@ enum class PhysicsCategory
                         Enum ApplicationDomain
 \*---------------------------------------------------------------------------*/
 
-enum class ApplicationDomain
-{
+enum class ApplicationDomain {
     AUTOMOTIVE,   // Vehicles, engines
     AEROSPACE,    // Aircraft, spacecraft
     ENERGY,       // Turbines, renewable
@@ -75,8 +71,7 @@ enum class ApplicationDomain
                         Struct UserScenario
 \*---------------------------------------------------------------------------*/
 
-struct UserScenario
-{
+struct UserScenario {
     // Primary identification
     std::string description;
     PhysicsCategory physics;
@@ -107,16 +102,14 @@ struct UserScenario
                         Struct CFDSetupRecommendation
 \*---------------------------------------------------------------------------*/
 
-struct CFDSetupRecommendation
-{
+struct CFDSetupRecommendation {
     // Solver configuration
     std::string solver;
     std::string turbulenceModel;
     std::map<std::string, std::string> solverControls;
 
     // Mesh requirements
-    struct MeshConfig
-    {
+    struct MeshConfig {
         int targetCells;
         double targetYPlus;
         int refinementLevels;
@@ -154,16 +147,15 @@ struct CFDSetupRecommendation
                  Class UniversalCFDAnalyzer Declaration
 \*---------------------------------------------------------------------------*/
 
-class UniversalCFDAnalyzer
-{
-  private:
+class UniversalCFDAnalyzer {
+   private:
     // Knowledge base
     std::map<std::string, PhysicsCategory> physicsKeywords_;
     std::map<std::string, ApplicationDomain> domainKeywords_;
     std::map<PhysicsCategory, std::vector<std::string>> physicsSolvers_;
     std::map<ApplicationDomain, std::vector<std::string>> domainBestPractices_;
 
-  public:
+   public:
     // Constructor
     UniversalCFDAnalyzer();
 
@@ -194,8 +186,8 @@ class UniversalCFDAnalyzer
     double recommendYPlus(PhysicsCategory physics, const std::string& accuracy) const;
 
     // Boundary condition intelligence
-    std::map<std::string, std::map<std::string, std::string>>
-    generateBoundaryConditions(const UserScenario& scenario) const;
+    std::map<std::string, std::map<std::string, std::string>> generateBoundaryConditions(
+        const UserScenario& scenario) const;
 
     // Scheme selection
     std::map<std::string, std::string> selectNumericalSchemes(PhysicsCategory physics,
@@ -223,7 +215,7 @@ class UniversalCFDAnalyzer
     UserScenario handleBiomedicalScenario(const std::string& description) const;
     UserScenario handleEnvironmentalScenario(const std::string& description) const;
 
-  private:
+   private:
     // Knowledge base initialization
     void initializePhysicsKeywords();
     void initializeDomainKeywords();
@@ -242,8 +234,7 @@ class UniversalCFDAnalyzer
                     Example Scenario Implementations
 \*---------------------------------------------------------------------------*/
 
-namespace ScenarioExamples
-{
+namespace ScenarioExamples {
 // Complete scenario definitions that the analyzer should handle
 
 const std::vector<std::string> AUTOMOTIVE_SCENARIOS = {
@@ -276,14 +267,11 @@ const std::vector<std::string> ENERGY_SCENARIOS = {
     "Optimize geothermal heat exchanger",
     "Analyze fuel cell thermal management"};
 
-const std::vector<std::string> PROCESS_SCENARIOS = {"Optimize mixing in stirred tank reactor",
-                                                    "Analyze fluidized bed catalytic reactor",
-                                                    "Study heat transfer in plate heat exchanger",
-                                                    "Design distillation column internals",
-                                                    "Analyze spray drying tower performance",
-                                                    "Study crystallizer mixing patterns",
-                                                    "Optimize pipeline flow for oil transport",
-                                                    "Analyze separator efficiency"};
+const std::vector<std::string> PROCESS_SCENARIOS = {
+    "Optimize mixing in stirred tank reactor",     "Analyze fluidized bed catalytic reactor",
+    "Study heat transfer in plate heat exchanger", "Design distillation column internals",
+    "Analyze spray drying tower performance",      "Study crystallizer mixing patterns",
+    "Optimize pipeline flow for oil transport",    "Analyze separator efficiency"};
 
 const std::vector<std::string> MARINE_SCENARIOS = {"Analyze ship hull resistance at design speed",
                                                    "Study propeller cavitation and noise",
@@ -312,14 +300,11 @@ const std::vector<std::string> BIOMEDICAL_SCENARIOS = {"Analyze blood flow throu
                                                        "Analyze blood pump flow patterns",
                                                        "Study oxygen transport in lungs"};
 
-const std::vector<std::string> ENVIRONMENTAL_SCENARIOS = {"Study atmospheric pollution dispersion",
-                                                          "Analyze groundwater contamination flow",
-                                                          "Model wildfire smoke transport",
-                                                          "Study ocean current patterns",
-                                                          "Analyze landfill gas migration",
-                                                          "Model hurricane storm surge",
-                                                          "Study volcanic ash dispersion",
-                                                          "Analyze river ecosystem flow patterns"};
+const std::vector<std::string> ENVIRONMENTAL_SCENARIOS = {
+    "Study atmospheric pollution dispersion", "Analyze groundwater contamination flow",
+    "Model wildfire smoke transport",         "Study ocean current patterns",
+    "Analyze landfill gas migration",         "Model hurricane storm surge",
+    "Study volcanic ash dispersion",          "Analyze river ecosystem flow patterns"};
 }  // namespace ScenarioExamples
 
 }  // End namespace MCP

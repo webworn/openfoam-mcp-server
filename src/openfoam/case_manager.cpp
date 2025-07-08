@@ -22,32 +22,26 @@ Description
 #include <random>
 #include <sstream>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         JSON Conversion Functions
 \*---------------------------------------------------------------------------*/
 
-void to_json(json& j, const CaseParameters& params)
-{
-    j = json{
-        {"caseName",           params.caseName          },
-        {"solver",             params.solver            },
-        {"caseType",           params.caseType          },
-        {"endTime",            params.endTime           },
-        {"deltaTime",          params.deltaTime         },
-        {"writeInterval",      params.writeInterval     },
-        {"boundaryConditions", params.boundaryConditions},
-        {"physicalProperties", params.physicalProperties},
-        {"numericalSchemes",   params.numericalSchemes  }
-    };
+void to_json(json& j, const CaseParameters& params) {
+    j = json{{"caseName", params.caseName},
+             {"solver", params.solver},
+             {"caseType", params.caseType},
+             {"endTime", params.endTime},
+             {"deltaTime", params.deltaTime},
+             {"writeInterval", params.writeInterval},
+             {"boundaryConditions", params.boundaryConditions},
+             {"physicalProperties", params.physicalProperties},
+             {"numericalSchemes", params.numericalSchemes}};
 }
 
-void from_json(const json& j, CaseParameters& params)
-{
+void from_json(const json& j, CaseParameters& params) {
     j.at("caseName").get_to(params.caseName);
     j.at("solver").get_to(params.solver);
     j.at("caseType").get_to(params.caseType);
@@ -59,22 +53,14 @@ void from_json(const json& j, CaseParameters& params)
     j.at("numericalSchemes").get_to(params.numericalSchemes);
 }
 
-void to_json(json& j, const CaseResult& result)
-{
-    j = json{
-        {"caseId",        result.caseId               },
-        {"status",        result.status               },
-        {"exitCode",      result.exitCode             },
-        {"logOutput",     result.logOutput            },
-        {"errorOutput",   result.errorOutput          },
-        {"executionTime", result.executionTime.count()},
-        {"results",       result.results              },
-        {"outputFiles",   result.outputFiles          }
-    };
+void to_json(json& j, const CaseResult& result) {
+    j = json{{"caseId", result.caseId},           {"status", result.status},
+             {"exitCode", result.exitCode},       {"logOutput", result.logOutput},
+             {"errorOutput", result.errorOutput}, {"executionTime", result.executionTime.count()},
+             {"results", result.results},         {"outputFiles", result.outputFiles}};
 }
 
-void from_json(const json& j, CaseResult& result)
-{
+void from_json(const json& j, CaseResult& result) {
     j.at("caseId").get_to(result.caseId);
     j.at("status").get_to(result.status);
     j.at("exitCode").get_to(result.exitCode);
@@ -92,29 +78,25 @@ void from_json(const json& j, CaseResult& result)
                         CaseManager Implementation
 \*---------------------------------------------------------------------------*/
 
-CaseManager::CaseManager() : workingDirectory_("/workspaces/openfoam-mcp-server/results")
-{
+CaseManager::CaseManager() : workingDirectory_("/workspaces/openfoam-mcp-server/results") {
     if (!fs::exists(workingDirectory_)) {
         fs::create_directories(workingDirectory_);
     }
 }
 
-CaseManager::CaseManager(const fs::path& workingDir) : workingDirectory_(workingDir)
-{
+CaseManager::CaseManager(const fs::path& workingDir) : workingDirectory_(workingDir) {
     if (!fs::exists(workingDirectory_)) {
         fs::create_directories(workingDirectory_);
     }
 }
 
-CaseManager::~CaseManager()
-{
+CaseManager::~CaseManager() {
     for (const auto& [caseId, result] : caseResults_) {
         cleanup(caseId);
     }
 }
 
-std::string CaseManager::generateCaseId() const
-{
+std::string CaseManager::generateCaseId() const {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 15);
@@ -129,13 +111,11 @@ std::string CaseManager::generateCaseId() const
     return ss.str();
 }
 
-fs::path CaseManager::getCasePath(const std::string& caseId) const
-{
+fs::path CaseManager::getCasePath(const std::string& caseId) const {
     return workingDirectory_ / caseId;
 }
 
-void CaseManager::createCaseDirectory(const std::string& caseId) const
-{
+void CaseManager::createCaseDirectory(const std::string& caseId) const {
     fs::path casePath = getCasePath(caseId);
 
     fs::create_directories(casePath / "0");
@@ -143,8 +123,7 @@ void CaseManager::createCaseDirectory(const std::string& caseId) const
     fs::create_directories(casePath / "system");
 }
 
-std::string CaseManager::createCase(const CaseParameters& params)
-{
+std::string CaseManager::createCase(const CaseParameters& params) {
     if (!validateCaseParameters(params)) {
         throw std::runtime_error("Invalid case parameters");
     }
@@ -163,8 +142,8 @@ std::string CaseManager::createCase(const CaseParameters& params)
     return caseId;
 }
 
-void CaseManager::setupCaseStructure(const std::string& caseId, const CaseParameters& params) const
-{
+void CaseManager::setupCaseStructure(const std::string& caseId,
+                                     const CaseParameters& params) const {
     fs::path casePath = getCasePath(caseId);
 
     writeControlDict(casePath, params);
@@ -177,8 +156,7 @@ void CaseManager::setupCaseStructure(const std::string& caseId, const CaseParame
     setupBoundaryConditions(caseId, params);
 }
 
-void CaseManager::writeControlDict(const fs::path& casePath, const CaseParameters& params) const
-{
+void CaseManager::writeControlDict(const fs::path& casePath, const CaseParameters& params) const {
     std::ofstream file(casePath / "system" / "controlDict");
 
     file << "FoamFile\n"
@@ -207,8 +185,7 @@ void CaseManager::writeControlDict(const fs::path& casePath, const CaseParameter
     file << "runTimeModifiable true;\n";
 }
 
-void CaseManager::writeFvSchemes(const fs::path& casePath, const CaseParameters& params) const
-{
+void CaseManager::writeFvSchemes(const fs::path& casePath, const CaseParameters& params) const {
     std::ofstream file(casePath / "system" / "fvSchemes");
 
     file << "FoamFile\n"
@@ -255,8 +232,7 @@ void CaseManager::writeFvSchemes(const fs::path& casePath, const CaseParameters&
          << "}\n\n";
 }
 
-void CaseManager::writeFvSolution(const fs::path& casePath, const CaseParameters& params) const
-{
+void CaseManager::writeFvSolution(const fs::path& casePath, const CaseParameters& params) const {
     std::ofstream file(casePath / "system" / "fvSolution");
 
     file << "FoamFile\n"
@@ -331,8 +307,7 @@ void CaseManager::writeFvSolution(const fs::path& casePath, const CaseParameters
 }
 
 void CaseManager::writeTransportProperties(const fs::path& casePath,
-                                           const CaseParameters& params) const
-{
+                                           const CaseParameters& params) const {
     std::ofstream file(casePath / "constant" / "transportProperties");
 
     file << "FoamFile\n"
@@ -354,8 +329,7 @@ void CaseManager::writeTransportProperties(const fs::path& casePath,
 }
 
 void CaseManager::writeTurbulenceProperties(const fs::path& casePath,
-                                            const CaseParameters& params) const
-{
+                                            const CaseParameters& params) const {
     std::ofstream file(casePath / "constant" / "turbulenceProperties");
 
     file << "FoamFile\n"
@@ -376,8 +350,7 @@ void CaseManager::writeTurbulenceProperties(const fs::path& casePath,
          << "}\n\n";
 }
 
-void CaseManager::setupMesh(const std::string& caseId, const CaseParameters& params) const
-{
+void CaseManager::setupMesh(const std::string& caseId, const CaseParameters& params) const {
     fs::path casePath = getCasePath(caseId);
 
     std::ofstream file(casePath / "system" / "blockMeshDict");
@@ -457,8 +430,7 @@ void CaseManager::setupMesh(const std::string& caseId, const CaseParameters& par
 }
 
 void CaseManager::setupBoundaryConditions(const std::string& caseId,
-                                          const CaseParameters& params) const
-{
+                                          const CaseParameters& params) const {
     fs::path casePath = getCasePath(caseId);
 
     // Detect case type from case name
@@ -812,8 +784,7 @@ void CaseManager::setupBoundaryConditions(const std::string& caseId,
     }
 }
 
-bool CaseManager::runCase(const std::string& caseId)
-{
+bool CaseManager::runCase(const std::string& caseId) {
     auto it = caseResults_.find(caseId);
     if (it == caseResults_.end()) {
         return false;
@@ -868,8 +839,7 @@ bool CaseManager::runCase(const std::string& caseId)
     return it->second->isSuccess();
 }
 
-void CaseManager::extractResults(const std::string& caseId)
-{
+void CaseManager::extractResults(const std::string& caseId) {
     auto it = caseResults_.find(caseId);
     if (it == caseResults_.end()) {
         return;
@@ -894,8 +864,7 @@ void CaseManager::extractResults(const std::string& caseId)
     }
 }
 
-void CaseManager::parseLogOutput(const std::string& caseId, const std::string& logOutput)
-{
+void CaseManager::parseLogOutput(const std::string& caseId, const std::string& logOutput) {
     auto it = caseResults_.find(caseId);
     if (it == caseResults_.end()) {
         return;
@@ -921,8 +890,7 @@ void CaseManager::parseLogOutput(const std::string& caseId, const std::string& l
     }
 }
 
-CaseResult CaseManager::getCaseResult(const std::string& caseId) const
-{
+CaseResult CaseManager::getCaseResult(const std::string& caseId) const {
     auto it = caseResults_.find(caseId);
     if (it != caseResults_.end()) {
         return *it->second;
@@ -934,8 +902,7 @@ CaseResult CaseManager::getCaseResult(const std::string& caseId) const
     return result;
 }
 
-std::vector<std::string> CaseManager::listCases() const
-{
+std::vector<std::string> CaseManager::listCases() const {
     std::vector<std::string> caseIds;
 
     for (const auto& [caseId, result] : caseResults_) {
@@ -945,8 +912,7 @@ std::vector<std::string> CaseManager::listCases() const
     return caseIds;
 }
 
-bool CaseManager::deleteCaseData(const std::string& caseId)
-{
+bool CaseManager::deleteCaseData(const std::string& caseId) {
     cleanup(caseId);
 
     auto it = caseResults_.find(caseId);
@@ -958,8 +924,7 @@ bool CaseManager::deleteCaseData(const std::string& caseId)
     return false;
 }
 
-void CaseManager::cleanup(const std::string& caseId)
-{
+void CaseManager::cleanup(const std::string& caseId) {
     fs::path casePath = getCasePath(caseId);
 
     if (fs::exists(casePath)) {
@@ -968,8 +933,7 @@ void CaseManager::cleanup(const std::string& caseId)
     }
 }
 
-void CaseManager::setWorkingDirectory(const fs::path& workingDir)
-{
+void CaseManager::setWorkingDirectory(const fs::path& workingDir) {
     workingDirectory_ = workingDir;
 
     if (!fs::exists(workingDirectory_)) {
@@ -977,8 +941,7 @@ void CaseManager::setWorkingDirectory(const fs::path& workingDir)
     }
 }
 
-bool CaseManager::validateCaseParameters(const CaseParameters& params) const
-{
+bool CaseManager::validateCaseParameters(const CaseParameters& params) const {
     if (params.caseName.empty()) {
         return false;
     }
@@ -998,32 +961,27 @@ bool CaseManager::validateCaseParameters(const CaseParameters& params) const
     return true;
 }
 
-std::vector<std::string> CaseManager::getAvailableSolvers() const
-{
+std::vector<std::string> CaseManager::getAvailableSolvers() const {
     return {"simpleFoam", "pimpleFoam", "icoFoam", "pisoFoam", "rhoPimpleFoam"};
 }
 
-json CaseManager::getCaseParametersSchema() const
-{
-    return json{
-        {"type",       "object"                                      },
-        {"properties",
-         {{"caseName", {{"type", "string"}}},
-          {"solver", {{"type", "string"}, {"enum", getAvailableSolvers()}}},
-          {"caseType", {{"type", "string"}, {"enum", {"steady", "transient"}}}},
-          {"endTime", {{"type", "number"}, {"minimum", 0}}},
-          {"deltaTime", {{"type", "number"}, {"minimum", 0}}},
-          {"writeInterval", {{"type", "integer"}, {"minimum", 1}}},
-          {"boundaryConditions", {{"type", "object"}}},
-          {"physicalProperties", {{"type", "object"}}},
-          {"numericalSchemes", {{"type", "object"}}}}                },
-        {"required",   {"caseName", "solver", "endTime", "deltaTime"}}
-    };
+json CaseManager::getCaseParametersSchema() const {
+    return json{{"type", "object"},
+                {"properties",
+                 {{"caseName", {{"type", "string"}}},
+                  {"solver", {{"type", "string"}, {"enum", getAvailableSolvers()}}},
+                  {"caseType", {{"type", "string"}, {"enum", {"steady", "transient"}}}},
+                  {"endTime", {{"type", "number"}, {"minimum", 0}}},
+                  {"deltaTime", {{"type", "number"}, {"minimum", 0}}},
+                  {"writeInterval", {{"type", "integer"}, {"minimum", 1}}},
+                  {"boundaryConditions", {{"type", "object"}}},
+                  {"physicalProperties", {{"type", "object"}}},
+                  {"numericalSchemes", {{"type", "object"}}}}},
+                {"required", {"caseName", "solver", "endTime", "deltaTime"}}};
 }
 
-CaseParameters
-CaseManager::createPipeFlowParameters(double velocity, double diameter, double length)
-{
+CaseParameters CaseManager::createPipeFlowParameters(double velocity, double diameter,
+                                                     double length) {
     CaseParameters params;
     params.caseName = "pipe_flow";
     params.solver = "simpleFoam";
@@ -1044,8 +1002,7 @@ CaseManager::createPipeFlowParameters(double velocity, double diameter, double l
     return params;
 }
 
-CaseParameters CaseManager::createCavityFlowParameters(double velocity, double viscosity)
-{
+CaseParameters CaseManager::createCavityFlowParameters(double velocity, double viscosity) {
     CaseParameters params;
     params.caseName = "cavity_flow";
     params.solver = "icoFoam";

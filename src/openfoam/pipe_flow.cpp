@@ -17,29 +17,19 @@ Description
 #include <sstream>
 #include <stdexcept>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         JSON Conversion Functions
 \*---------------------------------------------------------------------------*/
 
-void to_json(json& j, const PipeFlowInput& input)
-{
-    j = json{
-        {"velocity",  input.velocity },
-        {"diameter",  input.diameter },
-        {"length",    input.length   },
-        {"viscosity", input.viscosity},
-        {"density",   input.density  },
-        {"fluid",     input.fluid    }
-    };
+void to_json(json& j, const PipeFlowInput& input) {
+    j = json{{"velocity", input.velocity},   {"diameter", input.diameter}, {"length", input.length},
+             {"viscosity", input.viscosity}, {"density", input.density},   {"fluid", input.fluid}};
 }
 
-void from_json(const json& j, PipeFlowInput& input)
-{
+void from_json(const json& j, PipeFlowInput& input) {
     j.at("velocity").get_to(input.velocity);
     j.at("diameter").get_to(input.diameter);
     j.at("length").get_to(input.length);
@@ -52,27 +42,23 @@ void from_json(const json& j, PipeFlowInput& input)
         j.at("fluid").get_to(input.fluid);
 }
 
-void to_json(json& j, const PipeFlowResults& results)
-{
-    j = json{
-        {"reynoldsNumber",  results.reynoldsNumber },
-        {"frictionFactor",  results.frictionFactor },
-        {"pressureDrop",    results.pressureDrop   },
-        {"wallShearStress", results.wallShearStress},
-        {"maxVelocity",     results.maxVelocity    },
-        {"averageVelocity", results.averageVelocity},
-        {"flowRegime",      results.flowRegime     },
-        {"caseId",          results.caseId         },
-        {"success",         results.success        }
-    };
+void to_json(json& j, const PipeFlowResults& results) {
+    j = json{{"reynoldsNumber", results.reynoldsNumber},
+             {"frictionFactor", results.frictionFactor},
+             {"pressureDrop", results.pressureDrop},
+             {"wallShearStress", results.wallShearStress},
+             {"maxVelocity", results.maxVelocity},
+             {"averageVelocity", results.averageVelocity},
+             {"flowRegime", results.flowRegime},
+             {"caseId", results.caseId},
+             {"success", results.success}};
 
     if (!results.errorMessage.empty()) {
         j["errorMessage"] = results.errorMessage;
     }
 }
 
-void from_json(const json& j, PipeFlowResults& results)
-{
+void from_json(const json& j, PipeFlowResults& results) {
     j.at("reynoldsNumber").get_to(results.reynoldsNumber);
     j.at("frictionFactor").get_to(results.frictionFactor);
     j.at("pressureDrop").get_to(results.pressureDrop);
@@ -94,11 +80,9 @@ void from_json(const json& j, PipeFlowResults& results)
 PipeFlowAnalyzer::PipeFlowAnalyzer() : caseManager_(std::make_unique<CaseManager>()) {}
 
 PipeFlowAnalyzer::PipeFlowAnalyzer(std::unique_ptr<CaseManager> caseManager)
-    : caseManager_(std::move(caseManager))
-{}
+    : caseManager_(std::move(caseManager)) {}
 
-void PipeFlowAnalyzer::validateInput(const PipeFlowInput& input)
-{
+void PipeFlowAnalyzer::validateInput(const PipeFlowInput& input) {
     if (input.velocity <= 0) {
         throw std::invalid_argument("Velocity must be positive");
     }
@@ -132,8 +116,7 @@ void PipeFlowAnalyzer::validateInput(const PipeFlowInput& input)
     }
 }
 
-CaseParameters PipeFlowAnalyzer::createCaseParameters(const PipeFlowInput& input)
-{
+CaseParameters PipeFlowAnalyzer::createCaseParameters(const PipeFlowInput& input) {
     CaseParameters params;
     params.caseName = "pipe_flow_analysis";
 
@@ -164,8 +147,7 @@ CaseParameters PipeFlowAnalyzer::createCaseParameters(const PipeFlowInput& input
     return params;
 }
 
-PipeFlowResults PipeFlowAnalyzer::analyze(const PipeFlowInput& input)
-{
+PipeFlowResults PipeFlowAnalyzer::analyze(const PipeFlowInput& input) {
     PipeFlowResults results;
 
     try {
@@ -202,8 +184,7 @@ PipeFlowResults PipeFlowAnalyzer::analyze(const PipeFlowInput& input)
 }
 
 PipeFlowResults PipeFlowAnalyzer::processResults(const std::string& caseId,
-                                                 const PipeFlowInput& input)
-{
+                                                 const PipeFlowInput& input) {
     PipeFlowResults results;
 
     CaseResult caseResult = caseManager_->getCaseResult(caseId);
@@ -236,8 +217,7 @@ PipeFlowResults PipeFlowAnalyzer::processResults(const std::string& caseId,
     return results;
 }
 
-double PipeFlowAnalyzer::calculateTheoreticalPressureDrop(const PipeFlowInput& input) const
-{
+double PipeFlowAnalyzer::calculateTheoreticalPressureDrop(const PipeFlowInput& input) const {
     double Re = input.getReynoldsNumber();
     double f;
 
@@ -251,18 +231,15 @@ double PipeFlowAnalyzer::calculateTheoreticalPressureDrop(const PipeFlowInput& i
            input.velocity;
 }
 
-double PipeFlowAnalyzer::calculateLaminarFrictionFactor(double Re) const
-{
+double PipeFlowAnalyzer::calculateLaminarFrictionFactor(double Re) const {
     return 64.0 / Re;
 }
 
-double PipeFlowAnalyzer::calculateTurbulentFrictionFactor(double Re) const
-{
+double PipeFlowAnalyzer::calculateTurbulentFrictionFactor(double Re) const {
     return 0.316 / std::pow(Re, 0.25);
 }
 
-std::string PipeFlowAnalyzer::determineFlowRegime(const PipeFlowInput& input) const
-{
+std::string PipeFlowAnalyzer::determineFlowRegime(const PipeFlowInput& input) const {
     if (input.isLaminar()) {
         return "laminar";
     } else if (input.isTurbulent()) {
@@ -273,8 +250,7 @@ std::string PipeFlowAnalyzer::determineFlowRegime(const PipeFlowInput& input) co
 }
 
 std::string PipeFlowAnalyzer::generateAnalysisReport(const PipeFlowInput& input,
-                                                     const PipeFlowResults& results) const
-{
+                                                     const PipeFlowResults& results) const {
     std::ostringstream report;
 
     report << "=== Pipe Flow Analysis Report ===" << std::endl;
@@ -308,74 +284,66 @@ std::string PipeFlowAnalyzer::generateAnalysisReport(const PipeFlowInput& input,
     return report.str();
 }
 
-json PipeFlowAnalyzer::getInputSchema() const
-{
-    return json{
-        {"type",                 "object"                          },
-        {"properties",
-         {{"velocity",
-           {{"type", "number"},
-            {"minimum", 0.001},
-            {"maximum", 100},
-            {"description", "Flow velocity in m/s"}}},
-          {"diameter",
-           {{"type", "number"},
-            {"minimum", 0.001},
-            {"maximum", 10},
-            {"description", "Pipe diameter in m"}}},
-          {"length",
-           {{"type", "number"},
-            {"minimum", 0.001},
-            {"maximum", 1000},
-            {"description", "Pipe length in m"}}},
-          {"viscosity",
-           {{"type", "number"},
-            {"minimum", 1e-7},
-            {"maximum", 1e-3},
-            {"default", 1e-5},
-            {"description", "Kinematic viscosity in m²/s"}}},
-          {"density",
-           {{"type", "number"},
-            {"minimum", 0.1},
-            {"maximum", 2000},
-            {"default", 1.225},
-            {"description", "Fluid density in kg/m³"}}},
-          {"fluid",
-           {{"type", "string"},
-            {"enum", {"air", "water", "oil", "custom"}},
-            {"default", "air"},
-            {"description", "Fluid type"}}}}                       },
-        {"required",             {"velocity", "diameter", "length"}},
-        {"additionalProperties", false                             }
-    };
+json PipeFlowAnalyzer::getInputSchema() const {
+    return json{{"type", "object"},
+                {"properties",
+                 {{"velocity",
+                   {{"type", "number"},
+                    {"minimum", 0.001},
+                    {"maximum", 100},
+                    {"description", "Flow velocity in m/s"}}},
+                  {"diameter",
+                   {{"type", "number"},
+                    {"minimum", 0.001},
+                    {"maximum", 10},
+                    {"description", "Pipe diameter in m"}}},
+                  {"length",
+                   {{"type", "number"},
+                    {"minimum", 0.001},
+                    {"maximum", 1000},
+                    {"description", "Pipe length in m"}}},
+                  {"viscosity",
+                   {{"type", "number"},
+                    {"minimum", 1e-7},
+                    {"maximum", 1e-3},
+                    {"default", 1e-5},
+                    {"description", "Kinematic viscosity in m²/s"}}},
+                  {"density",
+                   {{"type", "number"},
+                    {"minimum", 0.1},
+                    {"maximum", 2000},
+                    {"default", 1.225},
+                    {"description", "Fluid density in kg/m³"}}},
+                  {"fluid",
+                   {{"type", "string"},
+                    {"enum", {"air", "water", "oil", "custom"}},
+                    {"default", "air"},
+                    {"description", "Fluid type"}}}}},
+                {"required", {"velocity", "diameter", "length"}},
+                {"additionalProperties", false}};
 }
 
-PipeFlowInput PipeFlowAnalyzer::parseInput(const json& inputJson)
-{
+PipeFlowInput PipeFlowAnalyzer::parseInput(const json& inputJson) {
     PipeFlowInput input;
     from_json(inputJson, input);
     return input;
 }
 
-json PipeFlowAnalyzer::resultsToJson(const PipeFlowResults& results)
-{
+json PipeFlowAnalyzer::resultsToJson(const PipeFlowResults& results) {
     json j;
     to_json(j, results);
     return j;
 }
 
-void PipeFlowAnalyzer::setWorkingDirectory(const std::string& workingDir)
-{
+void PipeFlowAnalyzer::setWorkingDirectory(const std::string& workingDir) {
     caseManager_->setWorkingDirectory(workingDir);
 }
 
-std::vector<std::string> PipeFlowAnalyzer::listActiveCases() const
-{
+std::vector<std::string> PipeFlowAnalyzer::listActiveCases() const {
     return caseManager_->listCases();
 }
 
-bool PipeFlowAnalyzer::deleteCaseData(const std::string& caseId)
-{
+bool PipeFlowAnalyzer::deleteCaseData(const std::string& caseId) {
     return caseManager_->deleteCaseData(caseId);
 }
 

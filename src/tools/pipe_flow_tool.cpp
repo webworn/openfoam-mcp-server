@@ -16,10 +16,8 @@ Description
 #include <iomanip>
 #include <sstream>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                         PipeFlowTool Implementation
@@ -28,11 +26,9 @@ namespace MCP
 PipeFlowTool::PipeFlowTool() : analyzer_(std::make_unique<PipeFlowAnalyzer>()) {}
 
 PipeFlowTool::PipeFlowTool(std::unique_ptr<PipeFlowAnalyzer> analyzer)
-    : analyzer_(std::move(analyzer))
-{}
+    : analyzer_(std::move(analyzer)) {}
 
-ToolResult PipeFlowTool::execute(const json& arguments)
-{
+ToolResult PipeFlowTool::execute(const json& arguments) {
     ToolResult result;
 
     try {
@@ -56,15 +52,14 @@ ToolResult PipeFlowTool::execute(const json& arguments)
         }
 
         json resultsJson = PipeFlowAnalyzer::resultsToJson(analysisResults);
-        result.content.push_back(json{
-            {"type",     "resource"            },
-            {"resource",
-             {{"uri", "openfoam://pipe_flow/" + analysisResults.caseId},
-              {"name", "Pipe Flow Results"},
-              {"description", "Complete OpenFOAM pipe flow analysis results"},
-              {"mimeType", "application/json"}}},
-            {"text",     resultsJson.dump(2)   }
-        });
+        result.content.push_back(
+            json{{"type", "resource"},
+                 {"resource",
+                  {{"uri", "openfoam://pipe_flow/" + analysisResults.caseId},
+                   {"name", "Pipe Flow Results"},
+                   {"description", "Complete OpenFOAM pipe flow analysis results"},
+                   {"mimeType", "application/json"}}},
+                 {"text", resultsJson.dump(2)}});
 
     } catch (const std::exception& e) {
         result.addErrorContent("Error executing pipe flow analysis: " + std::string(e.what()));
@@ -73,8 +68,7 @@ ToolResult PipeFlowTool::execute(const json& arguments)
     return result;
 }
 
-std::string PipeFlowTool::formatResultsForUser(const PipeFlowResults& results) const
-{
+std::string PipeFlowTool::formatResultsForUser(const PipeFlowResults& results) const {
     std::ostringstream output;
 
     output << "🔬 **OpenFOAM Pipe Flow Analysis Results**\n\n";
@@ -112,8 +106,7 @@ std::string PipeFlowTool::formatResultsForUser(const PipeFlowResults& results) c
 }
 
 std::string PipeFlowTool::generatePhysicsExplanation(const PipeFlowInput& input,
-                                                     const PipeFlowResults& results) const
-{
+                                                     const PipeFlowResults& results) const {
     std::ostringstream explanation;
 
     explanation << "📚 **Physics Explanation:**\n\n";
@@ -150,8 +143,7 @@ std::string PipeFlowTool::generatePhysicsExplanation(const PipeFlowInput& input,
 }
 
 std::string PipeFlowTool::generateRecommendations(const PipeFlowInput& input,
-                                                  const PipeFlowResults& results) const
-{
+                                                  const PipeFlowResults& results) const {
     std::ostringstream recommendations;
 
     recommendations << "💡 **Engineering Recommendations:**\n\n";
@@ -201,18 +193,15 @@ std::string PipeFlowTool::generateRecommendations(const PipeFlowInput& input,
     return recommendations.str();
 }
 
-void PipeFlowTool::setWorkingDirectory(const std::string& workingDir)
-{
+void PipeFlowTool::setWorkingDirectory(const std::string& workingDir) {
     analyzer_->setWorkingDirectory(workingDir);
 }
 
-std::vector<std::string> PipeFlowTool::listActiveCases() const
-{
+std::vector<std::string> PipeFlowTool::listActiveCases() const {
     return analyzer_->listActiveCases();
 }
 
-bool PipeFlowTool::deleteCaseData(const std::string& caseId)
-{
+bool PipeFlowTool::deleteCaseData(const std::string& caseId) {
     return analyzer_->deleteCaseData(caseId);
 }
 
@@ -220,14 +209,11 @@ bool PipeFlowTool::deleteCaseData(const std::string& caseId)
                         Tool Registration Helper
 \*---------------------------------------------------------------------------*/
 
-void registerPipeFlowTool(McpServer& server)
-{
+void registerPipeFlowTool(McpServer& server) {
     auto tool = std::make_shared<PipeFlowTool>();
 
     server.registerTool(
-        PipeFlowTool::getName(),
-        PipeFlowTool::getDescription(),
-        PipeFlowTool::getInputSchema(),
+        PipeFlowTool::getName(), PipeFlowTool::getDescription(), PipeFlowTool::getInputSchema(),
         [tool](const json& arguments) -> ToolResult { return tool->execute(arguments); });
 }
 

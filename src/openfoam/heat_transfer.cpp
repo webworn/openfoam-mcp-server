@@ -12,22 +12,18 @@
 #include <cmath>
 #include <sstream>
 
-namespace Foam
-{
-namespace MCP
-{
+namespace Foam {
+namespace MCP {
 
 /*---------------------------------------------------------------------------*\
                     HeatTransferAnalyzer Implementation
 \*---------------------------------------------------------------------------*/
 
-HeatTransferAnalyzer::HeatTransferAnalyzer()
-{
+HeatTransferAnalyzer::HeatTransferAnalyzer() {
     initializeMaterialDatabase();
 }
 
-HeatTransferResults HeatTransferAnalyzer::analyze(const HeatTransferInput& input)
-{
+HeatTransferResults HeatTransferAnalyzer::analyze(const HeatTransferInput& input) {
     HeatTransferResults results = {};
     results.success = false;
 
@@ -59,8 +55,8 @@ HeatTransferResults HeatTransferAnalyzer::analyze(const HeatTransferInput& input
     return results;
 }
 
-HeatTransferResults HeatTransferAnalyzer::analyzeElectronicsCooling(const HeatTransferInput& input)
-{
+HeatTransferResults HeatTransferAnalyzer::analyzeElectronicsCooling(
+    const HeatTransferInput& input) {
     HeatTransferResults results = {};
 
     // Calculate key dimensionless numbers
@@ -78,8 +74,8 @@ HeatTransferResults HeatTransferAnalyzer::analyzeElectronicsCooling(const HeatTr
 
     // Get thermal conductivity of coolant
     double k_fluid = getThermalConductivity(input.coolantType);
-    double h = calculateHeatTransferCoefficient(
-        results.nusseltNumber, k_fluid, input.characteristicLength);
+    double h = calculateHeatTransferCoefficient(results.nusseltNumber, k_fluid,
+                                                input.characteristicLength);
 
     // Calculate temperatures
     double deltaT = heatFlux / h;  // Temperature rise above coolant
@@ -99,9 +95,8 @@ HeatTransferResults HeatTransferAnalyzer::analyzeElectronicsCooling(const HeatTr
 
     // Performance metrics
     results.thermalEfficiency =
-        std::min(100.0,
-                 (input.maxAllowableTemp - results.maxTemperature) /
-                     (input.maxAllowableTemp - input.ambientTemperature) * 100.0);
+        std::min(100.0, (input.maxAllowableTemp - results.maxTemperature) /
+                            (input.maxAllowableTemp - input.ambientTemperature) * 100.0);
     results.coolingEffectiveness = (input.inletTemperature - input.ambientTemperature) /
                                    (results.maxTemperature - input.ambientTemperature);
 
@@ -119,8 +114,7 @@ HeatTransferResults HeatTransferAnalyzer::analyzeElectronicsCooling(const HeatTr
     return results;
 }
 
-HeatTransferResults HeatTransferAnalyzer::analyzeHeatExchanger(const HeatTransferInput& input)
-{
+HeatTransferResults HeatTransferAnalyzer::analyzeHeatExchanger(const HeatTransferInput& input) {
     HeatTransferResults results = {};
 
     // Calculate dimensionless numbers
@@ -158,8 +152,7 @@ HeatTransferResults HeatTransferAnalyzer::analyzeHeatExchanger(const HeatTransfe
     return results;
 }
 
-HeatTransferResults HeatTransferAnalyzer::analyzeBuildingThermal(const HeatTransferInput& input)
-{
+HeatTransferResults HeatTransferAnalyzer::analyzeBuildingThermal(const HeatTransferInput& input) {
     HeatTransferResults results = {};
 
     // Building thermal analysis - consider natural convection
@@ -196,8 +189,7 @@ HeatTransferResults HeatTransferAnalyzer::analyzeBuildingThermal(const HeatTrans
     return results;
 }
 
-HeatTransferResults HeatTransferAnalyzer::analyzeEngineCooling(const HeatTransferInput& input)
-{
+HeatTransferResults HeatTransferAnalyzer::analyzeEngineCooling(const HeatTransferInput& input) {
     HeatTransferResults results = {};
 
     // Engine cooling analysis
@@ -230,16 +222,14 @@ HeatTransferResults HeatTransferAnalyzer::analyzeEngineCooling(const HeatTransfe
     return results;
 }
 
-double HeatTransferAnalyzer::calculateReynoldsNumber(const HeatTransferInput& input) const
-{
+double HeatTransferAnalyzer::calculateReynoldsNumber(const HeatTransferInput& input) const {
     double rho = getDensity(input.coolantType);
     double mu = 1.8e-5;  // Dynamic viscosity, simplified
 
     return rho * input.inletVelocity * input.characteristicLength / mu;
 }
 
-double HeatTransferAnalyzer::calculatePrandtlNumber(const HeatTransferInput& input) const
-{
+double HeatTransferAnalyzer::calculatePrandtlNumber(const HeatTransferInput& input) const {
     // Typical Prandtl numbers
     if (input.coolantType == "air")
         return 0.7;
@@ -250,8 +240,7 @@ double HeatTransferAnalyzer::calculatePrandtlNumber(const HeatTransferInput& inp
     return 0.7;  // Default
 }
 
-double HeatTransferAnalyzer::calculateRayleighNumber(const HeatTransferInput& input) const
-{
+double HeatTransferAnalyzer::calculateRayleighNumber(const HeatTransferInput& input) const {
     double g = 9.81;                               // m/s²
     double beta = 1.0 / input.ambientTemperature;  // Thermal expansion coefficient
     double deltaT = std::abs(input.ambientTemperature - input.inletTemperature);
@@ -261,10 +250,8 @@ double HeatTransferAnalyzer::calculateRayleighNumber(const HeatTransferInput& in
     return g * beta * deltaT * std::pow(input.characteristicLength, 3) / (nu * alpha);
 }
 
-double HeatTransferAnalyzer::calculateNusseltNumber(double Re,
-                                                    double Pr,
-                                                    const std::string& geometry) const
-{
+double HeatTransferAnalyzer::calculateNusseltNumber(double Re, double Pr,
+                                                    const std::string& geometry) const {
     if (geometry == "flat_plate") {
         // Forced convection over flat plate
         if (Re < 5e5) {
@@ -288,13 +275,11 @@ double HeatTransferAnalyzer::calculateNusseltNumber(double Re,
     return 10.0;  // Default reasonable value
 }
 
-double HeatTransferAnalyzer::calculateHeatTransferCoefficient(double Nu, double k, double L) const
-{
+double HeatTransferAnalyzer::calculateHeatTransferCoefficient(double Nu, double k, double L) const {
     return Nu * k / L;  // W/m²K
 }
 
-double HeatTransferAnalyzer::calculatePressureDrop(const HeatTransferInput& input) const
-{
+double HeatTransferAnalyzer::calculatePressureDrop(const HeatTransferInput& input) const {
     double rho = getDensity(input.coolantType);
     double Re = calculateReynoldsNumber(input);
 
@@ -312,53 +297,27 @@ double HeatTransferAnalyzer::calculatePressureDrop(const HeatTransferInput& inpu
            input.inletVelocity;
 }
 
-void HeatTransferAnalyzer::initializeMaterialDatabase()
-{
+void HeatTransferAnalyzer::initializeMaterialDatabase() {
     // Thermal conductivity [W/m·K]
     materialDatabase_["thermal_conductivity"] = {
-        {"air",      0.026},
-        {"water",    0.6  },
-        {"oil",      0.15 },
-        {"aluminum", 237.0},
-        {"copper",   401.0},
-        {"steel",    50.0 },
-        {"silicon",  148.0},
-        {"plastic",  0.2  },
-        {"concrete", 1.7  },
-        {"glass",    1.4  }
-    };
+        {"air", 0.026},    {"water", 0.6},  {"oil", 0.15},      {"aluminum", 237.0},
+        {"copper", 401.0}, {"steel", 50.0}, {"silicon", 148.0}, {"plastic", 0.2},
+        {"concrete", 1.7}, {"glass", 1.4}};
 
     // Density [kg/m³]
-    materialDatabase_["density"] = {
-        {"air",      1.225 },
-        {"water",    1000.0},
-        {"oil",      850.0 },
-        {"aluminum", 2700.0},
-        {"copper",   8960.0},
-        {"steel",    7850.0},
-        {"silicon",  2330.0},
-        {"plastic",  1200.0},
-        {"concrete", 2400.0},
-        {"glass",    2500.0}
-    };
+    materialDatabase_["density"] = {{"air", 1.225},       {"water", 1000.0},   {"oil", 850.0},
+                                    {"aluminum", 2700.0}, {"copper", 8960.0},  {"steel", 7850.0},
+                                    {"silicon", 2330.0},  {"plastic", 1200.0}, {"concrete", 2400.0},
+                                    {"glass", 2500.0}};
 
     // Specific heat [J/kg·K]
     materialDatabase_["specific_heat"] = {
-        {"air",      1005.0},
-        {"water",    4180.0},
-        {"oil",      2000.0},
-        {"aluminum", 900.0 },
-        {"copper",   385.0 },
-        {"steel",    450.0 },
-        {"silicon",  700.0 },
-        {"plastic",  1500.0},
-        {"concrete", 880.0 },
-        {"glass",    840.0 }
-    };
+        {"air", 1005.0},     {"water", 4180.0}, {"oil", 2000.0},    {"aluminum", 900.0},
+        {"copper", 385.0},   {"steel", 450.0},  {"silicon", 700.0}, {"plastic", 1500.0},
+        {"concrete", 880.0}, {"glass", 840.0}};
 }
 
-double HeatTransferAnalyzer::getThermalConductivity(const std::string& material) const
-{
+double HeatTransferAnalyzer::getThermalConductivity(const std::string& material) const {
     auto it = materialDatabase_.find("thermal_conductivity");
     if (it != materialDatabase_.end()) {
         auto mat_it = it->second.find(material);
@@ -369,8 +328,7 @@ double HeatTransferAnalyzer::getThermalConductivity(const std::string& material)
     return 0.026;  // Default to air
 }
 
-double HeatTransferAnalyzer::getDensity(const std::string& material) const
-{
+double HeatTransferAnalyzer::getDensity(const std::string& material) const {
     auto it = materialDatabase_.find("density");
     if (it != materialDatabase_.end()) {
         auto mat_it = it->second.find(material);
@@ -381,8 +339,7 @@ double HeatTransferAnalyzer::getDensity(const std::string& material) const
     return 1.225;  // Default to air
 }
 
-double HeatTransferAnalyzer::getSpecificHeat(const std::string& material) const
-{
+double HeatTransferAnalyzer::getSpecificHeat(const std::string& material) const {
     auto it = materialDatabase_.find("specific_heat");
     if (it != materialDatabase_.end()) {
         auto mat_it = it->second.find(material);
@@ -393,8 +350,7 @@ double HeatTransferAnalyzer::getSpecificHeat(const std::string& material) const
     return 1005.0;  // Default to air
 }
 
-void HeatTransferAnalyzer::populateMaterialProperties(HeatTransferInput& input) const
-{
+void HeatTransferAnalyzer::populateMaterialProperties(HeatTransferInput& input) const {
     // Populate thermal conductivity
     if (input.thermalConductivity.empty()) {
         input.thermalConductivity[input.coolantType] = getThermalConductivity(input.coolantType);
@@ -420,15 +376,13 @@ void HeatTransferAnalyzer::populateMaterialProperties(HeatTransferInput& input) 
     }
 }
 
-bool HeatTransferAnalyzer::validateInput(const HeatTransferInput& input) const
-{
+bool HeatTransferAnalyzer::validateInput(const HeatTransferInput& input) const {
     return input.characteristicLength > 0 && input.heatGeneration > 0 &&
            input.ambientTemperature > 0 && input.inletTemperature > 0 &&
            input.maxAllowableTemp > input.ambientTemperature;
 }
 
-json HeatTransferAnalyzer::toJson(const HeatTransferResults& results) const
-{
+json HeatTransferAnalyzer::toJson(const HeatTransferResults& results) const {
     json j;
     j["maxTemperature"] = results.maxTemperature;
     j["minTemperature"] = results.minTemperature;
