@@ -91,7 +91,7 @@ void from_json(const json& j, CaseResult& result)
 \*---------------------------------------------------------------------------*/
 
 CaseManager::CaseManager()
-: workingDirectory_("/tmp/openfoam-mcp-cases")
+: workingDirectory_("/workspaces/openfoam-mcp-server/results")
 {
     if (!fs::exists(workingDirectory_))
     {
@@ -464,6 +464,9 @@ void CaseManager::setupBoundaryConditions(const std::string& caseId, const CaseP
 {
     fs::path casePath = getCasePath(caseId);
     
+    // Detect case type from case name
+    bool isExternalFlow = (params.caseName == "external_flow_analysis");
+    
     std::ofstream pFile(casePath / "0" / "p");
     pFile << "FoamFile\n"
           << "{\n"
@@ -475,26 +478,65 @@ void CaseManager::setupBoundaryConditions(const std::string& caseId, const CaseP
     
     pFile << "dimensions      [0 2 -2 0 0 0 0];\n";
     pFile << "internalField   uniform 0;\n\n";
-    pFile << "boundaryField\n"
-          << "{\n"
-          << "    inlet\n"
-          << "    {\n"
-          << "        type            zeroGradient;\n"
-          << "    }\n"
-          << "    outlet\n"
-          << "    {\n"
-          << "        type            fixedValue;\n"
-          << "        value           uniform 0;\n"
-          << "    }\n"
-          << "    walls\n"
-          << "    {\n"
-          << "        type            zeroGradient;\n"
-          << "    }\n"
-          << "    frontAndBack\n"
-          << "    {\n"
-          << "        type            empty;\n"
-          << "    }\n"
-          << "}\n\n";
+    
+    if (isExternalFlow)
+    {
+        // External flow boundary conditions
+        pFile << "boundaryField\n"
+              << "{\n"
+              << "    inlet\n"
+              << "    {\n"
+              << "        type            freestreamPressure;\n"
+              << "        freestreamValue uniform 0;\n"
+              << "    }\n"
+              << "    outlet\n"
+              << "    {\n"
+              << "        type            freestreamPressure;\n"
+              << "        freestreamValue uniform 0;\n"
+              << "    }\n"
+              << "    walls\n"
+              << "    {\n"
+              << "        type            zeroGradient;\n"
+              << "    }\n"
+              << "    symmetry\n"
+              << "    {\n"
+              << "        type            symmetryPlane;\n"
+              << "    }\n"
+              << "    farfield\n"
+              << "    {\n"
+              << "        type            freestreamPressure;\n"
+              << "        freestreamValue uniform 0;\n"
+              << "    }\n"
+              << "    frontAndBack\n"
+              << "    {\n"
+              << "        type            empty;\n"
+              << "    }\n"
+              << "}\n\n";
+    }
+    else
+    {
+        // Internal flow boundary conditions (pipe flow)
+        pFile << "boundaryField\n"
+              << "{\n"
+              << "    inlet\n"
+              << "    {\n"
+              << "        type            zeroGradient;\n"
+              << "    }\n"
+              << "    outlet\n"
+              << "    {\n"
+              << "        type            fixedValue;\n"
+              << "        value           uniform 0;\n"
+              << "    }\n"
+              << "    walls\n"
+              << "    {\n"
+              << "        type            zeroGradient;\n"
+              << "    }\n"
+              << "    frontAndBack\n"
+              << "    {\n"
+              << "        type            empty;\n"
+              << "    }\n"
+              << "}\n\n";
+    }
     
     std::ofstream UFile(casePath / "0" / "U");
     UFile << "FoamFile\n"
@@ -506,27 +548,73 @@ void CaseManager::setupBoundaryConditions(const std::string& caseId, const CaseP
           << "}\n\n";
     
     UFile << "dimensions      [0 1 -1 0 0 0 0];\n";
-    UFile << "internalField   uniform (0 0 0);\n\n";
-    UFile << "boundaryField\n"
-          << "{\n"
-          << "    inlet\n"
-          << "    {\n"
-          << "        type            fixedValue;\n"
-          << "        value           uniform (1 0 0);\n"
-          << "    }\n"
-          << "    outlet\n"
-          << "    {\n"
-          << "        type            zeroGradient;\n"
-          << "    }\n"
-          << "    walls\n"
-          << "    {\n"
-          << "        type            noSlip;\n"
-          << "    }\n"
-          << "    frontAndBack\n"
-          << "    {\n"
-          << "        type            empty;\n"
-          << "    }\n"
-          << "}\n\n";
+    
+    if (isExternalFlow)
+    {
+        // Get velocity from physical properties
+        std::string velocity = "30";
+        if (params.physicalProperties.find("velocity") != params.physicalProperties.end())
+        {
+            velocity = params.physicalProperties.at("velocity");
+        }
+        
+        UFile << "internalField   uniform (" << velocity << " 0 0);\n\n";
+        UFile << "boundaryField\n"
+              << "{\n"
+              << "    inlet\n"
+              << "    {\n"
+              << "        type            freestream;\n"
+              << "        freestreamValue uniform (" << velocity << " 0 0);\n"
+              << "    }\n"
+              << "    outlet\n"
+              << "    {\n"
+              << "        type            freestream;\n"
+              << "        freestreamValue uniform (" << velocity << " 0 0);\n"
+              << "    }\n"
+              << "    walls\n"
+              << "    {\n"
+              << "        type            noSlip;\n"
+              << "    }\n"
+              << "    symmetry\n"
+              << "    {\n"
+              << "        type            symmetryPlane;\n"
+              << "    }\n"
+              << "    farfield\n"
+              << "    {\n"
+              << "        type            freestream;\n"
+              << "        freestreamValue uniform (" << velocity << " 0 0);\n"
+              << "    }\n"
+              << "    frontAndBack\n"
+              << "    {\n"
+              << "        type            empty;\n"
+              << "    }\n"
+              << "}\n\n";
+    }
+    else
+    {
+        // Internal flow (pipe flow)
+        UFile << "internalField   uniform (0 0 0);\n\n";
+        UFile << "boundaryField\n"
+              << "{\n"
+              << "    inlet\n"
+              << "    {\n"
+              << "        type            fixedValue;\n"
+              << "        value           uniform (1 0 0);\n"
+              << "    }\n"
+              << "    outlet\n"
+              << "    {\n"
+              << "        type            zeroGradient;\n"
+              << "    }\n"
+              << "    walls\n"
+              << "    {\n"
+              << "        type            noSlip;\n"
+              << "    }\n"
+              << "    frontAndBack\n"
+              << "    {\n"
+              << "        type            empty;\n"
+              << "    }\n"
+              << "}\n\n";
+    }
     
     // Add turbulent viscosity field (nut)
     std::ofstream nutFile(casePath / "0" / "nut");
@@ -540,28 +628,65 @@ void CaseManager::setupBoundaryConditions(const std::string& caseId, const CaseP
     
     nutFile << "dimensions      [0 2 -1 0 0 0 0];\n";
     nutFile << "internalField   uniform 0;\n\n";
-    nutFile << "boundaryField\n"
-            << "{\n"
-            << "    inlet\n"
-            << "    {\n"
-            << "        type            calculated;\n"
-            << "        value           uniform 0;\n"
-            << "    }\n"
-            << "    outlet\n"
-            << "    {\n"
-            << "        type            calculated;\n"
-            << "        value           uniform 0;\n"
-            << "    }\n"
-            << "    walls\n"
-            << "    {\n"
-            << "        type            nutkWallFunction;\n"
-            << "        value           uniform 0;\n"
-            << "    }\n"
-            << "    frontAndBack\n"
-            << "    {\n"
-            << "        type            empty;\n"
-            << "    }\n"
-            << "}\n\n";
+    if (isExternalFlow)
+    {
+        nutFile << "boundaryField\n"
+                << "{\n"
+                << "    inlet\n"
+                << "    {\n"
+                << "        type            calculated;\n"
+                << "        value           uniform 0;\n"
+                << "    }\n"
+                << "    outlet\n"
+                << "    {\n"
+                << "        type            calculated;\n"
+                << "        value           uniform 0;\n"
+                << "    }\n"
+                << "    walls\n"
+                << "    {\n"
+                << "        type            nutkWallFunction;\n"
+                << "        value           uniform 0;\n"
+                << "    }\n"
+                << "    symmetry\n"
+                << "    {\n"
+                << "        type            symmetryPlane;\n"
+                << "    }\n"
+                << "    farfield\n"
+                << "    {\n"
+                << "        type            calculated;\n"
+                << "        value           uniform 0;\n"
+                << "    }\n"
+                << "    frontAndBack\n"
+                << "    {\n"
+                << "        type            empty;\n"
+                << "    }\n"
+                << "}\n\n";
+    }
+    else
+    {
+        nutFile << "boundaryField\n"
+                << "{\n"
+                << "    inlet\n"
+                << "    {\n"
+                << "        type            calculated;\n"
+                << "        value           uniform 0;\n"
+                << "    }\n"
+                << "    outlet\n"
+                << "    {\n"
+                << "        type            calculated;\n"
+                << "        value           uniform 0;\n"
+                << "    }\n"
+                << "    walls\n"
+                << "    {\n"
+                << "        type            nutkWallFunction;\n"
+                << "        value           uniform 0;\n"
+                << "    }\n"
+                << "    frontAndBack\n"
+                << "    {\n"
+                << "        type            empty;\n"
+                << "    }\n"
+                << "}\n\n";
+    }
     
     // Add turbulent kinetic energy field (k)
     std::ofstream kFile(casePath / "0" / "k");
@@ -575,27 +700,64 @@ void CaseManager::setupBoundaryConditions(const std::string& caseId, const CaseP
     
     kFile << "dimensions      [0 2 -2 0 0 0 0];\n";
     kFile << "internalField   uniform 0.1;\n\n";
-    kFile << "boundaryField\n"
-          << "{\n"
-          << "    inlet\n"
-          << "    {\n"
-          << "        type            fixedValue;\n"
-          << "        value           uniform 0.1;\n"
-          << "    }\n"
-          << "    outlet\n"
-          << "    {\n"
-          << "        type            zeroGradient;\n"
-          << "    }\n"
-          << "    walls\n"
-          << "    {\n"
-          << "        type            kqRWallFunction;\n"
-          << "        value           uniform 0.1;\n"
-          << "    }\n"
-          << "    frontAndBack\n"
-          << "    {\n"
-          << "        type            empty;\n"
-          << "    }\n"
-          << "}\n\n";
+    
+    if (isExternalFlow)
+    {
+        kFile << "boundaryField\n"
+              << "{\n"
+              << "    inlet\n"
+              << "    {\n"
+              << "        type            fixedValue;\n"
+              << "        value           uniform 0.1;\n"
+              << "    }\n"
+              << "    outlet\n"
+              << "    {\n"
+              << "        type            zeroGradient;\n"
+              << "    }\n"
+              << "    walls\n"
+              << "    {\n"
+              << "        type            kqRWallFunction;\n"
+              << "        value           uniform 0.1;\n"
+              << "    }\n"
+              << "    symmetry\n"
+              << "    {\n"
+              << "        type            symmetryPlane;\n"
+              << "    }\n"
+              << "    farfield\n"
+              << "    {\n"
+              << "        type            fixedValue;\n"
+              << "        value           uniform 0.1;\n"
+              << "    }\n"
+              << "    frontAndBack\n"
+              << "    {\n"
+              << "        type            empty;\n"
+              << "    }\n"
+              << "}\n\n";
+    }
+    else
+    {
+        kFile << "boundaryField\n"
+              << "{\n"
+              << "    inlet\n"
+              << "    {\n"
+              << "        type            fixedValue;\n"
+              << "        value           uniform 0.1;\n"
+              << "    }\n"
+              << "    outlet\n"
+              << "    {\n"
+              << "        type            zeroGradient;\n"
+              << "    }\n"
+              << "    walls\n"
+              << "    {\n"
+              << "        type            kqRWallFunction;\n"
+              << "        value           uniform 0.1;\n"
+              << "    }\n"
+              << "    frontAndBack\n"
+              << "    {\n"
+              << "        type            empty;\n"
+              << "    }\n"
+              << "}\n\n";
+    }
     
     // Add turbulent dissipation rate field (epsilon)
     std::ofstream epsilonFile(casePath / "0" / "epsilon");
@@ -609,27 +771,64 @@ void CaseManager::setupBoundaryConditions(const std::string& caseId, const CaseP
     
     epsilonFile << "dimensions      [0 2 -3 0 0 0 0];\n";
     epsilonFile << "internalField   uniform 0.01;\n\n";
-    epsilonFile << "boundaryField\n"
-                << "{\n"
-                << "    inlet\n"
-                << "    {\n"
-                << "        type            fixedValue;\n"
-                << "        value           uniform 0.01;\n"
-                << "    }\n"
-                << "    outlet\n"
-                << "    {\n"
-                << "        type            zeroGradient;\n"
-                << "    }\n"
-                << "    walls\n"
-                << "    {\n"
-                << "        type            epsilonWallFunction;\n"
-                << "        value           uniform 0.01;\n"
-                << "    }\n"
-                << "    frontAndBack\n"
-                << "    {\n"
-                << "        type            empty;\n"
-                << "    }\n"
-                << "}\n\n";
+    
+    if (isExternalFlow)
+    {
+        epsilonFile << "boundaryField\n"
+                    << "{\n"
+                    << "    inlet\n"
+                    << "    {\n"
+                    << "        type            fixedValue;\n"
+                    << "        value           uniform 0.01;\n"
+                    << "    }\n"
+                    << "    outlet\n"
+                    << "    {\n"
+                    << "        type            zeroGradient;\n"
+                    << "    }\n"
+                    << "    walls\n"
+                    << "    {\n"
+                    << "        type            epsilonWallFunction;\n"
+                    << "        value           uniform 0.01;\n"
+                    << "    }\n"
+                    << "    symmetry\n"
+                    << "    {\n"
+                    << "        type            symmetryPlane;\n"
+                    << "    }\n"
+                    << "    farfield\n"
+                    << "    {\n"
+                    << "        type            fixedValue;\n"
+                    << "        value           uniform 0.01;\n"
+                    << "    }\n"
+                    << "    frontAndBack\n"
+                    << "    {\n"
+                    << "        type            empty;\n"
+                    << "    }\n"
+                    << "}\n\n";
+    }
+    else
+    {
+        epsilonFile << "boundaryField\n"
+                    << "{\n"
+                    << "    inlet\n"
+                    << "    {\n"
+                    << "        type            fixedValue;\n"
+                    << "        value           uniform 0.01;\n"
+                    << "    }\n"
+                    << "    outlet\n"
+                    << "    {\n"
+                    << "        type            zeroGradient;\n"
+                    << "    }\n"
+                    << "    walls\n"
+                    << "    {\n"
+                    << "        type            epsilonWallFunction;\n"
+                    << "        value           uniform 0.01;\n"
+                    << "    }\n"
+                    << "    frontAndBack\n"
+                    << "    {\n"
+                    << "        type            empty;\n"
+                    << "    }\n"
+                    << "}\n\n";
+    }
 }
 
 bool CaseManager::runCase(const std::string& caseId)

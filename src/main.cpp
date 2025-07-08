@@ -3,6 +3,8 @@
 #include "foamVersion.H"
 #include "mcp/server.hpp"
 #include "tools/pipe_flow_tool.hpp"
+#include "tools/external_flow_tool.hpp"
+#include "tools/heat_transfer_tool.hpp"
 #include <iostream>
 #include <exception>
 
@@ -44,6 +46,8 @@ int main(int argc, char* argv[])
         
         // Register tools
         registerPipeFlowTool(server);
+        registerExternalFlowTool(server);
+        registerHeatTransferTool(server);
         
         std::cerr << "🔧 Registered tools: ";
         auto tools = server.getRegisteredTools();
