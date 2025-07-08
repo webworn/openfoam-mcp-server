@@ -43,9 +43,7 @@ class PipeFlowTool {
     explicit PipeFlowTool(std::unique_ptr<PipeFlowAnalyzer> analyzer);
     ~PipeFlowTool() = default;
 
-    static std::string getName() {
-        return "run_pipe_flow";
-    }
+    static std::string getName() { return "run_pipe_flow"; }
 
     static std::string getDescription() {
         return "Analyze pipe flow using OpenFOAM CFD simulation. Calculates Reynolds number, "

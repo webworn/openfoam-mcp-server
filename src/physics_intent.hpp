@@ -93,35 +93,17 @@ class PhysicsIntent {
     bool setObjectiveFromRequirements(const std::string& requirements);
 
     // Physics parameter setters (from user input)
-    void setReynoldsNumber(double Re) {
-        physicalParams_["Re"] = Re;
-    }
-    void setMachNumber(double Ma) {
-        physicalParams_["Ma"] = Ma;
-    }
-    void setVelocity(double U) {
-        physicalParams_["U"] = U;
-    }
-    void setPressure(double p) {
-        physicalParams_["p"] = p;
-    }
-    void setTemperature(double T) {
-        physicalParams_["T"] = T;
-    }
-    void setCharacteristicLength(double L) {
-        physicalParams_["L"] = L;
-    }
+    void setReynoldsNumber(double Re) { physicalParams_["Re"] = Re; }
+    void setMachNumber(double Ma) { physicalParams_["Ma"] = Ma; }
+    void setVelocity(double U) { physicalParams_["U"] = U; }
+    void setPressure(double p) { physicalParams_["p"] = p; }
+    void setTemperature(double T) { physicalParams_["T"] = T; }
+    void setCharacteristicLength(double L) { physicalParams_["L"] = L; }
 
     // Geometry and boundary information
-    void setGeometryType(const std::string& type) {
-        textParams_["geometry"] = type;
-    }
-    void setInletCondition(const std::string& condition) {
-        textParams_["inlet"] = condition;
-    }
-    void setWallCondition(const std::string& condition) {
-        textParams_["wall"] = condition;
-    }
+    void setGeometryType(const std::string& type) { textParams_["geometry"] = type; }
+    void setInletCondition(const std::string& condition) { textParams_["inlet"] = condition; }
+    void setWallCondition(const std::string& condition) { textParams_["wall"] = condition; }
 
     // OpenFOAM case generation
     std::unique_ptr<OpenFOAMCase> generateCase();

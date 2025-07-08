@@ -30,9 +30,7 @@ class HeatTransferTool {
     ~HeatTransferTool() = default;
 
     // MCP tool interface
-    static std::string getName() {
-        return "analyze_heat_transfer";
-    }
+    static std::string getName() { return "analyze_heat_transfer"; }
     static std::string getDescription() {
         return "Analyze conjugate heat transfer using OpenFOAM chtMultiRegionFoam solver. "
                "Supports electronics cooling, heat exchangers, building thermal analysis, and "

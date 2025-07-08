@@ -1,10 +1,10 @@
 #include <exception>
 #include <iostream>
 
+#include "Time.H"
 #include "argList.H"
 #include "foamVersion.H"
 #include "mcp/server.hpp"
-#include "Time.H"
 #include "tools/external_flow_tool.hpp"
 #include "tools/heat_transfer_tool.hpp"
 #include "tools/pipe_flow_tool.hpp"
@@ -52,8 +52,7 @@ int main(int argc, char* argv[]) {
         auto tools = server.getRegisteredTools();
         for (size_t i = 0; i < tools.size(); ++i) {
             std::cerr << tools[i];
-            if (i < tools.size() - 1)
-                std::cerr << ", ";
+            if (i < tools.size() - 1) std::cerr << ", ";
         }
         std::cerr << std::endl;
 

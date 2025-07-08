@@ -1,52 +1,9 @@
-# Simple clang-format configuration for OpenFOAM MCP Server
-# Based on Google style for maximum compatibility
-
 ---
 Language: Cpp
 BasedOnStyle: Google
-
-# Basic settings
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 ColumnLimit: 100
-
-# Simpler brace style
 BreakBeforeBraces: Attach
-
-# Standard alignment
-AlignAfterOpenBracket: Align
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
-AlignOperands: Align
-AlignTrailingComments: true
-
-# Allow short constructs
-AllowShortBlocksOnASingleLine: Empty
-AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: Empty
-AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine: false
-
-# Bin packing
-BinPackArguments: true
-BinPackParameters: true
-
-# Pointer alignment
-PointerAlignment: Left
-
-# Include sorting
-SortIncludes: CaseInsensitive
-
-# Spacing
-SpaceAfterCStyleCast: false
-SpaceAfterLogicalNot: false
-SpaceBeforeAssignmentOperators: true
-SpaceBeforeParens: ControlStatements
-SpacesBeforeTrailingComments: 2
-SpacesInAngles: Never
-SpacesInParentheses: false
-SpacesInSquareBrackets: false
-
-# C++ standard
 Standard: c++20

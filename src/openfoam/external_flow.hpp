@@ -64,9 +64,7 @@ struct ExternalFlowInput {
           temperature(288.15)  // 15°C
     {}
 
-    double getReynoldsNumber() const {
-        return velocity * characteristicLength / viscosity;
-    }
+    double getReynoldsNumber() const { return velocity * characteristicLength / viscosity; }
 
     double getMachNumber() const {
         double speedOfSound = std::sqrt(1.4 * 287.0 * temperature);  // air at temperature
@@ -77,17 +75,11 @@ struct ExternalFlowInput {
         return getReynoldsNumber() < 500000;  // external flow transition much higher
     }
 
-    bool isTurbulent() const {
-        return getReynoldsNumber() > 1000000;
-    }
+    bool isTurbulent() const { return getReynoldsNumber() > 1000000; }
 
-    bool isCompressible() const {
-        return getMachNumber() > 0.3;
-    }
+    bool isCompressible() const { return getMachNumber() > 0.3; }
 
-    bool isHighSpeed() const {
-        return getMachNumber() > 0.8;
-    }
+    bool isHighSpeed() const { return getMachNumber() > 0.8; }
 };
 
 /*---------------------------------------------------------------------------*\

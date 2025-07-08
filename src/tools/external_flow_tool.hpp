@@ -45,9 +45,7 @@ class ExternalFlowTool {
     explicit ExternalFlowTool(std::unique_ptr<ExternalFlowAnalyzer> analyzer);
     ~ExternalFlowTool() = default;
 
-    static std::string getName() {
-        return "analyze_external_flow";
-    }
+    static std::string getName() { return "analyze_external_flow"; }
 
     static std::string getDescription() {
         return "Analyze external flow around vehicles, aircraft, and buildings using OpenFOAM CFD "

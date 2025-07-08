@@ -40,27 +40,15 @@ class Logger {
     static std::string levelToString(LogLevel level);
 
    public:
-    static void setLogLevel(LogLevel level) {
-        currentLevel_ = level;
-    }
-    static LogLevel getLogLevel() {
-        return currentLevel_;
-    }
+    static void setLogLevel(LogLevel level) { currentLevel_ = level; }
+    static LogLevel getLogLevel() { return currentLevel_; }
 
     static void log(LogLevel level, const std::string& message);
 
-    static void debug(const std::string& message) {
-        log(LogLevel::DEBUG, message);
-    }
-    static void info(const std::string& message) {
-        log(LogLevel::INFO, message);
-    }
-    static void warning(const std::string& message) {
-        log(LogLevel::WARNING, message);
-    }
-    static void error(const std::string& message) {
-        log(LogLevel::ERROR, message);
-    }
+    static void debug(const std::string& message) { log(LogLevel::DEBUG, message); }
+    static void info(const std::string& message) { log(LogLevel::INFO, message); }
+    static void warning(const std::string& message) { log(LogLevel::WARNING, message); }
+    static void error(const std::string& message) { log(LogLevel::ERROR, message); }
 };
 
 /*---------------------------------------------------------------------------*\

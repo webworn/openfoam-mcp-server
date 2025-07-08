@@ -166,19 +166,11 @@ class McpServer {
 
     void processStdinMessage();
 
-    bool isInitialized() const {
-        return initialized_.load();
-    }
-    bool isRunning() const {
-        return running_.load();
-    }
+    bool isInitialized() const { return initialized_.load(); }
+    bool isRunning() const { return running_.load(); }
 
-    const ServerInfo& getServerInfo() const {
-        return serverInfo_;
-    }
-    void setServerInfo(const ServerInfo& info) {
-        serverInfo_ = info;
-    }
+    const ServerInfo& getServerInfo() const { return serverInfo_; }
+    void setServerInfo(const ServerInfo& info) { serverInfo_ = info; }
 
     std::vector<std::string> getRegisteredTools() const;
 };

@@ -884,7 +884,8 @@ void CaseManager::parseLogOutput(const std::string& caseId, const std::string& l
                 try {
                     double execTime = std::stod(timeStr);
                     it->second->results["executionTime"] = execTime;
-                } catch (const std::exception&) {}
+                } catch (const std::exception&) {
+                }
             }
         }
     }

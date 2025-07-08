@@ -50,18 +50,10 @@ struct JsonRpcMessage {
 
     JsonRpcMessage() : type(MessageType::INVALID), jsonrpc("2.0") {}
 
-    bool isRequest() const {
-        return type == MessageType::REQUEST;
-    }
-    bool isResponse() const {
-        return type == MessageType::RESPONSE;
-    }
-    bool isNotification() const {
-        return type == MessageType::NOTIFICATION;
-    }
-    bool isValid() const {
-        return type != MessageType::INVALID;
-    }
+    bool isRequest() const { return type == MessageType::REQUEST; }
+    bool isResponse() const { return type == MessageType::RESPONSE; }
+    bool isNotification() const { return type == MessageType::NOTIFICATION; }
+    bool isValid() const { return type != MessageType::INVALID; }
 };
 
 /*---------------------------------------------------------------------------*\
@@ -73,25 +65,15 @@ struct JsonRpcError {
     std::string message;
     std::optional<json> data;
 
-    static JsonRpcError parseError() {
-        return {-32700, "Parse error", std::nullopt};
-    }
+    static JsonRpcError parseError() { return {-32700, "Parse error", std::nullopt}; }
 
-    static JsonRpcError invalidRequest() {
-        return {-32600, "Invalid Request", std::nullopt};
-    }
+    static JsonRpcError invalidRequest() { return {-32600, "Invalid Request", std::nullopt}; }
 
-    static JsonRpcError methodNotFound() {
-        return {-32601, "Method not found", std::nullopt};
-    }
+    static JsonRpcError methodNotFound() { return {-32601, "Method not found", std::nullopt}; }
 
-    static JsonRpcError invalidParams() {
-        return {-32602, "Invalid params", std::nullopt};
-    }
+    static JsonRpcError invalidParams() { return {-32602, "Invalid params", std::nullopt}; }
 
-    static JsonRpcError internalError() {
-        return {-32603, "Internal error", std::nullopt};
-    }
+    static JsonRpcError internalError() { return {-32603, "Internal error", std::nullopt}; }
 
     static JsonRpcError serverError(int code, const std::string& message) {
         return {code, message, std::nullopt};

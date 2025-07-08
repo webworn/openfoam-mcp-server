@@ -34,12 +34,9 @@ void from_json(const json& j, PipeFlowInput& input) {
     j.at("diameter").get_to(input.diameter);
     j.at("length").get_to(input.length);
 
-    if (j.contains("viscosity"))
-        j.at("viscosity").get_to(input.viscosity);
-    if (j.contains("density"))
-        j.at("density").get_to(input.density);
-    if (j.contains("fluid"))
-        j.at("fluid").get_to(input.fluid);
+    if (j.contains("viscosity")) j.at("viscosity").get_to(input.viscosity);
+    if (j.contains("density")) j.at("density").get_to(input.density);
+    if (j.contains("fluid")) j.at("fluid").get_to(input.fluid);
 }
 
 void to_json(json& j, const PipeFlowResults& results) {
@@ -69,8 +66,7 @@ void from_json(const json& j, PipeFlowResults& results) {
     j.at("caseId").get_to(results.caseId);
     j.at("success").get_to(results.success);
 
-    if (j.contains("errorMessage"))
-        j.at("errorMessage").get_to(results.errorMessage);
+    if (j.contains("errorMessage")) j.at("errorMessage").get_to(results.errorMessage);
 }
 
 /*---------------------------------------------------------------------------*\
@@ -231,9 +227,7 @@ double PipeFlowAnalyzer::calculateTheoreticalPressureDrop(const PipeFlowInput& i
            input.velocity;
 }
 
-double PipeFlowAnalyzer::calculateLaminarFrictionFactor(double Re) const {
-    return 64.0 / Re;
-}
+double PipeFlowAnalyzer::calculateLaminarFrictionFactor(double Re) const { return 64.0 / Re; }
 
 double PipeFlowAnalyzer::calculateTurbulentFrictionFactor(double Re) const {
     return 0.316 / std::pow(Re, 0.25);

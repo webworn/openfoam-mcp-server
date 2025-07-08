@@ -19,9 +19,7 @@ namespace MCP {
                     HeatTransferAnalyzer Implementation
 \*---------------------------------------------------------------------------*/
 
-HeatTransferAnalyzer::HeatTransferAnalyzer() {
-    initializeMaterialDatabase();
-}
+HeatTransferAnalyzer::HeatTransferAnalyzer() { initializeMaterialDatabase(); }
 
 HeatTransferResults HeatTransferAnalyzer::analyze(const HeatTransferInput& input) {
     HeatTransferResults results = {};
@@ -231,12 +229,9 @@ double HeatTransferAnalyzer::calculateReynoldsNumber(const HeatTransferInput& in
 
 double HeatTransferAnalyzer::calculatePrandtlNumber(const HeatTransferInput& input) const {
     // Typical Prandtl numbers
-    if (input.coolantType == "air")
-        return 0.7;
-    if (input.coolantType == "water")
-        return 7.0;
-    if (input.coolantType == "oil")
-        return 100.0;
+    if (input.coolantType == "air") return 0.7;
+    if (input.coolantType == "water") return 7.0;
+    if (input.coolantType == "oil") return 100.0;
     return 0.7;  // Default
 }
 

@@ -42,20 +42,13 @@ void from_json(const json& j, ExternalFlowInput& input) {
     j.at("velocity").get_to(input.velocity);
     j.at("characteristicLength").get_to(input.characteristicLength);
 
-    if (j.contains("frontalArea"))
-        j.at("frontalArea").get_to(input.frontalArea);
-    if (j.contains("altitude"))
-        j.at("altitude").get_to(input.altitude);
-    if (j.contains("fluidType"))
-        j.at("fluidType").get_to(input.fluidType);
-    if (j.contains("objective"))
-        j.at("objective").get_to(input.objective);
-    if (j.contains("density"))
-        j.at("density").get_to(input.density);
-    if (j.contains("viscosity"))
-        j.at("viscosity").get_to(input.viscosity);
-    if (j.contains("temperature"))
-        j.at("temperature").get_to(input.temperature);
+    if (j.contains("frontalArea")) j.at("frontalArea").get_to(input.frontalArea);
+    if (j.contains("altitude")) j.at("altitude").get_to(input.altitude);
+    if (j.contains("fluidType")) j.at("fluidType").get_to(input.fluidType);
+    if (j.contains("objective")) j.at("objective").get_to(input.objective);
+    if (j.contains("density")) j.at("density").get_to(input.density);
+    if (j.contains("viscosity")) j.at("viscosity").get_to(input.viscosity);
+    if (j.contains("temperature")) j.at("temperature").get_to(input.temperature);
 }
 
 void to_json(json& j, const ExternalFlowResults& results) {
@@ -91,8 +84,7 @@ void from_json(const json& j, ExternalFlowResults& results) {
     j.at("caseId").get_to(results.caseId);
     j.at("success").get_to(results.success);
 
-    if (j.contains("errorMessage"))
-        j.at("errorMessage").get_to(results.errorMessage);
+    if (j.contains("errorMessage")) j.at("errorMessage").get_to(results.errorMessage);
 }
 
 /*---------------------------------------------------------------------------*\

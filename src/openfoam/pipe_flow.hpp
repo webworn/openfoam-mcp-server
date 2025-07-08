@@ -47,17 +47,11 @@ struct PipeFlowInput {
           density(1.225),
           fluid("air") {}
 
-    double getReynoldsNumber() const {
-        return velocity * diameter / viscosity;
-    }
+    double getReynoldsNumber() const { return velocity * diameter / viscosity; }
 
-    bool isLaminar() const {
-        return getReynoldsNumber() < 2300;
-    }
+    bool isLaminar() const { return getReynoldsNumber() < 2300; }
 
-    bool isTurbulent() const {
-        return getReynoldsNumber() > 4000;
-    }
+    bool isTurbulent() const { return getReynoldsNumber() > 4000; }
 
     bool isTransitional() const {
         double Re = getReynoldsNumber();

@@ -70,15 +70,9 @@ struct CaseResult {
 
     CaseResult() : status("unknown"), exitCode(-1), executionTime(0) {}
 
-    bool isSuccess() const {
-        return status == "completed" && exitCode == 0;
-    }
-    bool isRunning() const {
-        return status == "running";
-    }
-    bool isFailed() const {
-        return status == "failed" || exitCode != 0;
-    }
+    bool isSuccess() const { return status == "completed" && exitCode == 0; }
+    bool isRunning() const { return status == "running"; }
+    bool isFailed() const { return status == "failed" || exitCode != 0; }
 };
 
 /*---------------------------------------------------------------------------*\
@@ -126,9 +120,7 @@ class CaseManager {
     bool deleteCaseData(const std::string& caseId);
 
     void setWorkingDirectory(const fs::path& workingDir);
-    fs::path getWorkingDirectory() const {
-        return workingDirectory_;
-    }
+    fs::path getWorkingDirectory() const { return workingDirectory_; }
 
     bool validateCaseParameters(const CaseParameters& params) const;
 

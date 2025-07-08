@@ -34,12 +34,9 @@ void from_json(const json& j, ServerInfo& info) {
     j.at("name").get_to(info.name);
     j.at("version").get_to(info.version);
 
-    if (j.contains("description"))
-        j.at("description").get_to(info.description);
-    if (j.contains("author"))
-        j.at("author").get_to(info.author);
-    if (j.contains("homepage"))
-        j.at("homepage").get_to(info.homepage);
+    if (j.contains("description")) j.at("description").get_to(info.description);
+    if (j.contains("author")) j.at("author").get_to(info.author);
+    if (j.contains("homepage")) j.at("homepage").get_to(info.homepage);
 }
 
 void to_json(json& j, const Tool& tool) {
@@ -73,9 +70,7 @@ McpServer::McpServer()
     setupStandardHandlers();
 }
 
-McpServer::~McpServer() {
-    stop();
-}
+McpServer::~McpServer() { stop(); }
 
 void McpServer::setupStandardHandlers() {
     jsonRpcHandler_->registerRequestHandler(
@@ -145,9 +140,7 @@ json McpServer::handleToolsCall(const json& params) {
     return json(result);
 }
 
-json McpServer::handlePing(const json& params) {
-    return json::object();
-}
+json McpServer::handlePing(const json& params) { return json::object(); }
 
 json McpServer::capabilitiesToJson(const ServerCapabilities& caps) const {
     json j = json::object();
@@ -158,10 +151,8 @@ json McpServer::capabilitiesToJson(const ServerCapabilities& caps) const {
 
     if (caps.resources.subscribe || caps.resources.listChanged) {
         json resources = json::object();
-        if (caps.resources.subscribe)
-            resources["subscribe"] = true;
-        if (caps.resources.listChanged)
-            resources["listChanged"] = true;
+        if (caps.resources.subscribe) resources["subscribe"] = true;
+        if (caps.resources.listChanged) resources["listChanged"] = true;
         j["resources"] = resources;
     }
 
