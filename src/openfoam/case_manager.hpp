@@ -104,6 +104,9 @@ class CaseManager {
 
     void cleanup(const std::string& caseId);
 
+    int executeCommand(const std::string& command, const std::string& workingDir,
+                       const std::string& logFile);
+
    public:
     CaseManager();
     explicit CaseManager(const fs::path& workingDir);

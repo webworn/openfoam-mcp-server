@@ -12,6 +12,7 @@ Description
 
 #include "case_manager.hpp"
 
+#include <fcntl.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -93,6 +94,40 @@ CaseManager::CaseManager(const fs::path& workingDir) : workingDirectory_(working
 CaseManager::~CaseManager() {
     for (const auto& [caseId, result] : caseResults_) {
         cleanup(caseId);
+    }
+}
+
+int CaseManager::executeCommand(const std::string& command, const std::string& workingDir,
+                                const std::string& logFile) {
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        // Child process
+        if (chdir(workingDir.c_str()) != 0) {
+            std::exit(1);
+        }
+
+        // Redirect stdout and stderr to log file
+        int logFd = open(logFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (logFd == -1) {
+            std::exit(1);
+        }
+
+        dup2(logFd, STDOUT_FILENO);
+        dup2(logFd, STDERR_FILENO);
+        close(logFd);
+
+        // Execute command
+        execl("/bin/sh", "sh", "-c", command.c_str(), nullptr);
+        std::exit(1);
+    } else if (pid > 0) {
+        // Parent process
+        int status;
+        waitpid(pid, &status, 0);
+        return WEXITSTATUS(status);
+    } else {
+        // Fork failed
+        return -1;
     }
 }
 
@@ -802,8 +837,8 @@ bool CaseManager::runCase(const std::string& caseId) {
 
     auto startTime = std::chrono::steady_clock::now();
 
-    std::string command = "cd " + casePath.string() + " && blockMesh > blockMesh.log 2>&1";
-    int meshResult = std::system(command.c_str());
+    // Execute blockMesh safely
+    int meshResult = executeCommand("blockMesh", casePath.string(), "blockMesh.log");
 
     if (meshResult != 0) {
         it->second->status = "failed";
@@ -813,8 +848,8 @@ bool CaseManager::runCase(const std::string& caseId) {
     }
 
     CaseParameters params;
-    command = "cd " + casePath.string() + " && " + params.solver + " > solver.log 2>&1";
-    int solverResult = std::system(command.c_str());
+    // Execute solver safely
+    int solverResult = executeCommand(params.solver, casePath.string(), "solver.log");
 
     auto endTime = std::chrono::steady_clock::now();
     it->second->executionTime =
