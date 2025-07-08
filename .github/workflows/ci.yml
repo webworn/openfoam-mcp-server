@@ -1,11 +1,12 @@
 name: OpenFOAM MCP Server CI/CD
 
+# Temporarily disabled workflow
 on:
-  push:
-    branches: [ main, Development, 'feature/*', 'hotfix/*' ]
-  pull_request:
-    branches: [ main, Development ]
   workflow_dispatch:
+  # push:
+  #   branches: [ main, Development, 'feature/*', 'hotfix/*' ]
+  # pull_request:
+  #   branches: [ main, Development ]
     inputs:
       run_performance_tests:
         description: 'Run performance benchmarks'
