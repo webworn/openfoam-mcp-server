@@ -55,7 +55,10 @@ def main():
     # Define validation scripts to run
     validation_scripts = [
         ("analytical_solutions.py", "Analytical Solutions Library Test"),
-        ("pipe_flow_validation.py", "Pipe Flow Validation")
+        ("pipe_flow_validation.py", "Pipe Flow Validation"),
+        ("external_flow_validation.py", "External Flow Validation"),
+        ("heat_transfer_validation.py", "Heat Transfer Validation"),
+        ("multiphase_flow_validation.py", "Multiphase Flow Validation")
     ]
     
     # Track overall results

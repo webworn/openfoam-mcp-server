@@ -207,6 +207,41 @@ class ExternalFlowSolutions:
         else:
             # Turbulent: Cf = 0.0592/Re_x^(1/5)
             return 0.0592 / (reynolds_x ** 0.2)
+    
+    @staticmethod
+    def getBuildingDragCoefficient(reynolds: float, height_to_width: float) -> float:
+        """
+        Building drag coefficient correlation
+        
+        Args:
+            reynolds: Reynolds number based on building height
+            height_to_width: Building height to width ratio
+            
+        Returns:
+            Drag coefficient [-]
+        """
+        # Simplified building drag coefficient
+        # Based on typical values for rectangular buildings
+        if height_to_width < 0.5:
+            # Wide building
+            base_cd = 1.0
+        elif height_to_width < 1.5:
+            # Square-ish building  
+            base_cd = 1.2
+        elif height_to_width < 3.0:
+            # Tall building
+            base_cd = 1.4
+        else:
+            # Very tall building
+            base_cd = 1.6
+            
+        # Reynolds number effect (minimal for buildings)
+        if reynolds > 1e6:
+            reynolds_factor = 0.95  # Slight reduction at high Re
+        else:
+            reynolds_factor = 1.0
+            
+        return base_cd * reynolds_factor
 
 
 class HeatTransferSolutions:
