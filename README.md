@@ -141,13 +141,53 @@ This revolutionary MCP transforms CFD learning and problem-solving through:
 ## 📥 Installation
 
 ### Prerequisites
-Ensure OpenFOAM 12 is installed on your system:
+
+#### System Requirements
+- **OS**: Ubuntu 20.04+ or Debian 11+ (recommended)
+- **Memory**: 8GB+ RAM (16GB+ recommended for large simulations)
+- **Storage**: 10GB+ available disk space
+- **CPU**: Multi-core processor (4+ cores recommended)
+
+#### Required Dependencies
 ```bash
-# Ubuntu/Debian
+# Ubuntu/Debian - Install all dependencies
+sudo apt-get update
+sudo apt-get install -y \
+    cmake \
+    build-essential \
+    git \
+    nlohmann-json3-dev \
+    libboost-system-dev \
+    libboost-thread-dev \
+    sqlite3 \
+    libsqlite3-dev
+```
+
+#### OpenFOAM 12 Installation
+```bash
+# Option 1: Ubuntu/Debian packages (easiest)
 sudo apt-get install openfoam12
 
-# Or using OpenFOAM Foundation packages
-# Follow: https://openfoam.org/download/
+# Option 2: OpenFOAM Foundation packages (recommended)
+# Download from: https://openfoam.org/download/12-ubuntu/
+wget -O - https://dl.openfoam.org/gpg.key | sudo apt-key add -
+sudo add-apt-repository http://dl.openfoam.org/ubuntu
+sudo apt-get update
+sudo apt-get install openfoam12
+
+# Option 3: Source compilation (advanced users)
+# Follow: https://openfoam.org/download/12-source/
+```
+
+#### Environment Setup
+```bash
+# Add to ~/.bashrc or ~/.profile
+source /opt/openfoam12/etc/bashrc
+
+# Verify installation
+which blockMesh
+which simpleFoam
+foamVersion
 ```
 
 ### Build MCP Server
