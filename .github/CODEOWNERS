@@ -1,0 +1,289 @@
+# OpenFOAM MCP Server - Code Ownership & Review Requirements
+# 
+# This file defines who must review changes to specific parts of the codebase.
+# GitHub will automatically request reviews from these users/teams.
+#
+# Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ============================================================================
+# GLOBAL OWNERSHIP - Default reviewers for all changes
+# ============================================================================
+
+# All files require review from core maintainers
+* @webworn @core-maintainers
+
+# ============================================================================
+# CORE SYSTEM COMPONENTS - Critical Infrastructure
+# ============================================================================
+
+# MCP Protocol Implementation - Requires protocol experts
+/src/mcp/ @webworn @mcp-experts @protocol-team
+*.hpp @webworn @cpp-experts
+*.cpp @webworn @cpp-experts
+
+# Main application entry point - Core team only
+/src/main.cpp @webworn @core-maintainers
+
+# Build system and configuration - DevOps team
+CMakeLists.txt @webworn @devops-team @build-experts
+/cmake/ @devops-team @build-experts
+Dockerfile @devops-team @container-experts
+docker-compose.yml @devops-team @container-experts
+
+# ============================================================================
+# PHYSICS & CFD COMPONENTS - Domain Experts Required
+# ============================================================================
+
+# OpenFOAM Integration - CFD experts required
+/src/openfoam/ @webworn @cfd-experts @openfoam-team
+
+# Pipe Flow Analysis - Fluid dynamics experts
+/src/openfoam/pipe_flow.* @cfd-experts @fluid-dynamics-team
+/src/tools/pipe_flow_tool.* @cfd-experts @fluid-dynamics-team
+
+# Heat Transfer Analysis - Thermal engineers
+/src/openfoam/heat_transfer.* @cfd-experts @thermal-engineering-team  
+/src/tools/heat_transfer_tool.* @cfd-experts @thermal-engineering-team
+
+# External Flow Analysis - Aerodynamics experts
+/src/openfoam/external_flow.* @cfd-experts @aerodynamics-team
+/src/tools/external_flow_tool.* @cfd-experts @aerodynamics-team
+
+# Case Management - OpenFOAM specialists
+/src/openfoam/case_manager.* @openfoam-team @cfd-experts
+
+# ============================================================================
+# TOOL IMPLEMENTATIONS - Application Experts
+# ============================================================================
+
+# MCP Tool Framework - MCP + CFD integration specialists
+/src/tools/ @webworn @mcp-experts @cfd-experts
+
+# Tool Registration and Server Integration
+/src/tools/*_tool.hpp @mcp-experts @api-design-team
+/src/tools/*_tool.cpp @mcp-experts @cfd-experts
+
+# ============================================================================
+# TESTING & VALIDATION - Quality Assurance
+# ============================================================================
+
+# Unit Tests - Corresponding domain experts
+/tests/unit/ @webworn @testing-team
+/tests/unit/pipe_flow_* @fluid-dynamics-team @testing-team
+/tests/unit/heat_transfer_* @thermal-engineering-team @testing-team
+/tests/unit/external_flow_* @aerodynamics-team @testing-team
+
+# Integration Tests - Full system knowledge required
+/tests/integration/ @webworn @testing-team @system-architects
+
+# CFD Validation - Physics accuracy critical
+/tests/validation/ @cfd-experts @validation-team @physics-reviewers
+/tests/validation/analytical_solutions/ @physics-reviewers @cfd-experts
+/tests/validation/experimental_data/ @validation-team @data-scientists
+
+# Performance Benchmarks - Performance engineering
+/tests/benchmarks/ @performance-team @devops-team
+/tests/benchmarks/memory_* @performance-team @cpp-experts
+/tests/benchmarks/computational_* @performance-team @hpc-experts
+
+# ============================================================================
+# CI/CD & AUTOMATION - DevOps and Infrastructure
+# ============================================================================
+
+# GitHub Workflows - DevOps and security review
+/.github/workflows/ @webworn @devops-team @security-team
+/.github/workflows/ci.yml @devops-team @security-team @testing-team
+/.github/workflows/security.yml @security-team @devops-team
+/.github/workflows/release.yml @devops-team @release-managers
+
+# GitHub Configuration
+/.github/CODEOWNERS @webworn @governance-team
+/.github/pull_request_template.md @governance-team @community-managers
+/.github/ISSUE_TEMPLATE/ @community-managers @support-team
+
+# Dependency Management - Security and stability critical
+package.json @security-team @dependency-managers
+package-lock.json @security-team @dependency-managers
+requirements.txt @security-team @python-experts
+pyproject.toml @python-experts @dependency-managers
+
+# ============================================================================
+# DOCUMENTATION - Technical Writers and Domain Experts
+# ============================================================================
+
+# Main Documentation - Technical writing + domain knowledge
+README.md @webworn @technical-writers @community-managers
+CONTRIBUTING.md @governance-team @community-managers
+CODE_OF_CONDUCT.md @governance-team @community-managers
+LICENSE @legal-team @governance-team
+
+# API Documentation - API design and documentation
+/docs/api/ @api-design-team @technical-writers
+/docs/api/mcp-protocol.md @mcp-experts @technical-writers
+
+# Physics Documentation - Domain experts required
+/docs/physics/ @cfd-experts @technical-writers @physics-reviewers
+/docs/physics/fluid-dynamics.md @fluid-dynamics-team @technical-writers
+/docs/physics/heat-transfer.md @thermal-engineering-team @technical-writers
+/docs/physics/aerodynamics.md @aerodynamics-team @technical-writers
+
+# User Guides - UX and domain knowledge
+/docs/user-guide/ @technical-writers @ux-team @cfd-experts
+/docs/tutorials/ @technical-writers @education-team @cfd-experts
+
+# Developer Documentation - System architecture knowledge
+/docs/development/ @system-architects @technical-writers
+/docs/development/architecture.md @system-architects @senior-developers
+/docs/development/adding-tools.md @mcp-experts @cfd-experts @technical-writers
+
+# ============================================================================
+# CONFIGURATION & SETTINGS - Security and System Administration
+# ============================================================================
+
+# Environment Configuration - Security review required
+.env* @security-team @devops-team
+.dockerignore @devops-team @container-experts
+.gitignore @devops-team
+
+# IDE Configuration - Development environment
+.vscode/ @developer-experience-team
+.idea/ @developer-experience-team
+.devcontainer/ @devops-team @developer-experience-team
+
+# Linting and Code Quality
+.clang-format @cpp-experts @code-quality-team
+.clang-tidy @cpp-experts @code-quality-team
+.cppcheck @cpp-experts @security-team
+pyproject.toml @python-experts @code-quality-team
+
+# ============================================================================
+# SCRIPTS & AUTOMATION - DevOps and Security
+# ============================================================================
+
+# Build and Development Scripts
+/scripts/ @devops-team @automation-team
+/scripts/build.sh @devops-team @build-experts
+/scripts/test.sh @testing-team @devops-team
+/scripts/deploy.sh @devops-team @deployment-team @security-team
+
+# Installation and Setup Scripts - Security critical
+/scripts/install.sh @security-team @devops-team
+/scripts/setup-environment.sh @security-team @devops-team
+
+# ============================================================================
+# SECURITY & COMPLIANCE - Security Team Mandatory
+# ============================================================================
+
+# Security Policies and Configurations
+SECURITY.md @security-team @governance-team
+.github/workflows/security.yml @security-team @devops-team
+
+# Dependency Vulnerability Scanning
+/security/ @security-team
+.snyk @security-team
+.trivy @security-team
+
+# ============================================================================
+# RELEASE & DEPLOYMENT - Release Management
+# ============================================================================
+
+# Version and Release Configuration
+VERSION @release-managers @core-maintainers
+CHANGELOG.md @release-managers @technical-writers
+RELEASE_NOTES.md @release-managers @technical-writers @product-managers
+
+# Deployment Configuration
+/deploy/ @deployment-team @devops-team @security-team
+/k8s/ @kubernetes-team @devops-team
+/helm/ @kubernetes-team @helm-experts
+
+# ============================================================================
+# SAMPLE DATA & EXAMPLES - Domain and Educational Review
+# ============================================================================
+
+# Sample Cases and Examples - Educational value and accuracy
+/examples/ @education-team @cfd-experts @technical-writers
+/examples/automotive/ @automotive-experts @aerodynamics-team
+/examples/aerospace/ @aerospace-experts @aerodynamics-team
+/examples/energy/ @energy-experts @thermal-engineering-team
+/examples/biomedical/ @biomedical-experts @fluid-dynamics-team
+
+# Sample Data and Test Cases
+/data/ @data-scientists @validation-team
+/data/validation/ @validation-team @physics-reviewers
+/data/benchmarks/ @performance-team @validation-team
+
+# ============================================================================
+# SPECIAL FILES - Governance and Legal
+# ============================================================================
+
+# Legal and Governance Documents
+LICENSE* @legal-team @governance-team
+COPYRIGHT @legal-team @governance-team
+PATENT @legal-team @ip-team
+
+# Project Governance
+GOVERNANCE.md @governance-team @core-maintainers
+MAINTAINERS.md @governance-team @core-maintainers
+
+# ============================================================================
+# EMERGENCY OVERRIDES - Core Maintainers Only
+# ============================================================================
+
+# Critical system files that may need emergency fixes
+# Note: These can bypass normal review requirements in emergencies
+# Use with extreme caution and follow up with proper review
+
+# Emergency hotfix patterns (use sparingly)
+hotfix/* @webworn @emergency-response-team
+security-fix/* @security-team @webworn
+
+# ============================================================================
+# TEAM DEFINITIONS (for reference - configure in GitHub settings)
+# ============================================================================
+
+# Core Teams:
+# @core-maintainers: Primary project maintainers
+# @webworn: Project owner/lead
+# 
+# Domain Expert Teams:
+# @cfd-experts: Computational Fluid Dynamics specialists
+# @openfoam-team: OpenFOAM specialists
+# @mcp-experts: Model Context Protocol specialists
+# @fluid-dynamics-team: Fluid mechanics experts
+# @thermal-engineering-team: Heat transfer specialists  
+# @aerodynamics-team: Aerodynamics and external flow experts
+# @automotive-experts: Automotive industry specialists
+# @aerospace-experts: Aerospace industry specialists
+# @energy-experts: Energy systems specialists
+# @biomedical-experts: Biomedical engineering specialists
+#
+# Technical Teams:
+# @cpp-experts: C++ programming specialists
+# @python-experts: Python programming specialists
+# @api-design-team: API design specialists
+# @system-architects: System architecture experts
+# @performance-team: Performance optimization experts
+# @security-team: Security specialists
+# @testing-team: Quality assurance and testing
+# @validation-team: Physics validation specialists
+# @physics-reviewers: Physics accuracy reviewers
+#
+# Infrastructure Teams:
+# @devops-team: DevOps and CI/CD specialists
+# @container-experts: Docker/containerization experts
+# @kubernetes-team: Kubernetes deployment experts
+# @helm-experts: Helm chart specialists
+# @build-experts: Build system specialists
+# @deployment-team: Production deployment team
+#
+# Support Teams:
+# @technical-writers: Documentation specialists
+# @community-managers: Community engagement
+# @education-team: Educational content creators
+# @ux-team: User experience designers
+# @developer-experience-team: Developer tooling
+# @governance-team: Project governance
+# @legal-team: Legal and compliance
+# @release-managers: Release management
+# @data-scientists: Data analysis and validation

@@ -1,0 +1,284 @@
+{
+  "name": "OpenFOAM MCP Server",
+  "description": "Revolutionary intelligent CFD education and problem-solving system with Socratic questioning, context engineering, and expert-level error resolution",
+  "version": "2.0.0-dev",
+  
+  "project": {
+    "type": "cpp",
+    "language": "cpp20",
+    "build_system": "cmake",
+    "domain": "intelligent_cfd_education",
+    "frameworks": ["openfoam", "mcp", "json-rpc", "context_engine", "socratic_questioning"],
+    "target_platforms": ["linux", "container", "cloud"],
+    "ai_capabilities": ["context_engineering", "parameter_extraction", "error_resolution", "knowledge_graph"]
+  },
+
+  "context": {
+    "primary_files": [
+      "src/**/*.cpp",
+      "src/**/*.hpp", 
+      "src/**/*.H",
+      "src/**/*.C",
+      "src/tools/context_engine.*",
+      "src/tools/cfd_assistant_tool.*",
+      "src/utils/terminal_manager.*",
+      "tests/validation/**/*.py",
+      "CMakeLists.txt",
+      "CLAUDE.md",
+      "README.md"
+    ],
+    
+    "include_patterns": [
+      "src/mcp/**",
+      "src/openfoam/**", 
+      "src/tools/**",
+      "tests/**",
+      "examples/**",
+      ".devcontainer/**",
+      ".vscode/**"
+    ],
+    
+    "exclude_patterns": [
+      "build/**",
+      "*.o",
+      "*.so", 
+      "*.a",
+      ".git/**",
+      "**/.DS_Store",
+      "**/Thumbs.db",
+      "**/*.tmp",
+      "**/core.*"
+    ],
+
+    "openfoam_context": {
+      "version": "12",
+      "distribution": "foundation",
+      "source_path": "/usr/lib/openfoam/openfoam12/src",
+      "library_path": "/usr/lib/openfoam/openfoam12/lib",
+      "tutorials_path": "/usr/share/openfoam/tutorials",
+      "etc_path": "/usr/lib/openfoam/openfoam12/etc",
+      "key_headers": [
+        "fvCFD.H",
+        "Time.H", 
+        "fvMesh.H",
+        "volFields.H",
+        "surfaceFields.H",
+        "dictionary.H",
+        "IOobject.H"
+      ],
+      "common_libraries": [
+        "OpenFOAM",
+        "finiteVolume", 
+        "meshTools",
+        "sampling",
+        "fileFormats"
+      ]
+    }
+  },
+
+  "ai_instructions": {
+    "role": "You are an expert C++ developer specializing in intelligent CFD education systems that combine OpenFOAM simulation with advanced AI capabilities including Socratic questioning, context engineering, and intelligent error resolution. You understand both computational fluid dynamics and AI-driven learning methodologies.",
+    
+    "domain_expertise": [
+      "OpenFOAM C++ API and object model",
+      "Computational Fluid Dynamics physics and numerics", 
+      "Model Context Protocol (MCP) specification",
+      "JSON-RPC 2.0 protocol implementation",
+      "Context engineering and user modeling for CFD education",
+      "Socratic questioning methodologies for progressive learning",
+      "Intelligent parameter extraction from natural language",
+      "CFD knowledge graphs and concept relationships",
+      "Advanced error resolution with 5 Whys analysis",
+      "Research integration and academic paper databases",
+      "Dual-terminal architecture for seamless CFD execution",
+      "High-performance C++ for scientific computing",
+      "CFD solver selection and configuration",
+      "Mesh generation and quality assessment",
+      "Turbulence modeling and boundary conditions",
+      "Comprehensive CFD validation across multiple physics domains"
+    ],
+
+    "coding_guidelines": {
+      "style": "OpenFOAM coding standards with modern C++20 features",
+      "naming": "OpenFOAM camelCase for member functions, PascalCase for classes",
+      "memory_management": "Prefer OpenFOAM autoPtr and tmp<> over raw pointers, smart pointers for context engine",
+      "error_handling": "Use OpenFOAM FatalError for critical errors, implement 5 Whys analysis for debugging",
+      "performance": "Optimize for large mesh operations, efficient context tracking, real-time conversation flow",
+      "physics_validation": "Always validate CFD physics parameters and assumptions with intelligent feedback",
+      "ai_integration": "Implement Socratic questioning patterns, maintain user context across sessions",
+      "educational_design": "Design for progressive learning with adaptive complexity",
+      "research_integration": "Include academic references and evidence-based solutions"
+    },
+
+    "response_patterns": {
+      "code_generation": "Generate complete, compilable C++ code with proper OpenFOAM and context engine integration",
+      "error_explanation": "Apply 5 Whys methodology with research-backed solutions and academic references",
+      "educational_guidance": "Use Socratic questioning to build understanding progressively",
+      "context_awareness": "Maintain user learning state and adapt responses to experience level",
+      "optimization_suggestions": "Provide algorithmic, OpenFOAM-specific, and AI-driven optimizations", 
+      "architecture_advice": "Consider MCP protocol, OpenFOAM lifecycle, and dual-terminal execution patterns",
+      "physics_guidance": "Validate CFD setup with intelligent feedback and concept relationship mapping",
+      "research_integration": "Include relevant academic papers and proven CFD methodologies",
+      "parameter_extraction": "Extract CFD parameters from natural language with confidence scoring",
+      "conversation_flow": "Maintain intelligent dialogue that builds user expertise over time"
+    }
+  },
+
+  "common_tasks": {
+    "intelligent_cfd_assistant": {
+      "description": "Develop AI-driven CFD education and problem-solving capabilities",
+      "template": "src/tools/cfd_assistant_tool.cpp",
+      "pattern": "Integrate context engine, implement Socratic questioning, provide intelligent guidance",
+      "example": "Context-aware case generation with progressive learning"
+    },
+    
+    "context_engineering": {
+      "description": "Build and enhance user modeling and conversation flow systems",
+      "template": "src/tools/context_engine.cpp",
+      "pattern": "Track user understanding, generate strategic questions, extract parameters intelligently",
+      "example": "Enhanced user model with CFD concept confidence scoring"
+    },
+    
+    "mcp_tool_creation": {
+      "description": "Create new MCP tools for OpenFOAM operations with AI integration",
+      "template": "src/tools/",
+      "pattern": "Inherit from MCPTool base class, implement OpenFOAM integration, add intelligent guidance",
+      "example": "multiphase_flow_tool.cpp with context-aware parameter extraction"
+    },
+    
+    "openfoam_integration": {
+      "description": "Integrate with OpenFOAM classes and objects",
+      "key_patterns": [
+        "Use autoPtr<> for automatic memory management",
+        "Source OpenFOAM environment before compilation", 
+        "Handle OpenFOAM dictionary objects for configuration",
+        "Implement proper field access and manipulation"
+      ]
+    },
+    
+    "physics_validation": {
+      "description": "Intelligent CFD physics validation with educational feedback",
+      "checks": [
+        "Reynolds number range for turbulence models with user education",
+        "Mach number limits for compressibility assumptions with explanations",
+        "Boundary condition compatibility with Socratic questioning",
+        "Mesh quality metrics with improvement suggestions",
+        "Convergence criteria appropriateness with research references",
+        "User understanding assessment through concept confidence scoring",
+        "Validation against analytical solutions across 4 CFD domains"
+      ]
+    },
+    
+    "error_resolution": {
+      "description": "Advanced error analysis and resolution with 5 Whys methodology",
+      "process": [
+        "Apply systematic 5 Whys analysis to identify root causes",
+        "Provide research-backed solutions from academic database",
+        "Include relevant academic papers and references",
+        "Suggest diagnostic commands and troubleshooting steps",
+        "Educational guidance to prevent similar issues"
+      ]
+    },
+    
+    "socratic_questioning": {
+      "description": "Educational questioning system for progressive CFD learning",
+      "strategies": [
+        "CLARIFY: What specifically do you mean by...?",
+        "EXPLORE: What would happen if we changed...?", 
+        "CONFIRM: So you're saying that...?",
+        "APPLY: How would you use this principle for...?"
+      ]
+    },
+
+    "performance_optimization": {
+      "description": "Optimize for intelligent CFD workloads with AI integration",
+      "focus_areas": [
+        "Large mesh handling (1M+ cells) with intelligent adaptation",
+        "Memory-efficient field operations with context tracking", 
+        "Parallel processing with OpenMPI and dual-terminal architecture",
+        "Efficient data serialization for MCP responses with user state",
+        "Real-time monitoring without performance impact",
+        "Context engine efficiency for real-time conversation",
+        "Intelligent parameter extraction with minimal latency",
+        "Knowledge graph traversal optimization"
+      ]
+    }
+  },
+
+  "quick_commands": {
+    "build": "mkdir -p build && cd build && cmake .. && make -j$(nproc)",
+    "test": "cd build && ctest --output-on-failure", 
+    "validation": "cd tests/validation && python run_all_validations.py",
+    "clean": "rm -rf build && mkdir build",
+    "format": "find src -name '*.cpp' -o -name '*.hpp' | xargs clang-format -i",
+    "openfoam_env": "source /usr/lib/openfoam/openfoam12/etc/bashrc",
+    "cavity_test": "cp -r /usr/share/openfoam/tutorials/incompressible/icoFoam/cavity /tmp/ && cd /tmp/cavity",
+    "context_test": "./openfoam-mcp-server --test-context-engine",
+    "error_analysis": "./openfoam-mcp-server --test-error-resolution",
+    "socratic_demo": "./openfoam-mcp-server --demo-socratic-questioning"
+  },
+
+  "development_context": {
+    "environment": "GitHub Codespaces with VS Code Desktop",
+    "openfoam_installation": "Ubuntu package (openfoam12)", 
+    "build_tools": ["cmake", "ninja", "gcc", "clang"],
+    "debugging": ["gdb", "valgrind", "perf"],
+    "dependencies": ["nlohmann-json", "sqlite3", "boost", "openfoam-libs"],
+    "ai_features": ["context_engine", "socratic_questioning", "parameter_extraction", "error_resolution"],
+    "validation_framework": ["analytical_solutions", "experimental_data", "multi_physics_domains"]
+  },
+
+  "project_goals": {
+    "completed_phase_1": [
+      "✅ Complete MCP protocol implementation",
+      "✅ OpenFOAM v12 integration with case management",
+      "✅ Comprehensive CFD validation framework (100% success rate)",
+      "✅ Physics-aware intelligence with analytical validation"
+    ],
+    
+    "completed_phase_2": [
+      "✅ Advanced context engineering with user modeling",
+      "✅ Socratic questioning engine for progressive learning",
+      "✅ Intelligent parameter extraction from natural language",
+      "✅ CFD knowledge graph with concept relationships",
+      "✅ Advanced error resolution with 5 Whys methodology",
+      "✅ Research integration with academic paper database",
+      "✅ Dual-terminal architecture for seamless execution",
+      "✅ Multi-physics domain validation (pipe, external, heat, multiphase)"
+    ],
+    
+    "current_phase_3": [
+      "User-centric guidance system for visualization",
+      "Real-time solver progress streaming",
+      "Intelligent mesh sizing based on physics",
+      "Automatic solver selection with AI reasoning"
+    ],
+    
+    "future_phase_4": [
+      "Cloud HPC integration with intelligent scheduling",
+      "Advanced AI-driven optimization algorithms",
+      "Automatic mesh generation from CAD geometry",
+      "Multi-scale physics modeling integration"
+    ]
+  },
+
+  "knowledge_base": {
+    "openfoam_docs": "https://www.openfoam.com/documentation/",
+    "mcp_spec": "https://modelcontextprotocol.io/introduction",
+    "cfd_theory": "Computational Fluid Dynamics principles and best practices",
+    "cpp_standards": "Modern C++20 features and OpenFOAM coding conventions",
+    "socratic_methodology": "Educational questioning techniques for progressive learning",
+    "context_engineering": "AI conversation systems and user modeling approaches",
+    "error_resolution": "5 Whys analysis and systematic troubleshooting methodologies",
+    "academic_database": "CFD research papers, validation studies, and best practices",
+    "validation_results": "Comprehensive test results across 4 CFD physics domains",
+    "ai_education": "Principles of AI-assisted learning in technical domains"
+  },
+
+  "collaboration": {
+    "team_context": "Solo developer building revolutionary CFD-AI integration",
+    "communication_style": "Technical precision with CFD domain expertise",
+    "code_review_focus": ["Physics correctness", "Performance optimization", "OpenFOAM best practices", "MCP compliance"],
+    "documentation_level": "Professional-grade with API docs and usage examples"
+  }
+}

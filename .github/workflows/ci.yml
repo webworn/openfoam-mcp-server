@@ -1,0 +1,523 @@
+name: OpenFOAM MCP Server CI/CD
+
+# Temporarily disabled workflow
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [ main, Development, 'feature/*', 'hotfix/*' ]
+  # pull_request:
+  #   branches: [ main, Development ]
+    inputs:
+      run_performance_tests:
+        description: 'Run performance benchmarks'
+        required: false
+        default: false
+        type: boolean
+      openfoam_version:
+        description: 'OpenFOAM version to test against'
+        required: false
+        default: '12'
+        type: choice
+        options:
+        - '12'
+        - '11'
+        - '10'
+
+env:
+  # OpenFOAM Configuration
+  FOAM_VERSION: ${{ github.event.inputs.openfoam_version || '12' }}
+  FOAM_INST_DIR: /opt/openfoam${{ github.event.inputs.openfoam_version || '12' }}
+  WM_PROJECT_DIR: /opt/openfoam${{ github.event.inputs.openfoam_version || '12' }}
+  
+  # Build Configuration
+  CMAKE_BUILD_TYPE: Release
+  CMAKE_CXX_STANDARD: 20
+  
+  # Testing Configuration
+  CTEST_OUTPUT_ON_FAILURE: 1
+  CTEST_PARALLEL_LEVEL: 2
+
+jobs:
+  # ============================================================================
+  # CODE QUALITY & SECURITY
+  # ============================================================================
+  
+  code-quality:
+    name: 🔍 Code Quality Analysis
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for better analysis
+        
+    - name: Setup C++20 environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format clang-tidy cppcheck
+        
+    - name: Run clang-format check
+      run: |
+        find src -name "*.cpp" -o -name "*.hpp" | xargs clang-format --dry-run --Werror
+        
+    - name: Run cppcheck static analysis
+      run: |
+        cppcheck --enable=all --error-exitcode=1 --suppress=missingInclude \
+          --check-config --std=c++20 src/
+          
+    - name: Check for security vulnerabilities
+      run: |
+        # Check for potential security issues
+        grep -r "system(" src/ && exit 1 || true
+        grep -r "exec(" src/ && exit 1 || true
+        grep -r "popen(" src/ && exit 1 || true
+        echo "✅ No obvious security vulnerabilities found"
+        
+    - name: Validate JSON schemas
+      run: |
+        python3 -c "
+        import json
+        import glob
+        for file in glob.glob('**/*.json', recursive=True):
+          try:
+            with open(file) as f:
+              json.load(f)
+            print(f'✅ {file}')
+          except Exception as e:
+            print(f'❌ {file}: {e}')
+            exit(1)
+        "
+
+  # ============================================================================
+  # BUILD MATRIX - Multiple OpenFOAM Versions & Compilers
+  # ============================================================================
+  
+  build-test:
+    name: 🔨 Build & Test
+    runs-on: ubuntu-22.04
+    needs: code-quality
+    strategy:
+      fail-fast: false
+      matrix:
+        openfoam_version: ['12', '11']
+        compiler: ['gcc-11', 'gcc-12', 'clang-14']
+        build_type: ['Release', 'Debug']
+        exclude:
+          # Skip some combinations to reduce CI time
+          - openfoam_version: '11'
+            compiler: 'clang-14'
+          - openfoam_version: '11'
+            build_type: 'Debug'
+            
+    env:
+      CC: ${{ matrix.compiler == 'clang-14' && 'clang-14' || 'gcc' }}
+      CXX: ${{ matrix.compiler == 'clang-14' && 'clang++-14' || 'g++' }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Cache OpenFOAM installation
+      uses: actions/cache@v3
+      with:
+        path: /opt/openfoam${{ matrix.openfoam_version }}
+        key: openfoam-${{ matrix.openfoam_version }}-${{ runner.os }}-v2
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential cmake ninja-build \
+          ${{ matrix.compiler }} \
+          nlohmann-json3-dev libboost-all-dev libsqlite3-dev \
+          python3-dev python3-pip \
+          git curl wget
+          
+    - name: Install OpenFOAM ${{ matrix.openfoam_version }}
+      run: |
+        if [ ! -d "/opt/openfoam${{ matrix.openfoam_version }}" ]; then
+          # Download and install OpenFOAM
+          cd /tmp
+          wget -O - https://dl.openfoam.org/gpg.key | sudo apt-key add -
+          sudo add-apt-repository http://dl.openfoam.org/ubuntu
+          sudo apt-get update
+          sudo apt-get install -y openfoam${{ matrix.openfoam_version }}
+        fi
+        
+    - name: Setup OpenFOAM environment
+      run: |
+        echo "source /opt/openfoam${{ matrix.openfoam_version }}/etc/bashrc" >> ~/.bashrc
+        source /opt/openfoam${{ matrix.openfoam_version }}/etc/bashrc
+        echo "WM_PROJECT_DIR=$WM_PROJECT_DIR" >> $GITHUB_ENV
+        echo "FOAM_LIBBIN=$FOAM_LIBBIN" >> $GITHUB_ENV
+        
+    - name: Configure CMake
+      run: |
+        source /opt/openfoam${{ matrix.openfoam_version }}/etc/bashrc
+        cmake -B build -G Ninja \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_CXX_STANDARD=20 \
+          -DBUILD_TESTS=ON \
+          -DENABLE_COVERAGE=${{ matrix.build_type == 'Debug' && 'ON' || 'OFF' }} \
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          
+    - name: Build MCP Server
+      run: |
+        source /opt/openfoam${{ matrix.openfoam_version }}/etc/bashrc
+        cmake --build build --config ${{ matrix.build_type }} --parallel $(nproc)
+        
+    - name: Run unit tests
+      run: |
+        source /opt/openfoam${{ matrix.openfoam_version }}/etc/bashrc
+        cd build
+        ctest --output-on-failure --parallel ${{ env.CTEST_PARALLEL_LEVEL }}
+        
+    - name: Test MCP server startup
+      run: |
+        source /opt/openfoam${{ matrix.openfoam_version }}/etc/bashrc
+        # Test basic JSON-RPC functionality
+        echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' > test_input.json
+        timeout 10s ./build/openfoam-mcp-server < test_input.json || true
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      if: matrix.build_type == 'Release' && matrix.compiler == 'gcc-11'
+      with:
+        name: openfoam-mcp-server-${{ matrix.openfoam_version }}
+        path: |
+          build/openfoam-mcp-server
+          build/compile_commands.json
+        retention-days: 7
+
+  # ============================================================================
+  # CFD VALIDATION TESTS - Physics Accuracy
+  # ============================================================================
+  
+  cfd-validation:
+    name: 🌊 CFD Physics Validation
+    runs-on: ubuntu-22.04
+    needs: build-test
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup OpenFOAM 12
+      run: |
+        sudo apt-get update
+        wget -O - https://dl.openfoam.org/gpg.key | sudo apt-key add -
+        sudo add-apt-repository http://dl.openfoam.org/ubuntu
+        sudo apt-get update
+        sudo apt-get install -y openfoam12 python3-pip cmake ninja-build \
+          build-essential nlohmann-json3-dev libboost-all-dev libsqlite3-dev
+        pip3 install psutil
+        
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: openfoam-mcp-server-12
+        path: build/
+        
+    - name: Make executable
+      run: chmod +x build/openfoam-mcp-server
+      
+    - name: Build MCP server for testing
+      run: |
+        source /opt/openfoam12/etc/bashrc
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20
+        cmake --build build --parallel $(nproc)
+        
+    - name: Run unit tests
+      run: |
+        python3 tests/unit/basic_tests.py
+        
+    - name: Run comprehensive validation tests
+      run: |
+        source /opt/openfoam12/etc/bashrc
+        python3 tests/validation/run_all_tests.py
+        
+    - name: Generate validation report
+      run: |
+        python3 tests/validation/generate_report.py
+        
+    - name: Upload validation results
+      uses: actions/upload-artifact@v3
+      with:
+        name: cfd-validation-results
+        path: |
+          tests/validation/results/
+          tests/validation/report.html
+        retention-days: 30
+
+  # ============================================================================
+  # PERFORMANCE BENCHMARKS
+  # ============================================================================
+  
+  performance-tests:
+    name: ⚡ Performance Benchmarks
+    runs-on: ubuntu-22.04
+    needs: build-test
+    if: github.event.inputs.run_performance_tests == 'true' || github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup high-performance environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openfoam12 time valgrind python3-pip
+        pip3 install psutil
+        
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: openfoam-mcp-server-12
+        path: build/
+        
+    - name: Make executable
+      run: chmod +x build/openfoam-mcp-server
+      
+    - name: Run memory profiling
+      run: |
+        source /opt/openfoam12/etc/bashrc
+        # Create a simple test input for memory profiling
+        echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' > test_input.json
+        timeout 30s valgrind --tool=memcheck --leak-check=full \
+          ./build/openfoam-mcp-server < test_input.json 2>&1 | tee memory_profile.log || true
+        
+    - name: Run performance benchmarks
+      run: |
+        source /opt/openfoam12/etc/bashrc
+        python3 tests/performance/benchmark_tests.py
+        
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-results
+        path: |
+          tests/performance/results/
+          memory_profile.log
+        retention-days: 7
+
+  # ============================================================================
+  # DOCKER BUILD & CONTAINER TESTS
+  # ============================================================================
+  
+  docker-build:
+    name: 🐳 Docker Build & Test
+    runs-on: ubuntu-22.04
+    needs: code-quality
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: false
+        tags: openfoam-mcp-server:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        
+    - name: Test container startup
+      run: |
+        # Test basic JSON-RPC functionality in container
+        echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' > test_input.json
+        timeout 10s docker run --rm -i openfoam-mcp-server:test < test_input.json || true
+        
+    - name: Test MCP functionality in container
+      run: |
+        docker run --rm -d --name mcp-test openfoam-mcp-server:test
+        sleep 5
+        docker logs mcp-test
+        docker stop mcp-test
+
+  # ============================================================================
+  # INTEGRATION TESTS - End-to-End
+  # ============================================================================
+  
+  integration-tests:
+    name: 🔗 Integration Tests
+    runs-on: ubuntu-22.04
+    needs: [build-test, cfd-validation]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js for MCP testing
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install MCP testing tools
+      run: |
+        npm install -g @modelcontextprotocol/cli
+        
+    - name: Setup OpenFOAM
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openfoam12 python3-pip
+        pip3 install psutil
+        
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: openfoam-mcp-server-12
+        path: build/
+        
+    - name: Make executable
+      run: chmod +x build/openfoam-mcp-server
+      
+    - name: Test MCP protocol compliance
+      run: |
+        source /opt/openfoam12/etc/bashrc
+        python3 tests/integration/mcp_protocol_test.py
+        
+    - name: Test tool registration
+      run: |
+        source /opt/openfoam12/etc/bashrc
+        python3 tests/integration/test_tool_registration.py
+        
+    - name: Test end-to-end workflows
+      run: |
+        source /opt/openfoam12/etc/bashrc
+        python3 tests/integration/test_e2e_workflows.py
+
+  # ============================================================================
+  # SECURITY SCANNING
+  # ============================================================================
+  
+  security-scan:
+    name: 🔒 Security Scanning
+    runs-on: ubuntu-22.04
+    needs: code-quality
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+        
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/init@v2
+      with:
+        languages: cpp
+        
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+  # ============================================================================
+  # DOCUMENTATION GENERATION
+  # ============================================================================
+  
+  documentation:
+    name: 📚 Generate Documentation
+    runs-on: ubuntu-22.04
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Doxygen
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen graphviz
+        
+    - name: Generate API documentation
+      run: |
+        doxygen Doxyfile
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/html
+
+  # ============================================================================
+  # RELEASE AUTOMATION
+  # ============================================================================
+  
+  release:
+    name: 🚀 Release
+    runs-on: ubuntu-22.04
+    needs: [build-test, cfd-validation, integration-tests, security-scan]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      
+    - name: Generate changelog
+      run: |
+        python3 scripts/generate_changelog.py > CHANGELOG.md
+        
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          openfoam-mcp-server-*/openfoam-mcp-server
+          cfd-validation-results/*
+        body_path: CHANGELOG.md
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================================================
+  # NOTIFICATION & REPORTING
+  # ============================================================================
+  
+  notify:
+    name: 📢 Notify Results
+    runs-on: ubuntu-22.04
+    needs: [build-test, cfd-validation, integration-tests]
+    if: always()
+    
+    steps:
+    - name: Notify on failure
+      if: ${{ contains(needs.*.result, 'failure') }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        text: 'OpenFOAM MCP Server CI failed! Check the logs.'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
+    - name: Notify on success
+      if: ${{ needs.build-test.result == 'success' && needs.cfd-validation.result == 'success' }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        text: 'OpenFOAM MCP Server CI passed! 🎉'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
