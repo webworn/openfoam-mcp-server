@@ -1,34 +1,73 @@
 # OpenFOAM MCP Server
 
-🚀 **The world's first native OpenFOAM Model Context Protocol server** - enabling AI assistants to perform computational fluid dynamics (CFD) analysis with expert-level guidance.
+🚀 **Revolutionary intelligent CFD education and problem-solving system** - The world's first OpenFOAM Model Context Protocol server with advanced AI capabilities including Socratic questioning, context engineering, and expert-level error resolution.
 
 [![OpenFOAM](https://img.shields.io/badge/OpenFOAM-12-blue)](https://openfoam.org/)
 [![C++](https://img.shields.io/badge/C++-20-green)](https://isocpp.org/)
 [![MCP](https://img.shields.io/badge/MCP-1.0-purple)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-red)](LICENSE)
 
-## 🎯 Why This MCP? The CFD-AI Gap
+## 🎯 Why This MCP? The CFD-AI Educational Revolution
 
 ### The Problem: CFD Expertise Barrier
 - **Complex Setup**: OpenFOAM requires deep expertise in mesh generation, boundary conditions, and solver selection
 - **Physics Knowledge**: CFD analysis demands understanding of fluid dynamics, heat transfer, and numerical methods
 - **Time-Intensive**: Manual setup and analysis can take hours to days for complex cases
 - **Error-Prone**: Incorrect boundary conditions or solver settings lead to non-physical results
+- **Learning Curve**: Traditional CFD tools lack educational guidance and progressive learning support
 
-### The Solution: AI-Native CFD
-This MCP bridges the gap between AI assistance and professional CFD tools by:
-- **Physics-Aware AI**: First MCP server that understands OpenFOAM solvers and CFD principles
-- **Expert Guidance**: Provides thermal design recommendations and aerodynamic optimization advice
-- **Automated Setup**: Intelligent case creation with validated boundary conditions and solver settings
-- **Educational**: Explains the physics behind results with dimensionless numbers and engineering insights
+### The Solution: Intelligent CFD Education System
+This revolutionary MCP transforms CFD learning and problem-solving through:
+- **Context Engineering**: Advanced user modeling that tracks CFD concept understanding and adapts complexity
+- **Socratic Questioning**: Strategic questioning engine with 4 proven patterns (Clarify, Explore, Confirm, Apply)
+- **Intelligent Parameter Extraction**: Natural language to CFD parameter translation with confidence scoring
+- **Advanced Error Resolution**: 5 Whys methodology with research-backed solutions and academic references
+- **CFD Knowledge Graph**: Concept relationship mapping for guided learning paths
+- **Dual-Terminal Architecture**: Seamless OpenFOAM execution with intelligent conversation flow
 
 ### Market Impact
-- **Democratizes CFD**: Makes professional fluid dynamics analysis accessible to non-experts
-- **Accelerates Design**: Reduces CFD setup time from hours to minutes
-- **Enhances Learning**: Provides physics explanations alongside numerical results
-- **Professional Integration**: Maintains full OpenFOAM compatibility for advanced users
+- **Revolutionizes CFD Education**: First AI-driven system that teaches CFD through guided discovery
+- **Democratizes CFD**: Makes professional fluid dynamics analysis accessible through natural language
+- **Accelerates Learning**: Progressive complexity adaptation based on user understanding level
+- **Enhances Problem-Solving**: 5 Whys error resolution with research-backed solutions
+- **Professional Integration**: Maintains full OpenFOAM compatibility with intelligent guidance overlay
 
-## 🛠️ Capabilities
+## 🛠️ Intelligent CFD Capabilities
+
+### 🧠 Advanced AI Features
+
+#### **Context Engineering System**
+- **Enhanced User Modeling**: Tracks CFD concept understanding, experience level, and learning progress
+- **Confidence Scoring**: Monitors user comprehension across fluid dynamics, heat transfer, and numerical methods
+- **Adaptive Complexity**: Automatically adjusts explanations and guidance based on user expertise
+- **Learning Path Optimization**: Suggests optimal concept progression for effective CFD mastery
+
+#### **Socratic Questioning Engine** 
+- **Strategic Question Patterns**: 4 proven educational strategies for progressive learning
+  - 🔍 **CLARIFY**: "What specifically do you mean by turbulent flow in this context?"
+  - 🌊 **EXPLORE**: "What would happen if we increased the Reynolds number to 500,000?"
+  - ✅ **CONFIRM**: "So you're saying that pressure drop increases quadratically with velocity?"
+  - 🎯 **APPLY**: "How would you use the Moody diagram for this pipe flow problem?"
+- **Context-Aware Questions**: Generated based on user's current understanding and conversation history
+- **Progressive Difficulty**: Questions adapt complexity to build understanding systematically
+
+#### **Intelligent Parameter Extraction**
+- **Natural Language Processing**: Converts conversational descriptions to precise CFD parameters
+- **Physics Validation**: Ensures extracted parameters are physically reasonable and consistent
+- **Confidence Scoring**: Provides certainty levels for parameter extraction accuracy
+- **Interactive Clarification**: Asks intelligent follow-up questions when parameters are ambiguous
+
+#### **Advanced Error Resolution**
+- **5 Whys Methodology**: Systematic root cause analysis for CFD simulation failures
+- **Research Integration**: Academic paper database with evidence-based solutions
+- **Diagnostic Guidance**: Step-by-step troubleshooting with educational explanations
+- **Prevention Strategies**: Teaches users to avoid similar issues through understanding
+
+#### **CFD Knowledge Graph**
+- **Concept Relationships**: Maps connections between fluid mechanics, heat transfer, and numerical methods
+- **Learning Dependencies**: Identifies prerequisite concepts for advanced topics
+- **Skill Assessment**: Evaluates user knowledge gaps and suggests focused learning areas
+- **Academic References**: Links concepts to authoritative sources and research papers
 
 ### Core Analysis Tools
 
@@ -60,25 +99,44 @@ This MCP bridges the gap between AI assistance and professional CFD tools by:
 - **Solvers**: `chtMultiRegionFoam` with radiation modeling
 - **Features**: Material property database, Nusselt number correlations, thermal violations
 
-### Advanced Features
+#### 4. 🌊 **Multiphase Flow Analysis** (`analyze_multiphase_flow`)
+**Physics**: Complex multiphase interactions using Volume of Fluid (VOF) method
+- **Calculates**: Interface tracking, phase distribution, momentum transfer coefficients
+- **Applications**:
+  - **Dam Break Analysis**: Hydraulic structure design, flood modeling
+  - **Free Surface Flows**: Ship hull design, coastal engineering
+  - **Bubble Dynamics**: Chemical reactors, gas-liquid separations
+  - **Sloshing Analysis**: Fuel tank design, liquid cargo transport
+- **Solvers**: `interFoam` with interface compression and surface tension
+- **Features**: Analytical validation against dam break solutions, bubble rise dynamics
 
-#### 🧮 **Physics-Based Calculations**
-- **Dimensionless Numbers**: Reynolds, Prandtl, Nusselt, Rayleigh, Grashof
-- **Material Properties**: Thermal conductivity, density, specific heat, viscosity
-- **Validation**: Analytical comparisons and engineering rule checks
-- **Error Detection**: Non-physical results and convergence warnings
+### 🎯 Intelligent CFD Education Features
 
-#### 🎓 **Educational Content**
-- **Physics Explanations**: Detailed description of flow phenomena
-- **Engineering Guidance**: Design recommendations and optimization strategies
-- **Application Context**: Industry-specific advice for automotive, aerospace, HVAC
-- **Best Practices**: Mesh quality, boundary conditions, solver selection
+#### 🧮 **Physics-Based Calculations with AI Guidance**
+- **Dimensionless Numbers**: Reynolds, Prandtl, Nusselt, Rayleigh, Grashof with educational context
+- **Material Properties**: Thermal conductivity, density, specific heat, viscosity with database references
+- **Validation**: Analytical comparisons against Hagen-Poiseuille, Blasius, and experimental correlations
+- **Error Detection**: Non-physical results detection with 5 Whys analysis and resolution guidance
 
-#### 📊 **Visualization Integration**
-- **ParaView Web Interface**: Real-time result visualization on port 8080
-- **Automated Plots**: Velocity contours, pressure distributions, temperature fields
-- **Streamlines**: Flow visualization with particle tracking
-- **Result Export**: VTK format for advanced post-processing
+#### 🎓 **Adaptive Educational Content**
+- **Progressive Physics Explanations**: Complexity adapts to user's demonstrated understanding level
+- **Socratic Teaching Method**: Strategic questioning to build deep conceptual understanding
+- **Engineering Guidance**: Context-aware design recommendations with academic justification
+- **Industry Applications**: Real-world examples from automotive, aerospace, electronics, and marine sectors
+- **Best Practices**: Intelligent mesh quality assessment, boundary condition validation, solver selection logic
+
+#### 🔍 **Comprehensive CFD Validation Framework**
+- **Multi-Physics Domains**: Validation across pipe flow, external flow, heat transfer, and multiphase systems
+- **Analytical Solutions**: Automatic comparison with classical solutions (Poiseuille, Blasius, Rayleigh-Bénard)
+- **Experimental Validation**: Database of experimental correlations and benchmark cases
+- **Confidence Metrics**: Statistical validation with uncertainty quantification and error bounds
+
+#### 📊 **Intelligent Visualization & Results**
+- **ParaView Web Interface**: Real-time result visualization on port 8080 with educational annotations
+- **Context-Aware Plots**: Automatically generated visualizations based on physics domain and user understanding
+- **Interactive Learning**: Guided exploration of results with Socratic questioning about flow phenomena
+- **Streamlines & Pathlines**: Flow visualization with educational explanations of particle tracking
+- **Result Export**: VTK format for advanced post-processing with comprehensive metadata
 
 ## 📥 Installation
 
@@ -110,7 +168,11 @@ make -j$(nproc)
 3. **Test Installation**
 ```bash
 ./openfoam-mcp-server --version
-# Should output: OpenFOAM MCP Server v1.0.0
+# Should output: OpenFOAM MCP Server v2.0.0-dev
+
+# Test AI capabilities
+./openfoam-mcp-server --test-context-engine
+./openfoam-mcp-server --demo-socratic-questioning
 ```
 
 ### Dependencies Auto-Detection
@@ -141,79 +203,108 @@ Add to your Claude Code settings (`~/.config/claude-code/mcp_servers.json`):
 }
 ```
 
-### Usage Examples
+### Intelligent CFD Assistant Examples
 
-#### Basic Pipe Flow Analysis
+#### Socratic Learning: Pipe Flow Analysis
 ```
 🧑‍💻 User: "Analyze water flow in a 0.1m diameter pipe at 2 m/s"
 
-🤖 Claude: I'll run a pipe flow analysis for you.
-*Uses run_pipe_flow tool*
+🤖 Claude: Before I run the analysis, let me understand your background better.
 
-📊 Results:
-• Reynolds Number: 200,000 (Turbulent flow)
+🔍 CLARIFY: "What specifically interests you about this pipe flow - are you designing a hydraulic system, learning about pressure losses, or optimizing an existing installation?"
+
+🧑‍💻 User: "I'm learning about pressure losses for my fluid mechanics course"
+
+🤖 Claude: Perfect! I'll guide you through the analysis step by step.
+
+*Uses run_pipe_flow tool with educational context*
+
+📊 Results with Learning:
+• Reynolds Number: 200,000 
+  💡 This indicates turbulent flow (Re > 4,000). What do you think this means for mixing?
 • Friction Factor: 0.0184 (Blasius correlation)
+  🌊 EXPLORE: How would this change if we doubled the velocity?
 • Pressure Drop: 2.4 kPa per meter
-• Wall Shear Stress: 4.8 Pa
+  ✅ CONFIRM: So you're seeing that pressure drop increases significantly with velocity - can you explain why?
 
-💡 Recommendations:
-• High pressure drop - consider 0.15m diameter for 50% reduction
-• Turbulent mixing enhances heat transfer
-• Consider L/D > 10 for fully developed flow
+🎯 APPLY: "Now that you understand the relationship, how would you redesign this pipe to reduce pumping costs by 50%?"
 ```
 
-#### Automotive Aerodynamics
+#### Context-Aware Error Resolution
 ```
-🧑‍💻 User: "Calculate drag coefficient for a sedan at highway speeds"
+🧑‍💻 User: "My heat transfer simulation isn't converging. The residuals keep oscillating."
 
-🤖 Claude: I'll analyze the external flow around a sedan.
-*Uses analyze_external_flow tool*
+🤖 Claude: I'll help you resolve this using systematic analysis.
 
-🚗 Results:
-• Drag Coefficient (Cd): 0.32
-• Frontal Area: 2.2 m²
-• Drag Force: 312 N at 100 km/h
-• Fuel Impact: ~15% of energy at highway speeds
+*Applies 5 Whys methodology*
 
-🎯 Optimization:
-• Rear spoiler could reduce Cd by 0.02-0.05
-• Underbody panels improve airflow management
-• Side mirror design contributes 3-5% of total drag
-```
+🔍 Why #1: "Why are the residuals oscillating?"
+Analysis: Likely numerical instability or inappropriate relaxation factors.
 
-#### Electronics Thermal Management
-```
-🧑‍💻 User: "Design cooling for a 50W CPU with air cooling"
+🔍 Why #2: "Why might the relaxation factors be inappropriate?"
+Your setup shows high temperature gradients that require more conservative factors.
 
-🤖 Claude: I'll analyze the conjugate heat transfer.
-*Uses analyze_heat_transfer tool*
+🔍 Why #3: "Why are the temperature gradients so high?"
+The boundary conditions show a 500K temperature difference across a thin wall.
 
-🌡️ Results:
-• Junction Temperature: 78°C (within 85°C limit)
-• Thermal Resistance: 1.2 K/W (junction-to-ambient)
-• Heat Transfer: 45W convection, 5W radiation
-• Cooling Effectiveness: 92%
+📚 Research-Backed Solution:
+• Reduce temperature relaxation from 0.7 to 0.3 (Versteeg & Malalasekera, 2007)
+• Implement under-relaxation for energy equation (Patankar, 1980)
+• Consider CFL number for transient effects
 
-⚠️ Recommendations:
-• Current design adequate for 50W
-• For >60W, consider heat pipes or liquid cooling
-• Improve thermal interface material (TIM)
-• Add case ventilation for ambient cooling
+🎯 Prevention Strategy:
+• Always validate physical temperature ranges before simulation
+• Use dimensionless temperature analysis for better conditioning
+• Implement gradual temperature ramping for extreme conditions
 ```
 
-### Workflow Integration
+#### Parameter Extraction from Natural Language
+```
+🧑‍💻 User: "I have a large tank with water draining through a small hole at the bottom. The water level starts at about 2 meters and I want to know how long it takes to empty."
 
-#### Engineering Design Process
-1. **Conceptual Design**: Use MCP for initial sizing and feasibility
-2. **Detailed Analysis**: Export OpenFOAM cases for advanced simulation
-3. **Optimization**: Iterate with AI guidance on design improvements
-4. **Validation**: Compare results with analytical correlations
+🤖 Claude: I can help with this dam break/draining analysis! Let me extract the CFD parameters from your description.
 
-#### Educational Use
-1. **Physics Learning**: Understand CFD principles through practical examples
-2. **Parameter Studies**: Explore effects of Reynolds number, geometry
-3. **Best Practices**: Learn proper boundary conditions and solver selection
-4. **Industry Applications**: Apply CFD to real-world engineering problems
+*Uses intelligent parameter extraction*
+
+📋 Extracted Parameters (Confidence: 85%):
+• Physics Domain: Multiphase flow (free surface)
+• Initial water height: 2.0 m ✓
+• Geometry: Tank with bottom orifice ✓
+• Fluid: Water (ρ=1000 kg/m³, μ=1e-3 Pa·s) ✓
+
+❓ Clarification Needed:
+• Tank dimensions (length, width)? 
+• Orifice diameter?
+• Are we modeling turbulence effects?
+
+🔍 EXPLORE: "Based on Torricelli's law, what do you expect happens to the flow rate as the tank empties?"
+
+*After clarification, runs multiphase flow analysis*
+
+📊 Results with Physics Insight:
+• Analytical (Torricelli): ~89 seconds for complete drainage
+• CFD Simulation: ~94 seconds (includes viscous effects)
+• Flow regime: Initially turbulent (Re~50,000), transitions to laminar
+• Vortex formation near orifice affects drainage rate by ~5%
+```
+
+### Intelligent Workflow Integration
+
+#### AI-Enhanced Engineering Design Process
+1. **Conceptual Design**: Context-aware initial sizing with intelligent parameter extraction
+2. **Physics Validation**: Socratic questioning to ensure understanding of assumptions
+3. **Detailed Analysis**: Export OpenFOAM cases with AI-generated documentation
+4. **Error Resolution**: 5 Whys methodology for systematic troubleshooting
+5. **Optimization**: AI-guided design improvements with academic justification
+6. **Validation**: Automatic comparison with analytical solutions and experimental data
+
+#### Progressive CFD Education
+1. **Adaptive Learning**: Complexity automatically adjusts to demonstrated user understanding
+2. **Concept Mapping**: CFD knowledge graph guides learning path optimization
+3. **Socratic Discovery**: Strategic questioning builds deep conceptual understanding
+4. **Research Integration**: Academic papers and validated solutions support learning
+5. **Industry Context**: Real-world applications connect theory to practice
+6. **Error Prevention**: Learn from mistakes through systematic root cause analysis
 
 ## 🤝 Contributing
 

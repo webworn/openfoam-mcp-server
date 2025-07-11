@@ -1,0 +1,195 @@
+================================================================================
+EXTERNAL FLOW VALIDATION REPORT
+================================================================================
+
+OVERALL SUMMARY:
+  Total tests: 28
+  Passed: 28
+  Failed: 0
+  Success rate: 100.0%
+
+AERODYNAMICS VALIDATION:
+  Analytical solutions verified for:
+    - Cylinder drag coefficient correlations
+    - Sphere drag coefficient correlations
+    - Thin airfoil theory (lift and drag)
+    - Building aerodynamics correlations
+    - Reynolds number calculations
+
+TEST CASE BREAKDOWN:
+  Cylinder cases: 3
+  Sphere cases: 2
+  Airfoil cases: 2
+  Building cases: 2
+
+REYNOLDS NUMBER RANGE:
+  Minimum Re: 100
+  Maximum Re: 68055556
+  Range spans: 680555.6 orders of magnitude
+
+TEST CASE: cylinder_stokes_regime
+----------------------------------------
+  reynolds_number:
+    Computed: 100.0000
+    Analytical: 100.0000
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 1.0938
+    Analytical: 1.0938
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 0.0000
+    Analytical: 0.0000
+    Error: 0.00%
+    Status: ✅ PASS
+
+TEST CASE: cylinder_moderate_re
+----------------------------------------
+  reynolds_number:
+    Computed: 100000.0000
+    Analytical: 100000.0000
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 0.4892
+    Analytical: 0.4892
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 2.4458
+    Analytical: 2.4458
+    Error: 0.00%
+    Status: ✅ PASS
+
+TEST CASE: cylinder_air_flow
+----------------------------------------
+  reynolds_number:
+    Computed: 340277.7778
+    Analytical: 340277.7778
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 0.2000
+    Analytical: 0.2000
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 3.0625
+    Analytical: 3.0625
+    Error: 0.00%
+    Status: ✅ PASS
+
+TEST CASE: sphere_low_re
+----------------------------------------
+  reynolds_number:
+    Computed: 1000.0000
+    Analytical: 1000.0000
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 0.4400
+    Analytical: 0.4400
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 0.0002
+    Analytical: 0.0002
+    Error: 0.00%
+    Status: ✅ PASS
+
+TEST CASE: sphere_newton_regime
+----------------------------------------
+  reynolds_number:
+    Computed: 500000.0000
+    Analytical: 500000.0000
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 0.1000
+    Analytical: 0.1000
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 12.5000
+    Analytical: 12.5000
+    Error: 0.00%
+    Status: ✅ PASS
+
+TEST CASE: naca0012_zero_aoa
+----------------------------------------
+  reynolds_number:
+    Computed: 3402777.7778
+    Analytical: 3402777.7778
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 0.0100
+    Analytical: 0.0100
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 15.3125
+    Analytical: 15.3125
+    Error: 0.00%
+    Status: ✅ PASS
+
+TEST CASE: naca0012_small_aoa
+----------------------------------------
+  reynolds_number:
+    Computed: 2041666.6667
+    Analytical: 2041666.6667
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 0.0220
+    Analytical: 0.0220
+    Error: 0.00%
+    Status: ✅ PASS
+  lift_coefficient:
+    Computed: 0.5483
+    Analytical: 0.5483
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 12.1067
+    Analytical: 12.1067
+    Error: 0.00%
+    Status: ✅ PASS
+
+TEST CASE: square_building
+----------------------------------------
+  reynolds_number:
+    Computed: 20416666.6667
+    Analytical: 20416666.6667
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 1.1400
+    Analytical: 1.1400
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 62842.5000
+    Analytical: 62842.5000
+    Error: 0.00%
+    Status: ✅ PASS
+
+TEST CASE: tall_building
+----------------------------------------
+  reynolds_number:
+    Computed: 68055555.5556
+    Analytical: 68055555.5556
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_coefficient:
+    Computed: 1.3300
+    Analytical: 1.3300
+    Error: 0.00%
+    Status: ✅ PASS
+  drag_force:
+    Computed: 814625.0000
+    Analytical: 814625.0000
+    Error: 0.00%
+    Status: ✅ PASS
