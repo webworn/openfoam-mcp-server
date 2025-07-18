@@ -1,0 +1,12 @@
+SOURCE += fluxScheme/fluxScheme.C
+SOURCE += fluxScheme/newFluxScheme.C
+
+SOURCE += HLLC/HLLC.C
+SOURCE += HLLCP/HLLCP.C
+SOURCE += HLL/HLL.C
+SOURCE += Kurganov/Kurganov.C
+SOURCE += Tadmor/Tadmor.C
+SOURCE += AUSMPlus/AUSMPlus.C
+SOURCE += AUSMPlusUp/AUSMPlusUp.C
+
+LIB = $(FOAM_USER_LIBBIN)/libfluxSchemes_improved

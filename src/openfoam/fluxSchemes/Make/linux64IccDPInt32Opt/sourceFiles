@@ -1,0 +1,10 @@
+SOURCE = \
+fluxScheme/fluxScheme.C \
+fluxScheme/newFluxScheme.C \
+HLLC/HLLC.C \
+HLLCP/HLLCP.C \
+HLL/HLL.C \
+Kurganov/Kurganov.C \
+Tadmor/Tadmor.C \
+AUSMPlus/AUSMPlus.C \
+AUSMPlusUp/AUSMPlusUp.C 
