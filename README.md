@@ -630,11 +630,11 @@ optimize_subsea_pipeline(pipeline_route, current_loads, installation_method)
 
 | **Domain** | **Solvers** | **Applications** | **Target Release** |
 |------------|-------------|------------------|-------------------|
-| **Compressible** | `rhoCentralFoam`, `sonicFoam` | Aerospace, turbomachinery | Q2 2024 |
-| **Multiphase** | `interFoam`, `twoPhaseEulerFoam` | Process industry, marine | Q3 2024 |
-| **Combustion** | `fireFoam`, `reactingFoam` | Power generation, automotive | Q4 2024 |
-| **Electromagnetics** | `mhdFoam`, `electrostaticFoam` | Fusion, materials processing | Q1 2025 |
-| **Particle Dynamics** | `DPMFoam`, `coalChemistryFoam` | Environmental, pharmaceutical | Q2 2025 |
+| **Compressible** | `rhoCentralFoam`, `sonicFoam` | Aerospace, turbomachinery | Q4 2025 |
+| **Multiphase** | `interFoam`, `twoPhaseEulerFoam` | Process industry, marine | Q1 2026 |
+| **Combustion** | `fireFoam`, `reactingFoam` | Power generation, automotive | Q2 2026 |
+| **Electromagnetics** | `mhdFoam`, `electrostaticFoam` | Fusion, materials processing | Q3 2026 |
+| **Particle Dynamics** | `DPMFoam`, `coalChemistryFoam` | Environmental, pharmaceutical | Q4 2026 |
 
 ### 🤝 **How to Contribute**
 
