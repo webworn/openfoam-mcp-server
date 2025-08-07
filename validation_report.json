@@ -1,0 +1,30 @@
+{
+  "averageError": 0.32309597337103135,
+  "failedTests": 0,
+  "overallAccuracy": 100.0,
+  "passedTests": 2,
+  "reportTime": "2025-08-07T13:35:15Z",
+  "results": [
+    {
+      "absoluteError": 0.0633354698563835,
+      "calculatedValue": 1975.3633354698563,
+      "executionTimeMs": 983,
+      "expectedValue": 1975.3,
+      "relativeError": 0.003206372189357743,
+      "testCase": "H2_air_STP",
+      "timestamp": "2025-08-07T13:35:16Z",
+      "withinTolerance": true
+    },
+    {
+      "absoluteError": 13.69880766584538,
+      "calculatedValue": 2144.1988076658454,
+      "executionTimeMs": 922,
+      "expectedValue": 2130.5,
+      "relativeError": 0.642985574552705,
+      "testCase": "H2_air_rich",
+      "timestamp": "2025-08-07T13:35:17Z",
+      "withinTolerance": true
+    }
+  ],
+  "totalTests": 2
+}

@@ -38,7 +38,11 @@ file(GLOB_RECURSE SOURCES
     "src/openfoam/*.cpp" 
     "src/tools/*.cpp"
     "src/utils/*.cpp"
+    "src/physics/cantera_wrapper.cpp"
 )
+
+# Exclude test files from main sources
+list(FILTER SOURCES EXCLUDE REGEX ".*test_.*")
 
 # Main executable
 add_executable(openfoam-mcp-server
@@ -67,6 +71,32 @@ endif()
 # Add Boost if found
 if(Boost_FOUND)
     target_link_libraries(openfoam-mcp-server Boost::system Boost::thread)
+endif()
+
+# Physics test executable
+add_executable(test_cantera_wrapper
+    src/physics/test_cantera_wrapper.cpp
+    src/physics/cantera_wrapper.cpp
+)
+
+target_link_libraries(test_cantera_wrapper
+    pthread
+)
+
+# Add nlohmann_json to physics test if found
+if(nlohmann_json_FOUND)
+    target_link_libraries(test_cantera_wrapper nlohmann_json::nlohmann_json)
+else()
+    # Try to use system nlohmann/json header-only library
+    find_path(NLOHMANN_JSON_INCLUDE_DIR nlohmann/json.hpp 
+        PATHS /usr/include /usr/local/include /opt/homebrew/include
+    )
+    if(NLOHMANN_JSON_INCLUDE_DIR)
+        target_include_directories(test_cantera_wrapper PRIVATE ${NLOHMANN_JSON_INCLUDE_DIR})
+        message(STATUS "Using system nlohmann/json from ${NLOHMANN_JSON_INCLUDE_DIR}")
+    else()
+        message(WARNING "nlohmann/json not found. Consider installing with: sudo apt-get install nlohmann-json3-dev")
+    endif()
 endif()
 
 # Tests (optional)
