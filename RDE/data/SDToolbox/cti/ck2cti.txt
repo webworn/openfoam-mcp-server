@@ -1,0 +1,68 @@
+From cantera 2.3 documentation:
+
+Converting CK-format files
+
+Many existing reaction mechanism files are in “CK format,” by which we mean the input file format developed for use with the Chemkin-II software package as specified in the report describing the Chemkin software [SAND89].
+
+Cantera comes with a converter utility program ck2cti (or ck2cti.py) that converts CK format into Cantera format. This program should be run from the command line first to convert any CK files you plan to use into Cantera format (CTI format).
+
+Usage:
+
+ck2cti [--input=<filename>]
+       [--thermo=<filename>]
+       [--transport=<filename>]
+       [--surface=<filename>]
+       [--id=<phase-id>]
+       [--output=<filename>]
+       [--permissive]
+       [-d | --debug]
+
+Each of the terms in square brackets is an option that can be passed on the command line to ck2cti. --input is the chemistry input file, containing a list of all the element names that are used, a list of all the species names, and a list of all the reactions to be considered between the species. This file can also optionally contain thermodynamic information for the species. If the --input file does not contain the thermodynamic data, a separate file containing this information must be specified to the --thermo` option. Finally, the --input file can also optionally contain transport information for the species. If it does not, and the user wishes to use a part of Cantera that relies on some transport properties, the --transport option must be used to specify the file containing all the transport data for the species.
+
+For the case of a surface mechanism, the gas phase input file should be specified as --input and the surface phase input file should be specified as --surface.
+
+Example:
+
+ck2cti --input=chem.inp --thermo=therm.dat --transport=tran.dat
+
+If the output file name is not given, an output file with the same name as the input file, with the extension changed to ‘.cti’.
+
+If the ck2cti script is not on your path but the Cantera Python module is, ck2cti can also be used by running:
+
+python -m cantera.ck2cti --input=chem.inp --thermo=therm.dat --transport=tran.dat
+
+An input file containing only species definitions (which can be referenced from phase definitions in other input files) can be created by specifying only a thermo file.
+
+Many existing CK format files cause errors in ck2cti when they are processed. Some of these errors may be avoided by specifying the --permissive option. This option allows certain recoverable parsing errors (e.g. duplicate transport or thermodynamic data) to be ignored. Other errors may be caused by incorrect formatting of lines in one or more of the input files
+
+December 2021 update for Cantera 2.5
+
+To convert CK format files to YAML, first convert them to cti format, then to YAML format using 
+
+python -m cantera.cti2yaml mymech.cti
+
+Converting NASA9 polynomial output from the NASA web tool (https://cearun.grc.nasa.gov/ThermoBuild/)
+
+After running the tool,  copy the screen output (the print function does not seem to work) into a text buffer, then paste this into a text file.  Use a text editor (not Word!) to cut and paste the lines of NASA9 output for the polynomial data to create a therm.dat file.  Preserve the spacing between entries (no tabs!), remove all special characters, do not wrap the lines, these need to be exactly 80 columns wide.  
+
+The NASA9 data for each entry starts with are two lines with information about the species and then sets of three lines for each temperature range.  All lines need to be flush right at column 80 (Use 'block mode' to copy the output from the ThermoBuild tool). If not, ck2cti will throw an exception. The file format should be as follows (the entries in the second line do not have to correspond with that actual data - this temperature ranges are given individually for each species):
+
+thermo nasa9
+    200.00   1000.00   6000.00  20000.   
+U                 Gurvich,1982 pt1 p184 pt2 p201. Blaise,1976.
+ 3 g 7/00 U   1.00    0.00    0.00    0.00    0.00 0    238.02891     535000.000
+    200.000  1000.000 7 -2.0 -1.0  0.0  1.0  2.0  3.0  4.0  0.0         6499.294
+ 6.965737750E+04-1.070351517E+03 8.075842310E+00-1.060034069E-02 9.256548010E-06
+-3.219899760E-09 4.058048809E-13 0.000000000E+00 6.866513700E+04-2.240521678E+01
+   1000.000  6000.000 7 -2.0 -1.0  0.0  1.0  2.0  3.0  4.0  0.0         6499.294
+-4.092498960E+06 1.274888349E+04-1.218707506E+01 7.258105680E-03-7.787775070E-07
+-3.844353850E-11 7.066508567E-15 0.000000000E+00-1.699372664E+04 1.155026301E+02
+   6000.000 20000.000 7 -2.0 -1.0  0.0  1.0  2.0  3.0  4.0  0.0         6499.294
+-2.424676814E+08 1.022495503E+05-2.321762289E+00-7.433177460E-04 9.674993970E-08
+-4.159452280E-12 6.313829223E-17 0.000000000E+00-8.137559280E+05 7.333489176E+01
+.
+.
+.
+END
+
+The first entry in the example is for uranium gas species but the format is the same for all species in the NASA9 format. 

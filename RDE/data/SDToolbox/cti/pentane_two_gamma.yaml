@@ -1,0 +1,50 @@
+description: |-
+  "" Model reaction mechanism for two-gamma, one-step model of stoichiometric
+
+generator: cti2yaml
+cantera-version: 2.6.0
+date: Mon, 02 Jan 2023 22:33:27 -0800
+input-files: [pentane_two_gamma.cti]
+
+units: {length: cm, quantity: mol, activation-energy: cal/mol}
+
+elements:
+- symbol: a
+  atomic-weight: 29.2
+
+phases:
+- name: gas
+  thermo: ideal-gas
+  elements: [a]
+  species: [A, B]
+  kinetics: gas
+  reactions: all
+  state:
+    T: 298.15
+    P: 1.01325e+05
+
+species:
+- name: A
+  composition: {a: 1.0}
+  thermo:
+    model: NASA7
+    temperature-ranges: [200.0, 1000.0, 6000.0]
+    data:
+    - [4.751272934023, 0.0, 0.0, 0.0, 0.0, -2133.593547953, 0.0]
+    - [4.751272934023, 0.0, 0.0, 0.0, 0.0, -2133.593547953, 0.0]
+  note: Effective reactants for pentane combustion CIT 1/9/2021
+- name: B
+  composition: {a: 1.0}
+  thermo:
+    model: NASA7
+    temperature-ranges: [200.0, 1000.0, 6000.0]
+    data:
+    - [4.785851570519, 0.0, 0.0, 0.0, 0.0, -1.161179373263e+04, 10.0]
+    - [4.785851570519, 0.0, 0.0, 0.0, 0.0, -1.161179373263e+04, 10.0]
+  note: Effective products for pentane combustion - low temperature fit
+    CIT 1/9/2021
+
+reactions:
+- equation: ' A  => B'  # Reaction 1
+  rate-constant: {A: 5.15e+06, b: 0.0, Ea: 30000}
+  orders: {A: 0.5}

@@ -1,0 +1,44 @@
+description: |-
+  nits(length='cm', time='s', quantity='mol', act_energy='cal/mol')
+
+generator: cti2yaml
+cantera-version: 2.6.0
+date: Mon, 02 Jan 2023 22:32:37 -0800
+input-files: [OH-Ruscic-Burcat.cti]
+
+units: {length: cm, quantity: mol, activation-energy: cal/mol}
+
+phases:
+- name: gas
+  thermo: ideal-gas
+  elements: [H, O]
+  species: [OH, OH*]
+  kinetics: gas
+  reactions: none
+  state:
+    T: 300.0
+    P: 1.01325e+05
+
+species:
+- name: OH
+  composition: {H: 1, O: 1}
+  thermo:
+    model: NASA7
+    temperature-ranges: [200.0, 1000.0, 6000.0]
+    data:
+    - [3.9919842, -2.4010666e-03, 4.6166403e-06, -3.8791631e-09, 1.363195e-12,
+      3368.8984, -0.10399848]
+    - [2.8385303, 1.1074129e-03, -2.9400021e-07, 4.2069873e-11, -2.4228989e-15,
+      3697.8081, 5.8449465]
+  note: JUNO3
+- name: OH*
+  composition: {H: 1, O: 1}
+  thermo:
+    model: NASA7
+    temperature-ranges: [200.0, 1000.0, 6000.0]
+    data:
+    - [3.46084428, 5.01872172e-04, -2.00254474e-06, 3.18901984e-09, -1.35451838e-12,
+      5.07349466e+04, 1.73976415]
+    - [2.7558292, 1.39848756e-03, -4.19428493e-07, 6.33453282e-11, -3.56042218e-15,
+      5.09751756e+04, 5.62581429]
+  note: ACTC

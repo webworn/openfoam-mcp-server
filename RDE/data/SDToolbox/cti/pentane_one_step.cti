@@ -1,0 +1,121 @@
+""" Model reaction mechanism for  one-step model of stoichiometric 
+pentane-air combustion using realistic thermodynamics for a restricted
+set of products (N2, CO2, H2O).  Two empirical one-step reaction models are defined.  
+The methodology is described in:
+ 
+SDToolbox Numerical Tools for Shock and Detonation Wave Modeling, Explosion 
+Dynamics Laboratory, Contributors: S. Browne, J. Ziegler, N. Bitter, B. Schmidt, 
+J. Lawson and J. E. Shepherd, GALCIT Technical Report FM2018.001 Revised January 2021.
+
+Please cite this report and the website if you use these routines. 
+ 
+Please refer to LICENCE.txt or the above report for copyright and disclaimers.
+ 
+http://shepherd.caltech.edu/EDL/PublicResources/sdt/
+
+January 27, 2021
+"""
+#-------------------------------------------------------------------------
+# 
+units(length = "cm", time = "s", quantity = "mol", act_energy = "cal/mol")
+#
+ideal_gas(name = "pentane-one-step",
+    elements = " C H O N ",
+    species = """ N2 O2 H2O NC5H12 CO2 """,
+    reactions = "all",
+    initial_state = state(temperature = 300.0,
+    pressure = OneAtm) )    
+#--------------------------------------------------------------------------
+# Species thermodynamic data  (Standard values obtained from JetSurf2 mechanism
+#--------------------------------------------------------------------------
+species(name='N2',
+        atoms='N:2',
+        thermo=(NASA([300.00, 1000.00],
+                     [ 3.29867700E+00,  1.40824040E-03, -3.96322200E-06,
+                       5.64151500E-09, -2.44485400E-12, -1.02089990E+03,
+                       3.95037200E+00]),
+                NASA([1000.00, 5000.00],
+                     [ 2.92664000E+00,  1.48797680E-03, -5.68476000E-07,
+                       1.00970380E-10, -6.75335100E-15, -9.22797700E+02,
+                       5.98052800E+00])),
+        transport=gas_transport(geom='linear',
+                                diam=3.621,
+                                well_depth=97.53,
+                                polar=1.76,
+                                rot_relax=4.0),
+        note='121286')
+        
+species(name='H2O',
+        atoms='H:2 O:1',
+        thermo=(NASA([200.00, 1000.00],
+                     [ 4.19864056E+00, -2.03643410E-03,  6.52040211E-06,
+                      -5.48797062E-09,  1.77197817E-12, -3.02937267E+04,
+                      -8.49032208E-01]),
+                NASA([1000.00, 3500.00],
+                     [ 3.03399249E+00,  2.17691804E-03, -1.64072518E-07,
+                      -9.70419870E-11,  1.68200992E-14, -3.00042971E+04,
+                       4.96677010E+00])),
+        transport=gas_transport(geom='nonlinear',
+                                diam=2.605,
+                                well_depth=572.4,
+                                dipole=1.844,
+                                rot_relax=4.0),
+        note='L8/89')
+        
+species(name='CO2',
+        atoms='C:1 O:2',
+        thermo=(NASA([200.00, 1000.00],
+                     [ 2.35677352E+00,  8.98459677E-03, -7.12356269E-06,
+                       2.45919022E-09, -1.43699548E-13, -4.83719697E+04,
+                       9.90105222E+00]),
+                NASA([1000.00, 3500.00],
+                     [ 3.85746029E+00,  4.41437026E-03, -2.21481404E-06,
+                       5.23490188E-10, -4.72084164E-14, -4.87591660E+04,
+                       2.27163806E+00])),
+        transport=gas_transport(geom='linear',
+                                diam=3.763,
+                                well_depth=244.0,
+                                polar=2.65,
+                                rot_relax=2.1),
+        note='L7/88')
+        
+species(name='NC5H12',
+        atoms='H:12 C:5',
+        thermo=(NASA([300.00, 1590.00],
+                     [-6.19842877E-01,  5.99868693E-02, -3.43140207E-05,
+                       9.39962973E-09, -9.45023617E-13, -1.99065044E+04,
+                       2.90331291E+01]),
+                NASA([1590.00, 5000.00],
+                     [ 1.57249715E+01,  2.61097423E-02, -8.91028314E-06,
+                       1.38114378E-09, -8.00388502E-14, -2.60565715E+04,
+                      -6.03376362E+01])),
+        transport=gas_transport(geom='nonlinear',
+                                diam=5.445,
+                                well_depth=458.182,
+                                rot_relax=1.0),
+        note='SDT18')
+        
+species(name='O2',
+        atoms='O:2',
+        thermo=(NASA([200.00, 1000.00],
+                     [ 3.78245636E+00, -2.99673416E-03,  9.84730201E-06,
+                      -9.68129509E-09,  3.24372837E-12, -1.06394356E+03,
+                       3.65767573E+00]),
+                NASA([1000.00, 3500.00],
+                     [ 3.28253784E+00,  1.48308754E-03, -7.57966669E-07,
+                       2.09470555E-10, -2.16717794E-14, -1.08845772E+03,
+                       5.45323129E+00])),
+        transport=gas_transport(geom='linear',
+                                diam=3.458,
+                                well_depth=107.4,
+                                polar=1.6,
+                                rot_relax=3.8),
+        note='TPIS89')
+#--------------------------------------------------------------------------
+# Reaction data
+#--------------------------------------------------------------------------
+# Reaction 1
+#reaction(" NC5H12 + 8 O2 => 5 CO2 + 6 H2O",  [6.4E+11, 0.0, 30000], order="NC5H12:0.25 O2:1.5")
+# Global reaction from Table 1, Westbrook and Dryer,  CST Vol. 27, 31-43, 1981
+reaction(" NC5H12 + 8 O2 => 5 CO2 + 6 H2O",  [6.3E12, 0.0, 34610], order="NC5H12:0.71 O2:1.1 N2:-0.13",options=['negative_orders', 'nonreactant_orders'])
+# Global reaction derived from induction time fit of Burcat and Dvinyaninov, 1995, Shock Tubes@Marseille, Springer, pp. 197-202.

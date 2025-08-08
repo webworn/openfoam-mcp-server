@@ -1,0 +1,12 @@
+! No reactions in this file, uses ionized species.
+! units are length = "cm", time = "s", quantity = "mol", act_energy = "cal/mol"
+!
+elements
+H O Ar He
+end
+
+species
+O2 O H2 H OH H2O HO2 H2O2 AR HE
+end
+
+

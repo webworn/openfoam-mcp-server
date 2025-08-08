@@ -1,0 +1,29 @@
+Shock and Detonation Toolbox 'ZND' module
+
+Calculates ZND structure model of detonations
+
+This module defines the following functions:
+
+    zndsys
+    zndsolve
+
+################################################################################
+Theory, numerical methods and applications are described in the following report:
+
+“SDToolbox:  Numerical Tools for Shock and Detonation Wave Modeling.”
+Explosion Dynamics Laboratory. Contributors: S.T.  Browne, J.L. Zeigler,
+N.P. Bitter, B.E. Schmidt, J. Lawson, J.E. Shepherd.
+GALCIT Report FM2018.001. California Institute of Technology, Pasadena, CA. 2020.
+
+Please cite this report and the website if you use these routines.
+
+Please refer to LICENCE.txt or the above report for copyright and disclaimers.
+
+http://shepherd.caltech.edu/EDL/PublicResources/sdt/
+
+
+################################################################################
+Updated February 2021 Tested with:
+    Matlab 2020b Cantera  2.4
+Under these operating systems:
+    Windows 10

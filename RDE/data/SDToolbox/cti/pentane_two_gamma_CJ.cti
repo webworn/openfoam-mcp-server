@@ -1,0 +1,66 @@
+""" Model reaction mechanism for two-gamma, one-step model of stoichiometric 
+pentane-air combustion using high-temperature (CJ state) thermodynamic fit 
+for products.  Three reaction order (1/2, 1, and 2) one-step models are defined.  
+
+The data were generated using the program demo_eq_one_step.cti which is 
+part of the Shock and Detonaion Toolbox.  The methodology is described in:
+
+SDToolbox Numerical Tools for Shock and Detonation Wave Modeling, Explosion 
+Dynamics Laboratory, Contributors: S. Browne, J. Ziegler, N. Bitter, B. Schmidt, 
+J. Lawson and J. E. Shepherd, GALCIT Technical Report FM2018.001 Revised January 2021.
+
+Please cite this report and the website if you use these routines. 
+ 
+Please refer to LICENCE.txt or the above report for copyright and disclaimers.
+ 
+http://shepherd.caltech.edu/EDL/PublicResources/sdt/
+
+January 27, 2021
+"""
+#-------------------------------------------------------------------------
+units(length = "cm", time = "s", quantity = "mol", act_energy = "cal/mol")
+#-------------------------------------------------------------------------
+# define an artificial element with the molar mass of species A and B (or C)
+#-------------------------------------------------------------------------
+element(symbol="a", atomic_mass=29.2)
+#-------------------------------------------------------------------------
+# define models
+#-------------------------------------------------------------------------
+ideal_gas(name = "gas",
+    elements = " a ",
+    species = """ A  B""",
+    reactions = "all",
+    initial_state = state(temperature = 298.15,
+    pressure = OneAtm) )
+#-------------------------------------------------------------------------
+# Species thermodynamic data
+#--------------------------------------------------------------------------
+species( name = "A",
+    atoms = "a:1.0",
+    thermo = (
+       NASA( [  200.00,  1000.00], [ 4.751272934023e+00,   0.0,
+                0.0,   0.0,  0.0,
+               -2.133593547953e+03,   0.0] ),
+       NASA( [ 1000.00,  6000.00], [ 4.751272934023e+00,   0.0,
+                0.0,   0.0,  0.0,
+               -2.133593547953e+03,   0.0] )
+             ),
+    note = "Effective reactants for pentane combustion CIT 1/9/2021" )
+
+species( name = "B",
+    atoms = " a:1.0 ",
+    thermo = (
+       NASA( [  200.00,  1000.00], [ 6.039633920271e+00,   0.0,
+               0.0,   0.0,  0.0,
+               -1.424659577027e+04,   10.0] ),
+       NASA( [ 1000.00,  6000.00], [ 6.039633920271e+00,   0.0,
+                0.0,   0.0,  0.0,
+                -1.424659577027e+04,   10.0] )
+             ),
+    note = "Effective products for pentane combustion - CJ fit CIT 1/9/2021" )
+#-------------------------------------------------------------------------
+# reactions, comment out all but the reaction you wish to use
+#--------------------------------------------------------------------------
+#reaction(" A  => B",  [1.76E+12, 0.0, 30000], order = "A:2")
+#reaction(" A  => B",  [3.6E+8, 0.0, 30000], order = "A:1")
+reaction(" A  => B",  [5.15E+6, 0.0, 30000], order = "A:0.5")

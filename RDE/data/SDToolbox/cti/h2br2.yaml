@@ -1,0 +1,92 @@
+description: |-
+  Generated from file h2br2.inp
+  by ck2cti on Sat Mar 05 19:54:59 2005
+
+generator: cti2yaml
+cantera-version: 2.6.0
+date: Mon, 02 Jan 2023 22:19:48 -0800
+input-files: [h2br2.cti]
+
+units: {length: cm, quantity: mol, activation-energy: cal/mol}
+
+phases:
+- name: gas
+  thermo: ideal-gas
+  elements: [H, Br]
+  species: [H2, H, BR2, BR, HBR]
+  kinetics: gas
+  reactions: all
+  state:
+    T: 300.0
+    P: 1.01325e+05
+
+species:
+- name: H2
+  composition: {H: 2}
+  thermo:
+    model: NASA7
+    temperature-ranges: [200.0, 1000.0, 6000.0]
+    data:
+    - [2.3443029, 7.9804248e-03, -1.9477917e-05, 2.0156967e-08, -7.3760289e-12,
+      -917.92413, 0.68300218]
+    - [2.9328305, 8.2659802e-04, -1.4640057e-07, 1.5409851e-11, -6.8879615e-16,
+      -813.05582, -1.0243164]
+  note: REF ELEMENT RUS 78
+- name: H
+  composition: {H: 1}
+  thermo:
+    model: NASA7
+    temperature-ranges: [200.0, 1000.0, 6000.0]
+    data:
+    - [2.5, 0.0, 0.0, 0.0, 0.0, 2.547366e+04, -0.44668285]
+    - [2.5, 0.0, 0.0, 0.0, 0.0, 2.547366e+04, -0.44668285]
+  note: L 6/94
+- name: BR2
+  composition: {Br: 2}
+  thermo:
+    model: NASA7
+    temperature-ranges: [300.0, 1000.0, 5000.0]
+    data:
+    - [3.846958, 2.6111841e-03, -4.0034147e-06, 2.8120689e-09, -7.3256202e-13,
+      2484.6984, 6.9696985]
+    - [4.4479495, 1.0051208e-04, -1.6393816e-08, 2.2685621e-12, -1.0236774e-16,
+      2365.9941, 4.0888431]
+  note: J12/61
+- name: BR
+  composition: {Br: 1}
+  thermo:
+    model: NASA7
+    temperature-ranges: [300.0, 1000.0, 5000.0]
+    data:
+    - [2.4611551, 3.3319275e-04, -1.0080655e-06, 1.2262126e-09, -4.428351e-13,
+      1.271192e+04, 6.9494733]
+    - [2.0843207, 7.1949483e-04, -2.7419924e-07, 4.242265e-11, -2.379157e-15,
+      1.2858837e+04, 9.0838003]
+  note: J 6/74
+- name: HBR
+  composition: {H: 1, Br: 1}
+  thermo:
+    model: NASA7
+    temperature-ranges: [300.0, 1000.0, 5000.0]
+    data:
+    - [3.605669, -5.9529431e-04, 6.5029568e-07, 9.3781219e-10, -7.1141852e-13,
+      -5438.9455, 3.4831774]
+    - [2.7935804, 1.5655925e-03, -5.6171064e-07, 9.5783142e-11, -6.181399e-15,
+      -5233.8384, 7.6423703]
+  note: J 9/65
+
+reactions:
+- equation: H + H + M <=> H2 + M  # Reaction 1
+  type: three-body
+  rate-constant: {A: 1.0e+18, b: -1, Ea: 0}
+  duplicate: true
+- equation: H + H + H2 <=> H2 + H2  # Reaction 2
+  rate-constant: {A: 9.2e+16, b: -0.6, Ea: 0}
+  duplicate: true
+- equation: BR2 + H <=> HBR + BR  # Reaction 3
+  rate-constant: {A: 4.58e+07, b: 2.05, Ea: -1800}
+- equation: H2 + BR <=> HBR + H  # Reaction 4
+  rate-constant: {A: 4.16e+12, b: 0.43, Ea: 17830}
+- equation: BR + BR + M <=> BR2 + M  # Reaction 5
+  type: three-body
+  rate-constant: {A: 1.48e+14, b: 0, Ea: -1700}

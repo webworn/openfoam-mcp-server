@@ -1,0 +1,2132 @@
+**** species number 1 in input file 
+Mechanism: chem.cti
+Species: N-C6H14
+Total number of atoms 20
+Standard state values:
+Cp/R                17.2051
+H/RT                -67.7218
+S/R                 46.6834
+Delta H_f0 (kJ/mol) -167.8793
+S_0         (J/mol) 388.1477
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        17.2977
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        54.4814
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        58
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.094e-07
+Jump in CP at midpoint = -0.00030359
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 2.2027e-13
+Jump in CP at midpoint = -6.201e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -6.201e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.037256
+Maximum difference in H/RT 0.0037256
+Maximum difference in S/R 0.0064298
+Writing NASA (Chemkin II) format .dat file for species N-C6H14
+**** species number 2 in input file 
+Mechanism: chem.cti
+Species: C6H12
+Total number of atoms 18
+Standard state values:
+Cp/R                15.6607
+H/RT                -21.7918
+S/R                 46.1047
+Delta H_f0 (kJ/mol) -54.021
+S_0         (J/mol) 383.3356
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        15.7444
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        49.0843
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        52
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 9.2909e-08
+Jump in CP at midpoint = -0.00025784
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 1.8296e-13
+Jump in CP at midpoint = -5.2668e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -5.2668e-10
+Jump at Tmid in H/RT 7.1054e-15
+Jump at Tmid  in S/R 7.1054e-15
+Maximum difference in Cp/R 0.03499
+Maximum difference in H/RT 0.0035323
+Maximum difference in S/R 0.0061107
+Writing NASA (Chemkin II) format .dat file for species C6H12
+**** species number 3 in input file 
+Mechanism: chem.cti
+Species: C6H13O
+Total number of atoms 20
+Standard state values:
+Cp/R                18.2844
+H/RT                -40.444
+S/R                 51.998
+Delta H_f0 (kJ/mol) -100.2589
+S_0         (J/mol) 432.3353
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        18.3775
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        54.5434
+Midpoint fit temperature (K) = 1391
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        58
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 5.5063e-07
+Jump in CP at midpoint = -0.00074101
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 4.7251e-13
+Jump in CP at midpoint = -1.3103e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.3103e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.043722
+Maximum difference in H/RT 0.0045617
+Maximum difference in S/R 0.0078869
+Writing NASA (Chemkin II) format .dat file for species C6H13O
+**** species number 4 in input file 
+Mechanism: chem.cti
+Species: C6H13O2
+Total number of atoms 21
+Standard state values:
+Cp/R                20.3917
+H/RT                -45.1028
+S/R                 56.8395
+Delta H_f0 (kJ/mol) -111.808
+S_0         (J/mol) 472.5895
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        20.4822
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        57.0441
+Midpoint fit temperature (K) = 1389
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        61
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.3907e-07
+Jump in CP at midpoint = 0.000866
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -7.816e-14
+Jump in CP at midpoint = 4.9594e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 4.9594e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.042836
+Maximum difference in H/RT 0.0044386
+Maximum difference in S/R 0.0075696
+Writing NASA (Chemkin II) format .dat file for species C6H13O2
+**** species number 5 in input file 
+Mechanism: chem.cti
+Species: C6H12OOH
+Total number of atoms 21
+Standard state values:
+Cp/R                20.5798
+H/RT                -23.9187
+S/R                 59.6427
+Delta H_f0 (kJ/mol) -59.2934
+S_0         (J/mol) 495.8968
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        20.6714
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        56.5016
+Midpoint fit temperature (K) = 1381
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        61
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.3611e-07
+Jump in CP at midpoint = 0.00084753
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -8.5265e-14
+Jump in CP at midpoint = 4.8532e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 4.8532e-10
+Jump at Tmid in H/RT 7.1054e-15
+Jump at Tmid  in S/R 7.1054e-15
+Maximum difference in Cp/R 0.014631
+Maximum difference in H/RT 0.0011504
+Maximum difference in S/R 0.0018837
+Writing NASA (Chemkin II) format .dat file for species C6H12OOH
+**** species number 6 in input file 
+Mechanism: chem.cti
+Species: C6H12O
+Total number of atoms 19
+Standard state values:
+Cp/R                17.1272
+H/RT                -61.8982
+S/R                 47.5893
+Delta H_f0 (kJ/mol) -153.443
+S_0         (J/mol) 395.6797
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        17.2229
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        52.1661
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        55
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.1173e-06
+Jump in CP at midpoint = -0.0018578
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 1.4282e-12
+Jump in CP at midpoint = -3.9448e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -3.9448e-09
+Jump at Tmid in H/RT -1.4211e-14
+Jump at Tmid  in S/R -1.4211e-14
+Maximum difference in Cp/R 0.079431
+Maximum difference in H/RT 0.0088681
+Maximum difference in S/R 0.015519
+Writing NASA (Chemkin II) format .dat file for species C6H12O
+**** species number 7 in input file 
+Mechanism: chem.cti
+Species: C6H13O4
+Total number of atoms 23
+Standard state values:
+Cp/R                23.5589
+H/RT                -86.7453
+S/R                 65.4957
+Delta H_f0 (kJ/mol) -215.0378
+S_0         (J/mol) 544.5617
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        23.66
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        62.071
+Midpoint fit temperature (K) = 1389
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        67
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.7627e-07
+Jump in CP at midpoint = 0.0010979
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -9.5923e-14
+Jump in CP at midpoint = 6.2877e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 6.2877e-10
+Jump at Tmid in H/RT 3.5527e-15
+Jump at Tmid  in S/R 3.5527e-15
+Maximum difference in Cp/R 0.050423
+Maximum difference in H/RT 0.0053502
+Maximum difference in S/R 0.0091519
+Writing NASA (Chemkin II) format .dat file for species C6H13O4
+**** species number 8 in input file 
+Mechanism: chem.cti
+Species: N-C12H26
+Total number of atoms 38
+Standard state values:
+Cp/R                33.6688
+H/RT                -117.6522
+S/R                 75.1283
+Delta H_f0 (kJ/mol) -291.6548
+S_0         (J/mol) 624.6517
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        33.8512
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        104.555
+Midpoint fit temperature (K) = 1391
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        112
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 3.1111e-07
+Jump in CP at midpoint = -0.00086326
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 6.1817e-13
+Jump in CP at midpoint = -1.7631e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.7631e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.068238
+Maximum difference in H/RT 0.0068496
+Maximum difference in S/R 0.011791
+Writing NASA (Chemkin II) format .dat file for species N-C12H26
+**** species number 9 in input file 
+Mechanism: chem.cti
+Species: N-C10H21
+Total number of atoms 31
+Standard state values:
+Cp/R                27.7964
+H/RT                -18.2977
+S/R                 68.0574
+Delta H_f0 (kJ/mol) -45.3592
+S_0         (J/mol) 565.8605
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        27.9429
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        84.9367
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        91
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.9691e-06
+Jump in CP at midpoint = 0.00040051
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 6.2883e-13
+Jump in CP at midpoint = -1.7389e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.7389e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.05589
+Maximum difference in H/RT 0.0056153
+Maximum difference in S/R 0.0096758
+Writing NASA (Chemkin II) format .dat file for species N-C10H21
+**** species number 10 in input file 
+Mechanism: chem.cti
+Species: N-C9H19
+Total number of atoms 28
+Standard state values:
+Cp/R                25.0526
+H/RT                -9.976
+S/R                 63.3166
+Delta H_f0 (kJ/mol) -24.73
+S_0         (J/mol) 526.4431
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        25.1842
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        76.5911
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        82
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 8.307e-07
+Jump in CP at midpoint = -0.00033635
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 4.5119e-13
+Jump in CP at midpoint = -1.2545e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.2545e-09
+Jump at Tmid in H/RT -7.1054e-15
+Jump at Tmid  in S/R -7.1054e-15
+Maximum difference in Cp/R 0.050722
+Maximum difference in H/RT 0.0050965
+Maximum difference in S/R 0.0087827
+Writing NASA (Chemkin II) format .dat file for species N-C9H19
+**** species number 11 in input file 
+Mechanism: chem.cti
+Species: N-C8H17
+Total number of atoms 25
+Standard state values:
+Cp/R                22.3089
+H/RT                -1.6542
+S/R                 58.5757
+Delta H_f0 (kJ/mol) -4.1007
+S_0         (J/mol) 487.0258
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        22.4255
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        68.2454
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        73
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 9.7013e-07
+Jump in CP at midpoint = -0.00042136
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 9.0239e-13
+Jump in CP at midpoint = -2.4919e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.4919e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.045549
+Maximum difference in H/RT 0.0045769
+Maximum difference in S/R 0.0078908
+Writing NASA (Chemkin II) format .dat file for species N-C8H17
+**** species number 12 in input file 
+Mechanism: chem.cti
+Species: C12H25
+Total number of atoms 37
+Standard state values:
+Cp/R                32.8662
+H/RT                -39.4143
+S/R                 78.0523
+Delta H_f0 (kJ/mol) -97.7064
+S_0         (J/mol) 648.9632
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        33.0403
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        101.5508
+Midpoint fit temperature (K) = 1385
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        109
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 5.9026e-08
+Jump in CP at midpoint = -0.00037177
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 4.2633e-14
+Jump in CP at midpoint = -2.1394e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.1394e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.045717
+Maximum difference in H/RT 0.0043659
+Maximum difference in S/R 0.0073928
+Writing NASA (Chemkin II) format .dat file for species C12H25
+**** species number 13 in input file 
+Mechanism: chem.cti
+Species: C9H18
+Total number of atoms 27
+Standard state values:
+Cp/R                24.028
+H/RT                -41.7944
+S/R                 60.7499
+Delta H_f0 (kJ/mol) -103.6065
+S_0         (J/mol) 505.1025
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        24.1586
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        74.1293
+Midpoint fit temperature (K) = 1392
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        79
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 2.5718e-07
+Jump in CP at midpoint = -0.00071358
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 5.2225e-13
+Jump in CP at midpoint = -1.4574e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.4574e-09
+Jump at Tmid in H/RT -1.4211e-14
+Jump at Tmid  in S/R -1.4211e-14
+Maximum difference in Cp/R 0.053034
+Maximum difference in H/RT 0.0054733
+Maximum difference in S/R 0.00942
+Writing NASA (Chemkin II) format .dat file for species C9H18
+**** species number 14 in input file 
+Mechanism: chem.cti
+Species: C10H20
+Total number of atoms 30
+Standard state values:
+Cp/R                26.7721
+H/RT                -50.1161
+S/R                 65.4907
+Delta H_f0 (kJ/mol) -124.2357
+S_0         (J/mol) 544.5199
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        26.9176
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        82.4748
+Midpoint fit temperature (K) = 1392
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        88
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 6.2402e-07
+Jump in CP at midpoint = -0.00086268
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 7.7804e-13
+Jump in CP at midpoint = -2.177e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.177e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.058202
+Maximum difference in H/RT 0.0059911
+Maximum difference in S/R 0.010312
+Writing NASA (Chemkin II) format .dat file for species C10H20
+**** species number 15 in input file 
+Mechanism: chem.cti
+Species: C12H24
+Total number of atoms 36
+Standard state values:
+Cp/R                32.2604
+H/RT                -66.7596
+S/R                 74.9723
+Delta H_f0 (kJ/mol) -165.4942
+S_0         (J/mol) 623.3545
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        32.4358
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        99.1656
+Midpoint fit temperature (K) = 1391
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        106
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.9656e-06
+Jump in CP at midpoint = -0.0011548
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 9.3792e-13
+Jump in CP at midpoint = -2.6116e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.6116e-09
+Jump at Tmid in H/RT -2.1316e-14
+Jump at Tmid  in S/R -2.1316e-14
+Maximum difference in Cp/R 0.068534
+Maximum difference in H/RT 0.0070272
+Maximum difference in S/R 0.012093
+Writing NASA (Chemkin II) format .dat file for species C12H24
+**** species number 16 in input file 
+Mechanism: chem.cti
+Species: C12H25O
+Total number of atoms 38
+Standard state values:
+Cp/R                34.8418
+H/RT                -90.3745
+S/R                 80.4429
+Delta H_f0 (kJ/mol) -224.0344
+S_0         (J/mol) 668.8393
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        35.0229
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        104.2571
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        112
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 4.5122e-07
+Jump in CP at midpoint = -0.00045016
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 1.0587e-12
+Jump in CP at midpoint = -2.9577e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.9577e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.087396
+Maximum difference in H/RT 0.0090811
+Maximum difference in S/R 0.01576
+Writing NASA (Chemkin II) format .dat file for species C12H25O
+**** species number 17 in input file 
+Mechanism: chem.cti
+Species: C8H15
+Total number of atoms 23
+Standard state values:
+Cp/R                20.1781
+H/RT                40.0895
+S/R                 58.0121
+Delta H_f0 (kJ/mol) 99.3802
+S_0         (J/mol) 482.3392
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        20.2861
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        62.7928
+Midpoint fit temperature (K) = 1385
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        67
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 4.6996e-08
+Jump in CP at midpoint = -0.00029539
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 2.8422e-14
+Jump in CP at midpoint = -1.6982e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.6982e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.029872
+Maximum difference in H/RT 0.0028759
+Maximum difference in S/R 0.0048919
+Writing NASA (Chemkin II) format .dat file for species C8H15
+**** species number 18 in input file 
+Mechanism: chem.cti
+Species: C12H23
+Total number of atoms 35
+Standard state values:
+Cp/R                31.1713
+H/RT                6.8026
+S/R                 76.9753
+Delta H_f0 (kJ/mol) 16.8633
+S_0         (J/mol) 640.0086
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        31.3391
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        96.1842
+Midpoint fit temperature (K) = 1388
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        103
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 9.4945e-08
+Jump in CP at midpoint = -0.00059582
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 5.3291e-14
+Jump in CP at midpoint = -3.4227e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -3.4227e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.048981
+Maximum difference in H/RT 0.0048363
+Maximum difference in S/R 0.0081672
+Writing NASA (Chemkin II) format .dat file for species C12H23
+**** species number 19 in input file 
+Mechanism: chem.cti
+Species: C9H17
+Total number of atoms 26
+Standard state values:
+Cp/R                22.9217
+H/RT                31.7678
+S/R                 62.7529
+Delta H_f0 (kJ/mol) 78.751
+S_0         (J/mol) 521.7566
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        23.0447
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        71.1378
+Midpoint fit temperature (K) = 1385
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        76
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 5.9215e-08
+Jump in CP at midpoint = -0.00037194
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 3.5527e-14
+Jump in CP at midpoint = -2.1377e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.1377e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.03477
+Maximum difference in H/RT 0.0033882
+Maximum difference in S/R 0.0057604
+Writing NASA (Chemkin II) format .dat file for species C9H17
+**** species number 20 in input file 
+Mechanism: chem.cti
+Species: C12H25O2
+Total number of atoms 39
+Standard state values:
+Cp/R                36.9084
+H/RT                -97.042
+S/R                 85.1233
+Delta H_f0 (kJ/mol) -240.5629
+S_0         (J/mol) 707.7545
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        37.0868
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        106.7492
+Midpoint fit temperature (K) = 1389
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        115
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -9.4676e-08
+Jump in CP at midpoint = 0.0005872
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -6.3949e-14
+Jump in CP at midpoint = 3.3577e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 3.3577e-10
+Jump at Tmid in H/RT 1.4211e-14
+Jump at Tmid  in S/R 1.4211e-14
+Maximum difference in Cp/R 0.088944
+Maximum difference in H/RT 0.0093513
+Maximum difference in S/R 0.015972
+Writing NASA (Chemkin II) format .dat file for species C12H25O2
+**** species number 21 in input file 
+Mechanism: chem.cti
+Species: C12H24OOH
+Total number of atoms 39
+Standard state values:
+Cp/R                37.1032
+H/RT                -75.1826
+S/R                 87.9366
+Delta H_f0 (kJ/mol) -186.3745
+S_0         (J/mol) 731.1454
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        37.2835
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        106.6617
+Midpoint fit temperature (K) = 1389
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        115
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -7.9664e-08
+Jump in CP at midpoint = 0.00049347
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -5.6843e-14
+Jump in CP at midpoint = 2.8196e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 2.8196e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.056307
+Maximum difference in H/RT 0.005554
+Maximum difference in S/R 0.0093843
+Writing NASA (Chemkin II) format .dat file for species C12H24OOH
+**** species number 22 in input file 
+Mechanism: chem.cti
+Species: C12H24O
+Total number of atoms 37
+Standard state values:
+Cp/R                33.6262
+H/RT                -119.1883
+S/R                 76.6532
+Delta H_f0 (kJ/mol) -295.4626
+S_0         (J/mol) 637.3305
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        33.8161
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        102.3345
+Midpoint fit temperature (K) = 1395
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        109
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 6.2751e-07
+Jump in CP at midpoint = -0.001741
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 1.279e-12
+Jump in CP at midpoint = -3.5556e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -3.5556e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.092921
+Maximum difference in H/RT 0.01007
+Maximum difference in S/R 0.017282
+Writing NASA (Chemkin II) format .dat file for species C12H24O
+**** species number 23 in input file 
+Mechanism: chem.cti
+Species: C12H24O3
+Total number of atoms 39
+Standard state values:
+Cp/R                38.5031
+H/RT                -187.8722
+S/R                 87.1968
+Delta H_f0 (kJ/mol) -465.727
+S_0         (J/mol) 724.9943
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        38.6929
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        106.8388
+Midpoint fit temperature (K) = 1394
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        115
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -3.7996e-09
+Jump in CP at midpoint = 1.0279e-05
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -7.1054e-15
+Jump in CP at midpoint = 2.079e-11
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 2.079e-11
+Jump at Tmid in H/RT 2.8422e-14
+Jump at Tmid  in S/R 2.8422e-14
+Maximum difference in Cp/R 0.092718
+Maximum difference in H/RT 0.010025
+Maximum difference in S/R 0.017239
+Writing NASA (Chemkin II) format .dat file for species C12H24O3
+**** species number 24 in input file 
+Mechanism: chem.cti
+Species: C8H17O2
+Total number of atoms 27
+Standard state values:
+Cp/R                25.9032
+H/RT                -63.755
+S/R                 66.16
+Delta H_f0 (kJ/mol) -158.0459
+S_0         (J/mol) 550.0852
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        26.0232
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        73.3217
+Midpoint fit temperature (K) = 1388
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        79
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.2428e-07
+Jump in CP at midpoint = 0.00077311
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -7.1054e-14
+Jump in CP at midpoint = 4.4255e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 4.4255e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.055011
+Maximum difference in H/RT 0.0058098
+Maximum difference in S/R 0.0099513
+Writing NASA (Chemkin II) format .dat file for species C8H17O2
+**** species number 25 in input file 
+Mechanism: chem.cti
+Species: C8H16OOH
+Total number of atoms 27
+Standard state values:
+Cp/R                26.0842
+H/RT                -41.8957
+S/R                 68.9733
+Delta H_f0 (kJ/mol) -103.8575
+S_0         (J/mol) 573.4761
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        26.2054
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        73.2229
+Midpoint fit temperature (K) = 1386
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        79
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.1624e-07
+Jump in CP at midpoint = 0.0007229
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -7.1054e-14
+Jump in CP at midpoint = 4.1374e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 4.1374e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.028114
+Maximum difference in H/RT 0.0025901
+Maximum difference in S/R 0.004345
+Writing NASA (Chemkin II) format .dat file for species C8H16OOH
+**** species number 26 in input file 
+Mechanism: chem.cti
+Species: C8H17O4
+Total number of atoms 29
+Standard state values:
+Cp/R                29.9999
+H/RT                -105.3637
+S/R                 74.6301
+Delta H_f0 (kJ/mol) -261.1921
+S_0         (J/mol) 620.5091
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        30.132
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        78.4197
+Midpoint fit temperature (K) = 1388
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        85
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.8979e-07
+Jump in CP at midpoint = 0.0011816
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -1.0658e-13
+Jump in CP at midpoint = 6.7661e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 6.7661e-10
+Jump at Tmid in H/RT 3.5527e-15
+Jump at Tmid  in S/R 3.5527e-15
+Maximum difference in Cp/R 0.042567
+Maximum difference in H/RT 0.004272
+Maximum difference in S/R 0.0072617
+Writing NASA (Chemkin II) format .dat file for species C8H17O4
+**** species number 27 in input file 
+Mechanism: chem.cti
+Species: C8H16O3
+Total number of atoms 27
+Standard state values:
+Cp/R                27.4677
+H/RT                -154.5852
+S/R                 68.2335
+Delta H_f0 (kJ/mol) -383.2101
+S_0         (J/mol) 567.325
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        27.5989
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        73.4061
+Midpoint fit temperature (K) = 1395
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        79
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.402e-06
+Jump in CP at midpoint = -3.2555e-05
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -6.3949e-14
+Jump in CP at midpoint = 1.6252e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 1.6252e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.064711
+Maximum difference in H/RT 0.0070818
+Maximum difference in S/R 0.012156
+Writing NASA (Chemkin II) format .dat file for species C8H16O3
+**** species number 28 in input file 
+Mechanism: chem.cti
+Species: C6H11
+Total number of atoms 17
+Standard state values:
+Cp/R                14.7421
+H/RT                35.0425
+S/R                 44.3785
+Delta H_f0 (kJ/mol) 86.8688
+S_0         (J/mol) 368.983
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        14.825
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        46.2533
+Midpoint fit temperature (K) = 1388
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        49
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 7.9487e-08
+Jump in CP at midpoint = -0.00049766
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 4.6185e-14
+Jump in CP at midpoint = -2.8566e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.8566e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.041538
+Maximum difference in H/RT 0.0044809
+Maximum difference in S/R 0.0076922
+Writing NASA (Chemkin II) format .dat file for species C6H11
+Wrote 1
+Wrote 0
+**** species number 1 in input file 
+Mechanism: chem.cti
+Species: N-C6H14
+Total number of atoms 20
+Standard state values:
+Cp/R                17.2051
+H/RT                -67.7218
+S/R                 46.6834
+Delta H_f0 (kJ/mol) -167.8793
+S_0         (J/mol) 388.1477
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        17.2977
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        54.4814
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        58
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.094e-07
+Jump in CP at midpoint = -0.00030359
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 2.2027e-13
+Jump in CP at midpoint = -6.201e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -6.201e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.037256
+Maximum difference in H/RT 0.0037256
+Maximum difference in S/R 0.0064298
+Writing NASA (Chemkin II) format .dat file for species N-C6H14
+**** species number 2 in input file 
+Mechanism: chem.cti
+Species: C6H12
+Total number of atoms 18
+Standard state values:
+Cp/R                15.6607
+H/RT                -21.7918
+S/R                 46.1047
+Delta H_f0 (kJ/mol) -54.021
+S_0         (J/mol) 383.3356
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        15.7444
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        49.0843
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        52
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 9.2909e-08
+Jump in CP at midpoint = -0.00025784
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 1.8296e-13
+Jump in CP at midpoint = -5.2668e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -5.2668e-10
+Jump at Tmid in H/RT 7.1054e-15
+Jump at Tmid  in S/R 7.1054e-15
+Maximum difference in Cp/R 0.03499
+Maximum difference in H/RT 0.0035323
+Maximum difference in S/R 0.0061107
+Writing NASA (Chemkin II) format .dat file for species C6H12
+**** species number 3 in input file 
+Mechanism: chem.cti
+Species: C6H13O
+Total number of atoms 20
+Standard state values:
+Cp/R                18.2844
+H/RT                -40.444
+S/R                 51.998
+Delta H_f0 (kJ/mol) -100.2589
+S_0         (J/mol) 432.3353
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        18.3775
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        54.5434
+Midpoint fit temperature (K) = 1391
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        58
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 5.5063e-07
+Jump in CP at midpoint = -0.00074101
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 4.7251e-13
+Jump in CP at midpoint = -1.3103e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.3103e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.043722
+Maximum difference in H/RT 0.0045617
+Maximum difference in S/R 0.0078869
+Writing NASA (Chemkin II) format .dat file for species C6H13O
+**** species number 4 in input file 
+Mechanism: chem.cti
+Species: C6H13O2
+Total number of atoms 21
+Standard state values:
+Cp/R                20.3917
+H/RT                -45.1028
+S/R                 56.8395
+Delta H_f0 (kJ/mol) -111.808
+S_0         (J/mol) 472.5895
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        20.4822
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        57.0441
+Midpoint fit temperature (K) = 1389
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        61
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.3907e-07
+Jump in CP at midpoint = 0.000866
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -7.816e-14
+Jump in CP at midpoint = 4.9594e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 4.9594e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.042836
+Maximum difference in H/RT 0.0044386
+Maximum difference in S/R 0.0075696
+Writing NASA (Chemkin II) format .dat file for species C6H13O2
+**** species number 5 in input file 
+Mechanism: chem.cti
+Species: C6H12OOH
+Total number of atoms 21
+Standard state values:
+Cp/R                20.5798
+H/RT                -23.9187
+S/R                 59.6427
+Delta H_f0 (kJ/mol) -59.2934
+S_0         (J/mol) 495.8968
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        20.6714
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        56.5016
+Midpoint fit temperature (K) = 1381
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        61
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.3611e-07
+Jump in CP at midpoint = 0.00084753
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -8.5265e-14
+Jump in CP at midpoint = 4.8532e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 4.8532e-10
+Jump at Tmid in H/RT 7.1054e-15
+Jump at Tmid  in S/R 7.1054e-15
+Maximum difference in Cp/R 0.014631
+Maximum difference in H/RT 0.0011504
+Maximum difference in S/R 0.0018837
+Writing NASA (Chemkin II) format .dat file for species C6H12OOH
+**** species number 6 in input file 
+Mechanism: chem.cti
+Species: C6H12O
+Total number of atoms 19
+Standard state values:
+Cp/R                17.1272
+H/RT                -61.8982
+S/R                 47.5893
+Delta H_f0 (kJ/mol) -153.443
+S_0         (J/mol) 395.6797
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        17.2229
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        52.1661
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        55
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.1173e-06
+Jump in CP at midpoint = -0.0018578
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 1.4282e-12
+Jump in CP at midpoint = -3.9448e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -3.9448e-09
+Jump at Tmid in H/RT -1.4211e-14
+Jump at Tmid  in S/R -1.4211e-14
+Maximum difference in Cp/R 0.079431
+Maximum difference in H/RT 0.0088681
+Maximum difference in S/R 0.015519
+Writing NASA (Chemkin II) format .dat file for species C6H12O
+**** species number 7 in input file 
+Mechanism: chem.cti
+Species: C6H13O4
+Total number of atoms 23
+Standard state values:
+Cp/R                23.5589
+H/RT                -86.7453
+S/R                 65.4957
+Delta H_f0 (kJ/mol) -215.0378
+S_0         (J/mol) 544.5617
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        23.66
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        62.071
+Midpoint fit temperature (K) = 1389
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        67
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.7627e-07
+Jump in CP at midpoint = 0.0010979
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -9.5923e-14
+Jump in CP at midpoint = 6.2877e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 6.2877e-10
+Jump at Tmid in H/RT 3.5527e-15
+Jump at Tmid  in S/R 3.5527e-15
+Maximum difference in Cp/R 0.050423
+Maximum difference in H/RT 0.0053502
+Maximum difference in S/R 0.0091519
+Writing NASA (Chemkin II) format .dat file for species C6H13O4
+**** species number 8 in input file 
+Mechanism: chem.cti
+Species: N-C12H26
+Total number of atoms 38
+Standard state values:
+Cp/R                33.6688
+H/RT                -117.6522
+S/R                 75.1283
+Delta H_f0 (kJ/mol) -291.6548
+S_0         (J/mol) 624.6517
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        33.8512
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        104.555
+Midpoint fit temperature (K) = 1391
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        112
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 3.1111e-07
+Jump in CP at midpoint = -0.00086326
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 6.1817e-13
+Jump in CP at midpoint = -1.7631e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.7631e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.068238
+Maximum difference in H/RT 0.0068496
+Maximum difference in S/R 0.011791
+Writing NASA (Chemkin II) format .dat file for species N-C12H26
+**** species number 9 in input file 
+Mechanism: chem.cti
+Species: N-C10H21
+Total number of atoms 31
+Standard state values:
+Cp/R                27.7964
+H/RT                -18.2977
+S/R                 68.0574
+Delta H_f0 (kJ/mol) -45.3592
+S_0         (J/mol) 565.8605
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        27.9429
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        84.9367
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        91
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.9691e-06
+Jump in CP at midpoint = 0.00040051
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 6.2883e-13
+Jump in CP at midpoint = -1.7389e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.7389e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.05589
+Maximum difference in H/RT 0.0056153
+Maximum difference in S/R 0.0096758
+Writing NASA (Chemkin II) format .dat file for species N-C10H21
+**** species number 10 in input file 
+Mechanism: chem.cti
+Species: N-C9H19
+Total number of atoms 28
+Standard state values:
+Cp/R                25.0526
+H/RT                -9.976
+S/R                 63.3166
+Delta H_f0 (kJ/mol) -24.73
+S_0         (J/mol) 526.4431
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        25.1842
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        76.5911
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        82
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 8.307e-07
+Jump in CP at midpoint = -0.00033635
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 4.5119e-13
+Jump in CP at midpoint = -1.2545e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.2545e-09
+Jump at Tmid in H/RT -7.1054e-15
+Jump at Tmid  in S/R -7.1054e-15
+Maximum difference in Cp/R 0.050722
+Maximum difference in H/RT 0.0050965
+Maximum difference in S/R 0.0087827
+Writing NASA (Chemkin II) format .dat file for species N-C9H19
+**** species number 11 in input file 
+Mechanism: chem.cti
+Species: N-C8H17
+Total number of atoms 25
+Standard state values:
+Cp/R                22.3089
+H/RT                -1.6542
+S/R                 58.5757
+Delta H_f0 (kJ/mol) -4.1007
+S_0         (J/mol) 487.0258
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        22.4255
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        68.2454
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        73
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 9.7013e-07
+Jump in CP at midpoint = -0.00042136
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 9.0239e-13
+Jump in CP at midpoint = -2.4919e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.4919e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.045549
+Maximum difference in H/RT 0.0045769
+Maximum difference in S/R 0.0078908
+Writing NASA (Chemkin II) format .dat file for species N-C8H17
+**** species number 12 in input file 
+Mechanism: chem.cti
+Species: C12H25
+Total number of atoms 37
+Standard state values:
+Cp/R                32.8662
+H/RT                -39.4143
+S/R                 78.0523
+Delta H_f0 (kJ/mol) -97.7064
+S_0         (J/mol) 648.9632
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        33.0403
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        101.5508
+Midpoint fit temperature (K) = 1385
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        109
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 5.9026e-08
+Jump in CP at midpoint = -0.00037177
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 4.2633e-14
+Jump in CP at midpoint = -2.1394e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.1394e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.045717
+Maximum difference in H/RT 0.0043659
+Maximum difference in S/R 0.0073928
+Writing NASA (Chemkin II) format .dat file for species C12H25
+**** species number 13 in input file 
+Mechanism: chem.cti
+Species: C9H18
+Total number of atoms 27
+Standard state values:
+Cp/R                24.028
+H/RT                -41.7944
+S/R                 60.7499
+Delta H_f0 (kJ/mol) -103.6065
+S_0         (J/mol) 505.1025
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        24.1586
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        74.1293
+Midpoint fit temperature (K) = 1392
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        79
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 2.5718e-07
+Jump in CP at midpoint = -0.00071358
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 5.2225e-13
+Jump in CP at midpoint = -1.4574e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.4574e-09
+Jump at Tmid in H/RT -1.4211e-14
+Jump at Tmid  in S/R -1.4211e-14
+Maximum difference in Cp/R 0.053034
+Maximum difference in H/RT 0.0054733
+Maximum difference in S/R 0.00942
+Writing NASA (Chemkin II) format .dat file for species C9H18
+**** species number 14 in input file 
+Mechanism: chem.cti
+Species: C10H20
+Total number of atoms 30
+Standard state values:
+Cp/R                26.7721
+H/RT                -50.1161
+S/R                 65.4907
+Delta H_f0 (kJ/mol) -124.2357
+S_0         (J/mol) 544.5199
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        26.9176
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        82.4748
+Midpoint fit temperature (K) = 1392
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        88
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 6.2402e-07
+Jump in CP at midpoint = -0.00086268
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 7.7804e-13
+Jump in CP at midpoint = -2.177e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.177e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.058202
+Maximum difference in H/RT 0.0059911
+Maximum difference in S/R 0.010312
+Writing NASA (Chemkin II) format .dat file for species C10H20
+**** species number 15 in input file 
+Mechanism: chem.cti
+Species: C12H24
+Total number of atoms 36
+Standard state values:
+Cp/R                32.2604
+H/RT                -66.7596
+S/R                 74.9723
+Delta H_f0 (kJ/mol) -165.4942
+S_0         (J/mol) 623.3545
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        32.4358
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        99.1656
+Midpoint fit temperature (K) = 1391
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        106
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.9656e-06
+Jump in CP at midpoint = -0.0011548
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 9.3792e-13
+Jump in CP at midpoint = -2.6116e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.6116e-09
+Jump at Tmid in H/RT -2.1316e-14
+Jump at Tmid  in S/R -2.1316e-14
+Maximum difference in Cp/R 0.068534
+Maximum difference in H/RT 0.0070272
+Maximum difference in S/R 0.012093
+Writing NASA (Chemkin II) format .dat file for species C12H24
+**** species number 16 in input file 
+Mechanism: chem.cti
+Species: C12H25O
+Total number of atoms 38
+Standard state values:
+Cp/R                34.8418
+H/RT                -90.3745
+S/R                 80.4429
+Delta H_f0 (kJ/mol) -224.0344
+S_0         (J/mol) 668.8393
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        35.0229
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        104.2571
+Midpoint fit temperature (K) = 1390
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        112
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 4.5122e-07
+Jump in CP at midpoint = -0.00045016
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 1.0587e-12
+Jump in CP at midpoint = -2.9577e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.9577e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.087396
+Maximum difference in H/RT 0.0090811
+Maximum difference in S/R 0.01576
+Writing NASA (Chemkin II) format .dat file for species C12H25O
+**** species number 17 in input file 
+Mechanism: chem.cti
+Species: C8H15
+Total number of atoms 23
+Standard state values:
+Cp/R                20.1781
+H/RT                40.0895
+S/R                 58.0121
+Delta H_f0 (kJ/mol) 99.3802
+S_0         (J/mol) 482.3392
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        20.2861
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        62.7928
+Midpoint fit temperature (K) = 1385
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        67
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 4.6996e-08
+Jump in CP at midpoint = -0.00029539
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 2.8422e-14
+Jump in CP at midpoint = -1.6982e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -1.6982e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.029872
+Maximum difference in H/RT 0.0028759
+Maximum difference in S/R 0.0048919
+Writing NASA (Chemkin II) format .dat file for species C8H15
+**** species number 18 in input file 
+Mechanism: chem.cti
+Species: C12H23
+Total number of atoms 35
+Standard state values:
+Cp/R                31.1713
+H/RT                6.8026
+S/R                 76.9753
+Delta H_f0 (kJ/mol) 16.8633
+S_0         (J/mol) 640.0086
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        31.3391
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        96.1842
+Midpoint fit temperature (K) = 1388
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        103
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 9.4945e-08
+Jump in CP at midpoint = -0.00059582
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 5.3291e-14
+Jump in CP at midpoint = -3.4227e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -3.4227e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.048981
+Maximum difference in H/RT 0.0048363
+Maximum difference in S/R 0.0081672
+Writing NASA (Chemkin II) format .dat file for species C12H23
+**** species number 19 in input file 
+Mechanism: chem.cti
+Species: C9H17
+Total number of atoms 26
+Standard state values:
+Cp/R                22.9217
+H/RT                31.7678
+S/R                 62.7529
+Delta H_f0 (kJ/mol) 78.751
+S_0         (J/mol) 521.7566
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        23.0447
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        71.1378
+Midpoint fit temperature (K) = 1385
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        76
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 5.9215e-08
+Jump in CP at midpoint = -0.00037194
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 3.5527e-14
+Jump in CP at midpoint = -2.1377e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.1377e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.03477
+Maximum difference in H/RT 0.0033882
+Maximum difference in S/R 0.0057604
+Writing NASA (Chemkin II) format .dat file for species C9H17
+**** species number 20 in input file 
+Mechanism: chem.cti
+Species: C12H25O2
+Total number of atoms 39
+Standard state values:
+Cp/R                36.9084
+H/RT                -97.042
+S/R                 85.1233
+Delta H_f0 (kJ/mol) -240.5629
+S_0         (J/mol) 707.7545
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        37.0868
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        106.7492
+Midpoint fit temperature (K) = 1389
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        115
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -9.4676e-08
+Jump in CP at midpoint = 0.0005872
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -6.3949e-14
+Jump in CP at midpoint = 3.3577e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 3.3577e-10
+Jump at Tmid in H/RT 1.4211e-14
+Jump at Tmid  in S/R 1.4211e-14
+Maximum difference in Cp/R 0.088944
+Maximum difference in H/RT 0.0093513
+Maximum difference in S/R 0.015972
+Writing NASA (Chemkin II) format .dat file for species C12H25O2
+**** species number 21 in input file 
+Mechanism: chem.cti
+Species: C12H24OOH
+Total number of atoms 39
+Standard state values:
+Cp/R                37.1032
+H/RT                -75.1826
+S/R                 87.9366
+Delta H_f0 (kJ/mol) -186.3745
+S_0         (J/mol) 731.1454
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        37.2835
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        106.6617
+Midpoint fit temperature (K) = 1389
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        115
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -7.9664e-08
+Jump in CP at midpoint = 0.00049347
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -5.6843e-14
+Jump in CP at midpoint = 2.8196e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 2.8196e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.056307
+Maximum difference in H/RT 0.005554
+Maximum difference in S/R 0.0093843
+Writing NASA (Chemkin II) format .dat file for species C12H24OOH
+**** species number 22 in input file 
+Mechanism: chem.cti
+Species: C12H24O
+Total number of atoms 37
+Standard state values:
+Cp/R                33.6262
+H/RT                -119.1883
+S/R                 76.6532
+Delta H_f0 (kJ/mol) -295.4626
+S_0         (J/mol) 637.3305
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        33.8161
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        102.3345
+Midpoint fit temperature (K) = 1395
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        109
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 6.2751e-07
+Jump in CP at midpoint = -0.001741
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 1.279e-12
+Jump in CP at midpoint = -3.5556e-09
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -3.5556e-09
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.092921
+Maximum difference in H/RT 0.01007
+Maximum difference in S/R 0.017282
+Writing NASA (Chemkin II) format .dat file for species C12H24O
+**** species number 23 in input file 
+Mechanism: chem.cti
+Species: C12H24O3
+Total number of atoms 39
+Standard state values:
+Cp/R                38.5031
+H/RT                -187.8722
+S/R                 87.1968
+Delta H_f0 (kJ/mol) -465.727
+S_0         (J/mol) 724.9943
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        38.6929
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        106.8388
+Midpoint fit temperature (K) = 1394
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        115
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -3.7996e-09
+Jump in CP at midpoint = 1.0279e-05
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -7.1054e-15
+Jump in CP at midpoint = 2.079e-11
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 2.079e-11
+Jump at Tmid in H/RT 2.8422e-14
+Jump at Tmid  in S/R 2.8422e-14
+Maximum difference in Cp/R 0.092718
+Maximum difference in H/RT 0.010025
+Maximum difference in S/R 0.017239
+Writing NASA (Chemkin II) format .dat file for species C12H24O3
+**** species number 24 in input file 
+Mechanism: chem.cti
+Species: C8H17O2
+Total number of atoms 27
+Standard state values:
+Cp/R                25.9032
+H/RT                -63.755
+S/R                 66.16
+Delta H_f0 (kJ/mol) -158.0459
+S_0         (J/mol) 550.0852
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        26.0232
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        73.3217
+Midpoint fit temperature (K) = 1388
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        79
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.2428e-07
+Jump in CP at midpoint = 0.00077311
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -7.1054e-14
+Jump in CP at midpoint = 4.4255e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 4.4255e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.055011
+Maximum difference in H/RT 0.0058098
+Maximum difference in S/R 0.0099513
+Writing NASA (Chemkin II) format .dat file for species C8H17O2
+**** species number 25 in input file 
+Mechanism: chem.cti
+Species: C8H16OOH
+Total number of atoms 27
+Standard state values:
+Cp/R                26.0842
+H/RT                -41.8957
+S/R                 68.9733
+Delta H_f0 (kJ/mol) -103.8575
+S_0         (J/mol) 573.4761
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        26.2054
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        73.2229
+Midpoint fit temperature (K) = 1386
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        79
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.1624e-07
+Jump in CP at midpoint = 0.0007229
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -7.1054e-14
+Jump in CP at midpoint = 4.1374e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 4.1374e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.028114
+Maximum difference in H/RT 0.0025901
+Maximum difference in S/R 0.004345
+Writing NASA (Chemkin II) format .dat file for species C8H16OOH
+**** species number 26 in input file 
+Mechanism: chem.cti
+Species: C8H17O4
+Total number of atoms 29
+Standard state values:
+Cp/R                29.9999
+H/RT                -105.3637
+S/R                 74.6301
+Delta H_f0 (kJ/mol) -261.1921
+S_0         (J/mol) 620.5091
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        30.132
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        78.4197
+Midpoint fit temperature (K) = 1388
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        85
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = -1.8979e-07
+Jump in CP at midpoint = 0.0011816
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -1.0658e-13
+Jump in CP at midpoint = 6.7661e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 6.7661e-10
+Jump at Tmid in H/RT 3.5527e-15
+Jump at Tmid  in S/R 3.5527e-15
+Maximum difference in Cp/R 0.042567
+Maximum difference in H/RT 0.004272
+Maximum difference in S/R 0.0072617
+Writing NASA (Chemkin II) format .dat file for species C8H17O4
+**** species number 27 in input file 
+Mechanism: chem.cti
+Species: C8H16O3
+Total number of atoms 27
+Standard state values:
+Cp/R                27.4677
+H/RT                -154.5852
+S/R                 68.2335
+Delta H_f0 (kJ/mol) -383.2101
+S_0         (J/mol) 567.325
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        27.5989
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        73.4061
+Midpoint fit temperature (K) = 1395
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        79
+Adjusted temperature for midpoint of fit = 1590
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 1.402e-06
+Jump in CP at midpoint = -3.2555e-05
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = -6.3949e-14
+Jump in CP at midpoint = 1.6252e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R 1.6252e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.064711
+Maximum difference in H/RT 0.0070818
+Maximum difference in S/R 0.012156
+Writing NASA (Chemkin II) format .dat file for species C8H16O3
+**** species number 28 in input file 
+Mechanism: chem.cti
+Species: C6H11
+Total number of atoms 17
+Standard state values:
+Cp/R                14.7421
+H/RT                35.0425
+S/R                 44.3785
+Delta H_f0 (kJ/mol) 86.8688
+S_0         (J/mol) 368.983
+Minimum fit temperature (K) = 300
+Cp/R  (Tmin)        14.825
+Maximum fit temperature (K) = 5000
+Cp/R  (Tmax)        46.2533
+Midpoint fit temperature (K) = 1388
+geometry nonlinear
+geometry nonlinear
+Cp/R  (T_infty)        49
+Adjusted temperature for midpoint of fit = 1580
+Adjusted temperature for minimum of fit = 300
+Refitting...
+Optimization terminated.
+Result of initial optimization
+Difference in CP at T_zero = 7.9487e-08
+Jump in CP at midpoint = -0.00049766
+Optimization terminated.
+Optimization terminated.
+Result of re-running optimization
+Difference at T_zero in CP = 4.6185e-14
+Jump in CP at midpoint = -2.8566e-10
+Result of optimization after adjustment
+Jump at Tmid in Cp/R -2.8566e-10
+Jump at Tmid in H/RT 0
+Jump at Tmid  in S/R 0
+Maximum difference in Cp/R 0.041538
+Maximum difference in H/RT 0.0044809
+Maximum difference in S/R 0.0076922
+Writing NASA (Chemkin II) format .dat file for species C6H11
+Wrote 28 NASA (chemkin) data file
+Wrote 0 cti (cantera) data file

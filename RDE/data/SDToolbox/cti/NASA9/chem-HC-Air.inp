@@ -1,0 +1,12 @@
+! No reactions in this file.
+! units are length = "cm", time = "s", quantity = "mol", act_energy = "cal/mol"
+!
+elements
+N C H O
+end
+
+species
+C6H14  C3H8 C2H2 CH4 C2H4 N2 NO N CO CO2 CH
+end
+
+

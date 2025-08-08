@@ -1,0 +1,33 @@
+description: |-
+  nits(length='cm', time='s', quantity='mol', act_energy='cal/mol')
+
+generator: cti2yaml
+cantera-version: 2.6.0
+date: Mon, 02 Jan 2023 22:32:02 -0800
+input-files: [OH-IUPAC-NASA9.cti]
+
+units: {length: cm, quantity: mol, activation-energy: cal/mol}
+
+phases:
+- name: gas
+  thermo: ideal-gas
+  elements: [H, O]
+  species: [OH]
+  kinetics: gas
+  reactions: none
+  state:
+    T: 300.0
+    P: 1.01325e+05
+
+species:
+- name: OH
+  composition: {O: 1, H: 1}
+  thermo:
+    model: NASA9
+    temperature-ranges: [200.0, 1000.0, 6000.0]
+    data:
+    - [-2511.76012, 100.200647, 3.01176222, 1.63498343e-03, -3.30846245e-06,
+      3.4240292e-09, -1.16985048e-12, 2959.2156, 4.89223824]
+    - [1.015061e+06, -2503.98392, 5.11068667, 1.33362531e-04, -8.35729831e-08,
+      2.01593585e-11, -1.56182738e-15, 2.01600906e+04, -10.9702891]
+  note: Nine term fit from 2005 IUPAC radical evaluation [JUNO3]

@@ -1,0 +1,17 @@
+generator: cti2yaml
+cantera-version: 2.5.1
+date: Mon, 27 Sep 2021 21:22:22 -0700
+input-files: [CH3CHCHCHO.cti]
+
+species:
+- name: CH3CHCHCHO
+  composition: {C: 4, H: 6, O: 1}
+  thermo:
+    model: NASA7
+    temperature-ranges: [200.0, 1000.0, 5000.0]
+    data:
+    - [4.81128032, 5.04043764e-03, 4.54497545e-05, -5.04331802e-08, 1.6700052e-11,
+      1.12352054e+04, 9.54134078]
+    - [1.11829874, 0.0317936187, -1.38771283e-05, 2.7330487e-09, -1.99493623e-13,
+      1.14155759e+04, 24.4646241]
+  note: Fit by JES 14-Jul-2018 12:06:24

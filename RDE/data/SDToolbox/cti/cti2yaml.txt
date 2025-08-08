@@ -1,0 +1,1 @@
+python -m cantera.cti2yaml mymech.cti

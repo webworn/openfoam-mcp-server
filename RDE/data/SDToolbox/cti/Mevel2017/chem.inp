@@ -1,0 +1,121 @@
+!-------------------------------------------------------------------------------
+! H2-O2-N2 reaction mechanism (includes NO and OH* formation)
+! This mechanism is used for the simulations in:
+!
+! J. Melguizo-Gavilanes, L.R. Boeck, R. Mevel, J.E. Shepherd.
+! Hot surface ignition of stoichiometric hydrogen-air mixtures.
+! International Journal of Hydrogen Energy, 42(11):7393-7403, 2017. 
+! doi:10.1016/j.ijhydene.2016.05.095.
+!
+! J. Melguizo-Gavilanes, S. Coronel, R. Mevel, and J. E. Shepherd.
+! Dynamics of ignition of stoichiometric hydrogen-air mixtures by moving heated particles.
+! International Journal of Hydrogen Energy, 42(11):7380-7392, 2017.
+! doi:10.1016/j.ijhydene.2016.05.206
+!
+! The rates are abstracted from the mechanism described in:
+! R. Mevel and S. Javoy and F. Lafosse and N. Chaumeix and G. Dupr\'e
+! and Paillard, C. -E., Hydrogen-nitrous oxide delay time: shock tube experimental study
+! and kinetic modelling, Proceedings of The Combustion Institute, 2009,  volume 32,359-366.
+! doi:10.1016/j.proci.2008.06.171
+!
+! -------------------------------------------------------------------------------
+elements
+H O N Ar He
+end
+
+species
+H O H2 O2 OH H2O N2 N NO HO2 H2O2 AR  OH* HE
+end
+
+reactions
+! H2 REACTIONS
+H2+M=H+H+M                4.57E+19  -1.40     104380       !1         Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986.
+   H2/2.5/ H2O/12/ AR/0.0/
+H2+AR=H+H+AR              5.84E+18  -1.10     104380       !2         Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986.
+H2+O2=OH+OH               2.50E+12   0.00      39000       !3         Konnov
+H+H+H=H2+H                3.20E+15   0.00          0       !4         Konnov
+H+HO2=H2O+O               3.00E+13   0.00       1720       !5         Konnov
+
+
+! O REACTIONS
+
+O+H2=H+OH                 5.08E+04   2.67       6290       !6          Sutherland et. al., 21st Symp. on Comb.,p929,1986.
+O+O+M=O2+M                6.16E+15  -0.50          0       !7          Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986.
+   H2/2.5/ H2O/12/ AR/0.0/
+O+O+AR=O2+AR              1.89E+13   0.00      -1788       !8          Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986.
+
+
+! H REACTIONS
+
+H+O2=O+OH                 1.91E+14   0.00      16439       !9          Pirraglia et. al. (TJK)###
+H+O2(+M)=HO2(+M)          1.48E+12   0.60          0       !10         Mueller et al Proc. Comb. Ins. 27, (1998)
+LOW/3.482E+16  -0.411  -1115/
+TROE/0.5  1E-30  1E30/
+H2/2.5/ H2O/12/ AR/0.0/
+H+O2(+AR)=HO2(+AR)        1.48E+13   0.60          0       !11         TJK baseline recommendation Should this be x 10^12 or 10 ^13?
+LOW/1.49E+15   0.00  -1000/
+TROE/0.45   1E-30  1E+30/
+H+O+M=OH+M                4.71E+18  -1.00          0       !12         Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986
+H2/2.5/ H2O/12/ AR/.75/
+
+
+! OH REACTIONS
+
+OH+H2=H2O+H               2.16E+08   1.51       3430       !13         Michael & Sutherland,J.Phys.Chem.,92,3853,1988
+H2O+O=OH+OH               2.97E+06   2.02      13400       !14         Sutherland et. al. Proc Comb. Ins., 28 51 (1990)
+H2O2(+M)=OH+OH(+M)        2.95E+14   0.00      48430       !15         Brouwer,Cobos,Troe,Duba,&Crim,J.Chem.Phys.86,6171,1987.
+LOW/1.20E+17 0.00 45500/
+TROE/0.5 1E-90 1E+90/
+H2/2.5/ H2O/12/ AR/0/
+H2O2(+AR)=OH+OH(+AR)	  2.95E+14   0.00      48430       !16         Brouwer,Cobos,Troe,Duba,&Crim,J.Chem.Phys.86,6171,1987.
+LOW/1.90E+16 0.00 43000/
+TROE/0.5 1E-29 1E+31/
+OH+H+M=H2O+M              2.21E+22  -2.00          0       !17         Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986
+   H2/2.5/ H2O/12/ AR/0.0/
+OH+H+AR=H2O+AR            8.41E+21  -2.00          0       !18         Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986
+
+
+! HO2 REACTIONS
+
+HO2+O=O2+OH               0.33E+14   0.00          0       !19         Baulch et al., JPC Ref Data, 21:411 (1992)
+HO2+H=H2+O2               1.66E+13   0.00        823       !20         Mueller et al. IJCK 31, 113 (1995)
+HO2+H=OH+OH               7.08E+13   0.00        295       !21         Mueller et al. IJCK 31, 113 (1995)
+HO2+OH=H2O+O2             2.89E+13   0.00       -497       !22         Keyser,L.F., J.Phys.Chem.92,1193,1988
+HO2+HO2=H2O2+O2           4.20E+14   0.00      11982       !23         Hippler,Troe,Willner,J.Chem.Phys.93,1755,1990
+DUP
+HO2+HO2=H2O2+O2           1.30E+11   0.00      -1629       !24         Hippler,Troe,Willner,J.Chem.Phys.93,1755,1990
+DUP
+
+
+! H2O2 REACTIONS
+
+H2O2+O=OH+HO2             9.55E+06   2.00       3970       !25         Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986
+H2O2+H=H2O+OH             0.24E+14   0.00       3970       !26         Tsang and Hampson, JPC Ref. Data, 15:1087 (1986)
+H2O2+H=HO2+H2             4.82E+13   0.00       7950       !27         Tsang & Hampson,J.Phys.Chem.Ref.Data,15,1986
+H2O2+OH=H2O+HO2           1.00E+12   0.00          0       !28         Hippler et. al. Double Exponential fit by(TJK)
+DUP
+H2O2+OH=H2O+HO2           5.80E+14   0.00       9557       !29         Hippler et. al. Double Exponential fit by(TJK)###
+DUP
+
+
+
+!*****************************************************************
+!******************Réactions radicaux OHexcité********************
+!*****************************************************************
+
+H+O+M=OH*+M               6.00E+14   0.00       6940       !31         Petersen 1 AIAA Paper, n° 2004-4164, 10 p.
+OH*+AR=OH+AR              2.17E+10   0.50       2060       !32         Paul et al.
+OH*+H2O=OH+H2O            5.92E+12   0.50       -861       !33         Tamura et al.
+OH*+H=OH+H                1.50E+12   0.50          0       !34         Hidaka Bull. Chem. Soc. Jpn., 58,p 2911.
+OH*+H2=OH+H2              2.95E+12   0.50       -444       !35         Tamura et al.
+OH*+O2=OH+O2              2.10E+12   0.50       -482       !36         Tamura et al.
+OH*+O=OH+O                1.50E+12   0.50          0       !37         Hidaka Bull. Chem. Soc. Jpn., 58,p 2911.
+OH*+OH=OH+OH              1.50E+12   0.50          0       !38         Hidaka Bull. Chem. Soc. Jpn., 58,p 2911.
+OH*=OH                    1.40E+06   0.00          0       !39         Hidaka Bull. Chem. Soc. Jpn., 58,p 2911.
+! NO REACTIONS
+N2+O=NO+N                 1.80E+14   0.00      76100       !40         Konnov
+N+O2=NO+O                 9.00E+09   1.00       6500       !41         Konnov
+NO+M=N+O+M                9.64E+14   0.00     148300       !42         Konnov
+N2 /1.5/ NO /3.0/ 
+NO+NO=N2+O2               3.00E+11   0.00      65000       !43         Konnov
+end
