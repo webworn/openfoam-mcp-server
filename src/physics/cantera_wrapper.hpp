@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <system_error>
 #include <chrono>
+#include <list>
 #include <nlohmann/json.hpp>
 
 namespace Foam {
@@ -207,6 +208,19 @@ public:
     struct AccuracyMetrics;
     struct ValidationReport;
     
+    // Performance monitoring
+    struct PerformanceMetrics {
+        unsigned int totalExecutions;
+        double totalExecutionTime;  // milliseconds
+        double averageExecutionTime;
+        double minExecutionTime;
+        double maxExecutionTime;
+        std::chrono::system_clock::time_point lastExecution;
+        
+        nlohmann::json toJson() const;
+        static PerformanceMetrics fromJson(const nlohmann::json& j);
+    };
+    
     // Input validation
     void validateThermodynamicInputs(double pressure, double temperature, 
                                    const std::string& composition) const;
@@ -236,6 +250,21 @@ public:
     double getCurrentAccuracyScore() const { return totalAccuracyScore_; }
     void loadValidationBenchmarks(const std::string& filePath);
     void saveValidationReport(const ValidationReport& report, const std::string& filePath) const;
+    
+    // Performance optimization methods
+    void enableCaching(bool enable = true, const std::string& cacheFile = "");
+    bool isCachingEnabled() const { return cachingEnabled_; }
+    void clearCache();
+    void saveCacheToFile() const;
+    void loadCacheFromFile();
+    unsigned int getCacheHits() const { return cacheHits_; }
+    unsigned int getCacheMisses() const { return cacheMisses_; }
+    double getCacheHitRate() const { 
+        unsigned int total = cacheHits_ + cacheMisses_;
+        return total > 0 ? static_cast<double>(cacheHits_) / total : 0.0; 
+    }
+    PerformanceMetrics getPerformanceMetrics() const { return performanceMetrics_; }
+    void resetPerformanceMetrics();
     
     // Custom exception classes
     class ThermodynamicException : public std::runtime_error {
@@ -318,7 +347,7 @@ private:
     /**
      * @brief Log error information with categorization
      */
-    void logError(const std::string& errorType, const std::string& message);
+    void logError(const std::string& errorType, const std::string& message) const;
     
     // Reliability helpers
     void recordError(const std::string& errorType, const std::string& message);
@@ -333,6 +362,16 @@ private:
                                        const std::string& mechanism, double expectedCJSpeed, 
                                        double tolerance, const std::string& reference) const;
     void updateAccuracyScore();
+    
+    // Caching helper methods
+    std::string generateCacheKey(const std::string& function, double pressure, 
+                                double temperature, const std::string& composition,
+                                const std::string& mechanism) const;
+    bool getCachedResult(const std::string& cacheKey, double& result) const;
+    void setCachedResult(const std::string& cacheKey, double result) const;
+    void updateLRU(const std::string& cacheKey) const;
+    void evictLRU() const;
+    void recordPerformance(double executionTime) const;
     
     /**
      * @brief Format composition string for SDT
@@ -372,6 +411,26 @@ private:
     mutable double totalAccuracyScore_;
     mutable bool validationEnabled_;
     
+    // Performance optimization - Intelligent caching system
+    struct CachedResult {
+        double result;
+        std::chrono::system_clock::time_point timestamp;
+        std::string inputHash;
+        int accessCount;
+        
+        nlohmann::json toJson() const;
+        static CachedResult fromJson(const nlohmann::json& j);
+    };
+    
+    mutable std::map<std::string, CachedResult> resultCache_;
+    mutable std::list<std::string> lruOrder_;
+    mutable unsigned int cacheHits_;
+    mutable unsigned int cacheMisses_;
+    mutable bool cachingEnabled_;
+    mutable std::string cacheFilePath_;
+    
+    mutable PerformanceMetrics performanceMetrics_;
+    
     // Default configuration
     static constexpr int DEFAULT_TIMEOUT_MS = 30000;  // 30 seconds
     static constexpr int DEFAULT_MAX_BATCH_SIZE = 50;
@@ -390,6 +449,11 @@ private:
     static constexpr double DEFAULT_TOLERANCE = 0.05;   // 5% tolerance
     static constexpr int MAX_ACCURACY_HISTORY = 100;    // Maximum stored accuracy metrics
     static constexpr double MIN_ACCURACY_SCORE = 0.95;  // 95% minimum accuracy
+    
+    // Performance optimization constants
+    static constexpr int MAX_CACHE_SIZE = 1000;         // Maximum cached results
+    static constexpr double CACHE_TOLERANCE = 1e-6;     // Cache key tolerance
+    static constexpr const char* DEFAULT_CACHE_FILE = "cantera_cache.json";
     
     // Standard mechanism names (relative to mechanism directory)
     static const std::vector<std::string> STANDARD_MECHANISMS;

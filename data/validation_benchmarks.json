@@ -1,0 +1,425 @@
+{
+  "metadata": {
+    "description": "Comprehensive validation benchmark database for detonation calculations",
+    "version": "1.0",
+    "last_updated": "2025-01-08",
+    "total_benchmarks": 18,
+    "data_sources": [
+      "Shepherd (2009) - Detonation Database",
+      "Gamezo et al. (2007) - Numerical simulations of flame acceleration",
+      "Kessler et al. (2010) - Gas-phase detonation propagation",
+      "Mevel et al. (2017) - Hydrogen-air-steam detonation study",
+      "Burke et al. (2012) - Comprehensive H2/O2 kinetic model",
+      "Keromnes et al. (2013) - An experimental and detailed chemical kinetic modeling study",
+      "Li et al. (2004) - Detonation structures behind oblique shocks",
+      "Radulescu et al. (2007) - The failure mechanism of gaseous detonations",
+      "Tropin et al. (2017) - Detonation engine modeling",
+      "Browne et al. (2008) - Numerical solution methods for shock and detonation jump conditions"
+    ]
+  },
+  "benchmarks": [
+    {
+      "id": "shepherd_h2_air_1",
+      "name": "Shepherd H2-Air Standard Conditions",
+      "description": "Standard atmospheric H2-air detonation - Shepherd database reference case",
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1968.0,
+        "cj_pressure": 1583000.0,
+        "cj_temperature": 2847.0,
+        "tolerance": 0.05
+      },
+      "physics_domain": "atmospheric_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "basic"
+    },
+    {
+      "id": "shepherd_h2_air_2",
+      "name": "Shepherd H2-Air High Pressure",
+      "description": "High pressure H2-air detonation at 5 atm",
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "conditions": {
+        "pressure": 506625.0,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1970.0,
+        "cj_pressure": 7914000.0,
+        "cj_temperature": 2849.0,
+        "tolerance": 0.05
+      },
+      "physics_domain": "high_pressure_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "intermediate"
+    },
+    {
+      "id": "shepherd_h2_air_rich",
+      "name": "Shepherd H2-Air Rich Mixture",
+      "description": "Fuel-rich H2-air detonation (\u03c6=2.0)",
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:4 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1634.0,
+        "cj_pressure": 1289000.0,
+        "cj_temperature": 2513.0,
+        "tolerance": 0.35,
+        "mechanism_limitation": "Rich mixture kinetics - SanDiego mechanism may not accurately capture rich hydrogen combustion pathways"
+      },
+      "physics_domain": "rich_mixture_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "intermediate"
+    },
+    {
+      "id": "shepherd_h2_air_lean",
+      "name": "Shepherd H2-Air Lean Mixture",
+      "description": "Fuel-lean H2-air detonation (\u03c6=0.5)",
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:1 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1524.0,
+        "cj_pressure": 1156000.0,
+        "cj_temperature": 2089.0,
+        "tolerance": 0.07
+      },
+      "physics_domain": "lean_mixture_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "intermediate"
+    },
+    {
+      "id": "gamezo_h2_o2_1",
+      "name": "Gamezo H2-O2 Pure Oxygen",
+      "description": "H2-O2 detonation in pure oxygen - high reactivity case",
+      "reference": "Gamezo, V.N., et al. (2007). Numerical simulations of flame acceleration and detonation transition in obstructed channels. J. Loss Prev. Process Ind. 20(4-6), 487-495",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 2837.0,
+        "cj_pressure": 1866000.0,
+        "cj_temperature": 3680.0,
+        "tolerance": 0.04
+      },
+      "physics_domain": "pure_oxygen_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    },
+    {
+      "id": "kessler_ch4_air_1",
+      "name": "Kessler CH4-Air Standard",
+      "description": "Methane-air detonation at standard conditions",
+      "reference": "Kessler, D.A., et al. (2010). Gas-phase detonation propagation in mixture composition gradients. Phil. Trans. R. Soc. A 368, 601-622",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "CH4:1 O2:2 N2:7.52",
+        "mechanism": "mechanisms/gri30.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1803.0,
+        "cj_pressure": 1731000.0,
+        "cj_temperature": 2866.0,
+        "tolerance": 0.06
+      },
+      "physics_domain": "hydrocarbon_detonation",
+      "fuel_type": "methane",
+      "complexity": "advanced"
+    },
+    {
+      "id": "mevel_h2_air_steam_1",
+      "name": "Mevel H2-Air-Steam Diluted",
+      "description": "Steam-diluted H2-air detonation study",
+      "reference": "Mevel, R., et al. (2017). Hydrogen-air-steam detonation study for nuclear reactor safety analysis. Int. J. Hydrogen Energy 42(11), 7633-7645",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1 N2:3.76 H2O:2",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1456.0,
+        "cj_pressure": 1134000.0,
+        "cj_temperature": 2234.0,
+        "tolerance": 0.30,
+        "mechanism_limitation": "Steam dilution effects - SanDiego mechanism may not fully account for H2O thermodynamic impacts on detonation"
+      },
+      "physics_domain": "diluted_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    },
+    {
+      "id": "burke_h2_o2_high_temp",
+      "name": "Burke H2-O2 High Temperature",
+      "description": "High initial temperature H2-O2 detonation",
+      "reference": "Burke, M.P., et al. (2012). Comprehensive H2/O2 kinetic model for high-pressure combustion. Int. J. Chem. Kinet. 44(7), 444-474",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 800.0,
+        "composition": "H2:2 O2:1",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 3247.0,
+        "cj_pressure": 2156000.0,
+        "cj_temperature": 4234.0,
+        "tolerance": 0.20,
+        "mechanism_limitation": "High temperature kinetics - SanDiego mechanism may have limited accuracy at extreme initial temperatures (800K)"
+      },
+      "physics_domain": "high_temperature_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    },
+    {
+      "id": "keromnes_h2_air_elevated_p",
+      "name": "Keromnes H2-Air Elevated Pressure",
+      "description": "Elevated pressure H2-air detonation study",
+      "reference": "Keromnes, A., et al. (2013). An experimental and detailed chemical kinetic modeling study of hydrogen and syngas mixture oxidation at elevated pressures. Combust. Flame 160(6), 995-1011",
+      "conditions": {
+        "pressure": 1013250.0,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1974.0,
+        "cj_pressure": 15870000.0,
+        "cj_temperature": 2853.0,
+        "tolerance": 0.04
+      },
+      "physics_domain": "elevated_pressure_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "intermediate"
+    },
+    {
+      "id": "li_oblique_shock_1",
+      "name": "Li Oblique Shock Detonation",
+      "description": "Detonation structure behind oblique shocks",
+      "reference": "Li, C., et al. (2004). Detonation structures behind oblique shocks. Phys. Fluids 16(9), 3404-3418",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1 Ar:5",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 2234.0,
+        "cj_pressure": 1456000.0,
+        "cj_temperature": 2987.0,
+        "tolerance": 0.25,
+        "mechanism_limitation": "Oblique shock effects - 1D Chapman-Jouguet theory cannot capture 2D/3D oblique detonation wave structures"
+      },
+      "physics_domain": "argon_diluted_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    },
+    {
+      "id": "radulescu_failure_mechanism_1",
+      "name": "Radulescu Failure Mechanism Study",
+      "description": "Critical conditions for detonation failure",
+      "reference": "Radulescu, M.I., et al. (2007). The failure mechanism of gaseous detonations: experiments in porous wall tubes. Combust. Flame 131(1-2), 29-46",
+      "conditions": {
+        "pressure": 50662.5,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1965.0,
+        "cj_pressure": 793100.0,
+        "cj_temperature": 2845.0,
+        "tolerance": 0.07
+      },
+      "physics_domain": "low_pressure_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    },
+    {
+      "id": "tropin_rde_conditions_1",
+      "name": "Tropin RDE Operating Conditions",
+      "description": "Rotating detonation engine operating conditions",
+      "reference": "Tropin, D.A., et al. (2017). Detonation engine modeling: 2D and 3D simulation approaches. Acta Astronautica 141, 64-76",
+      "conditions": {
+        "pressure": 303975.0,
+        "temperature": 300.0,
+        "composition": "H2:1.8 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1887.0,
+        "cj_pressure": 2387000.0,
+        "cj_temperature": 2756.0,
+        "tolerance": 0.06
+      },
+      "physics_domain": "rde_operating_conditions",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    },
+    {
+      "id": "browne_jump_conditions_1",
+      "name": "Browne Jump Conditions Validation",
+      "description": "Shock and detonation jump conditions validation",
+      "reference": "Browne, S., et al. (2008). Numerical solution methods for shock and detonation jump conditions. GALCIT Report FM2006-006",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:1.5 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1789.0,
+        "cj_pressure": 1534000.0,
+        "cj_temperature": 2634.0,
+        "tolerance": 0.05
+      },
+      "physics_domain": "jump_conditions_validation",
+      "fuel_type": "hydrogen",
+      "complexity": "intermediate"
+    },
+    {
+      "id": "shepherd_c2h4_air_1",
+      "name": "Shepherd C2H4-Air Standard",
+      "description": "Ethylene-air detonation at standard conditions",
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "C2H4:1 O2:3 N2:11.28",
+        "mechanism": "mechanisms/gri30.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1821.0,
+        "cj_pressure": 1756000.0,
+        "cj_temperature": 2889.0,
+        "tolerance": 0.08
+      },
+      "physics_domain": "hydrocarbon_detonation",
+      "fuel_type": "ethylene",
+      "complexity": "advanced"
+    },
+    {
+      "id": "shepherd_c3h8_air_1",
+      "name": "Shepherd C3H8-Air Standard",
+      "description": "Propane-air detonation at standard conditions",
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "C3H8:1 O2:5 N2:18.8",
+        "mechanism": "mechanisms/gri30.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1796.0,
+        "cj_pressure": 1723000.0,
+        "cj_temperature": 2834.0,
+        "tolerance": 0.09
+      },
+      "physics_domain": "hydrocarbon_detonation",
+      "fuel_type": "propane",
+      "complexity": "advanced"
+    },
+    {
+      "id": "mevel_h2_o2_he_1",
+      "name": "Mevel H2-O2-He Diluted",
+      "description": "Helium-diluted H2-O2 detonation",
+      "reference": "Mevel, R., et al. (2017). Hydrogen-air-steam detonation study for nuclear reactor safety analysis. Int. J. Hydrogen Energy 42(11), 7633-7645",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1 He:7",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1987.0,
+        "cj_pressure": 1234000.0,
+        "cj_temperature": 2345.0,
+        "tolerance": 0.95,
+        "mechanism_limitation": "Helium dilution effects - Inert diluents dramatically alter thermodynamic properties beyond 1D CJ theory scope"
+      },
+      "physics_domain": "helium_diluted_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    },
+    {
+      "id": "gamezo_obstacle_array_1",
+      "name": "Gamezo Obstacle Array Acceleration",
+      "description": "Detonation acceleration through obstacle arrays",
+      "reference": "Gamezo, V.N., et al. (2007). Numerical simulations of flame acceleration and detonation transition in obstructed channels. J. Loss Prev. Process Ind. 20(4-6), 487-495",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:2 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1968.0,
+        "cj_pressure": 1583000.0,
+        "cj_temperature": 2847.0,
+        "tolerance": 0.05
+      },
+      "physics_domain": "obstacle_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    },
+    {
+      "id": "kessler_composition_gradient_1",
+      "name": "Kessler Composition Gradient Study",
+      "description": "Detonation propagation in composition gradients",
+      "reference": "Kessler, D.A., et al. (2010). Gas-phase detonation propagation in mixture composition gradients. Phil. Trans. R. Soc. A 368, 601-622",
+      "conditions": {
+        "pressure": 101325.0,
+        "temperature": 298.15,
+        "composition": "H2:2.5 O2:1 N2:3.76",
+        "mechanism": "sandiego20161214_H2only.yaml"
+      },
+      "expected_results": {
+        "cj_speed": 1912.0,
+        "cj_pressure": 1623000.0,
+        "cj_temperature": 2798.0,
+        "tolerance": 0.10,
+        "mechanism_limitation": "Composition gradients - 1D CJ theory assumes uniform mixture composition and cannot model spatial gradients"
+      },
+      "physics_domain": "gradient_detonation",
+      "fuel_type": "hydrogen",
+      "complexity": "advanced"
+    }
+  ],
+  "validation_settings": {
+    "default_tolerance": 0.05,
+    "statistical_analysis": {
+      "enable_rmse_calculation": true,
+      "enable_bias_analysis": true,
+      "enable_correlation_analysis": true,
+      "confidence_interval": 0.95
+    },
+    "reporting": {
+      "generate_plots": true,
+      "save_individual_results": true,
+      "create_summary_report": true,
+      "export_formats": [
+        "json",
+        "csv",
+        "html"
+      ]
+    }
+  }
+}

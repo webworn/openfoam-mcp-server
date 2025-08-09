@@ -6,23 +6,20 @@
 #include <iomanip>
 
 RDEAnalysisTool::RDEAnalysisTool() 
-    : rdeEngine_(std::make_unique<RotatingDetonationEngine>())
+    : expertWorkflow_(std::make_unique<RDEExpertWorkflow>())
     , contextEngine_(std::make_unique<ContextEngine>()) {
 }
 
-json RDEAnalysisTool::getToolDefinition() const {
+json RDEAnalysisTool::getInputSchema() {
     return json{
-        {"name", "rde_analysis"},
-        {"description", "Advanced rotating detonation engine analysis with comprehensive combustion physics education. Analyzes detonation wave dynamics, pressure gain combustion, and performance optimization with Chapman-Jouguet theory and detailed chemistry models."},
-        {"inputSchema", {
-            {"type", "object"},
-            {"properties", {
-                {"outer_radius", {
-                    {"type", "number"},
-                    {"minimum", 0.01},
-                    {"maximum", 0.5},
-                    {"description", "Outer radius of annular combustor [m]"}
-                }},
+        {"type", "object"},
+        {"properties", {
+            {"outer_radius", {
+                {"type", "number"},
+                {"minimum", 0.01},
+                {"maximum", 0.5},
+                {"description", "Outer radius of annular combustor [m]"}
+            }},
                 {"inner_radius", {
                     {"type", "number"},
                     {"minimum", 0.005},
@@ -92,9 +89,25 @@ json RDEAnalysisTool::getToolDefinition() const {
                     {"description", "Generate visualization output files"}
                 }}
             }},
-            {"required", json::array({"outer_radius", "inner_radius", "chamber_length", "fuel_type", "analysis_type", "case_directory"})}
-        }}
+        {"required", json::array({"outer_radius", "inner_radius", "chamber_length", "fuel_type", "analysis_type", "case_directory"})}
     };
+}
+
+ToolResult RDEAnalysisTool::execute(const json& arguments) {
+    ToolResult result;
+    
+    try {
+        // Use the existing analysis logic
+        auto analysisResult = handleRequest(arguments);
+        
+        // Convert to ToolResult format
+        result.addTextContent(analysisResult.dump(2));
+        
+    } catch (const std::exception& e) {
+        result.addErrorContent(std::string("RDE analysis failed: ") + e.what());
+    }
+    
+    return result;
 }
 
 json RDEAnalysisTool::handleRequest(const json& request) {
@@ -183,108 +196,102 @@ RDEAnalysisTool::RDEAnalysisResult RDEAnalysisTool::analyzeRDE(const RDEAnalysis
         return result;
     }
     
-    // Phase 2: Configure RDE analysis request
-    RotatingDetonationEngine::RDEAnalysisRequest engineRequest;
+    // Phase 2: Configure RDE expert workflow request
+    RDEExpertWorkflow::ExpertAnalysisRequest expertRequest;
     
-    // Geometry setup
-    engineRequest.geometry.outerRadius = request.outerRadius;
-    engineRequest.geometry.innerRadius = request.innerRadius;
-    engineRequest.geometry.chamberLength = request.chamberLength;
-    engineRequest.geometry.numberOfInjectors = request.numberOfInjectors;
-    engineRequest.geometry.injectionType = request.injectionType;
+    // Analysis configuration
+    expertRequest.analysisGoal = request.analysisType;
+    expertRequest.applicationDomain = "propulsion"; // Default for MCP interface
+    expertRequest.targetThrust = 1000.0; // Default target
+    expertRequest.performancePriority = "efficiency";
     
-    // Chemistry setup
-    engineRequest.chemistry.fuelType = request.fuelType;
-    engineRequest.chemistry.oxidizerType = request.oxidizerType;
-    engineRequest.chemistry.equivalenceRatio = request.equivalenceRatio;
-    engineRequest.chemistry.chamberPressure = request.chamberPressure;
-    engineRequest.chemistry.injectionTemperature = request.injectionTemperature;
-    engineRequest.chemistry.injectionVelocity = request.injectionVelocity;
+    // Operating constraints
+    expertRequest.maxPressure = request.chamberPressure * 2.0; // Safety margin
+    expertRequest.maxTemperature = 3000.0; // High temperature limit
+    expertRequest.maxMassFlowRate = 1.0; // 1 kg/s limit
+    expertRequest.availableFuels = {request.fuelType};
+    expertRequest.oxidizerConstraint = (request.oxidizerType == "oxygen") ? "oxygen_available" : "air_only";
     
-    // Simulation settings
-    engineRequest.settings.solverType = request.solverType;
-    engineRequest.settings.combustionModel = request.enableDetailedChemistry ? "detailed_kinetics" : "finite_rate";
-    engineRequest.settings.enableVisualization = request.enableVisualization;
+    // Design constraints
+    expertRequest.maxOuterDiameter = request.outerRadius * 2.0;
+    expertRequest.lengthConstraint = request.chamberLength * 2.0;
+    expertRequest.materialConstraint = "inconel";
+    expertRequest.coolingRequired = true;
     
-    // Mesh resolution mapping
-    switch (request.meshResolution) {
-        case 1: // Coarse
-            engineRequest.settings.radialCells = 30;
-            engineRequest.settings.circumferentialCells = 120;
-            engineRequest.settings.axialCells = 60;
-            break;
-        case 3: // Fine
-            engineRequest.settings.radialCells = 80;
-            engineRequest.settings.circumferentialCells = 320;
-            engineRequest.settings.axialCells = 160;
-            break;
-        default: // Medium
-            engineRequest.settings.radialCells = 50;
-            engineRequest.settings.circumferentialCells = 200;
-            engineRequest.settings.axialCells = 100;
-    }
+    // User preferences
+    expertRequest.userExperience = "intermediate"; // Default for MCP users
+    expertRequest.requestDetailedExplanations = true;
+    expertRequest.requestDesignRationale = true;
+    expertRequest.preferredUnits = "SI";
     
-    engineRequest.analysisType = request.analysisType;
-    engineRequest.caseDirectory = request.caseDirectory;
-    engineRequest.enableVisualization = request.enableVisualization;
+    // Phase 3: Run RDE expert analysis
+    auto expertResult = expertWorkflow_->performExpertAnalysis(expertRequest);
     
-    // Phase 3: Run RDE analysis
-    auto engineResult = rdeEngine_->analyzeRDE(engineRequest);
-    
-    if (!engineResult.success) {
-        result.validationWarnings = engineResult.warnings;
-        result.troubleshooting = generateTroubleshootingGuide(engineResult.warnings);
+    if (!expertResult.feasibilityAssessment) {
+        result.validationWarnings = expertResult.technicalRisks;
+        result.troubleshooting = generateTroubleshootingGuide(expertResult.technicalRisks);
         return result;
     }
     
-    // Phase 4: Extract results
-    result.detonationVelocity = engineResult.operatingPoint.waveSpeed;
-    result.waveFrequency = engineResult.operatingPoint.waveFrequency;
-    result.numberOfWaves = engineResult.operatingPoint.numberOfWaves;
-    result.specificImpulse = engineResult.operatingPoint.specificImpulse;
-    result.thrust = engineResult.operatingPoint.thrust;
-    result.pressureGain = engineResult.operatingPoint.pressureGain;
-    result.combustionEfficiency = engineResult.operatingPoint.combustionEfficiency;
-    result.massFlowRate = engineResult.operatingPoint.massFlowRate;
-    result.pressureOscillations = engineResult.operatingPoint.pressureOscillations;
+    // Phase 4: Extract results from expert system
+    result.detonationVelocity = expertResult.recommendedChemistry.detonationVelocity;
+    result.waveFrequency = expertResult.predictedPerformance.waveFrequency;
+    result.numberOfWaves = expertResult.predictedPerformance.numberOfWaves;
+    result.specificImpulse = expertResult.predictedPerformance.specificImpulse;
+    result.thrust = expertResult.predictedPerformance.thrust;
+    result.pressureGain = expertResult.predictedPerformance.pressureGain;
+    result.combustionEfficiency = expertResult.predictedPerformance.combustionEfficiency;
+    result.massFlowRate = expertResult.predictedPerformance.massFlowRate;
+    result.pressureOscillations = expertResult.predictedPerformance.pressureOscillations;
     
     // Calculate additional metrics
     result.heatReleaseRate = result.massFlowRate * 120e6; // Simplified heat release [W]
     result.residenceTime = request.chamberLength / request.injectionVelocity;
-    result.cellSize = engineRequest.settings.cellSize;
+    result.cellSize = expertResult.recommendedChemistry.cellSize;
     
-    // Phase 5: Generate educational content
+    // Phase 5: Generate educational content using expert workflow results
     auto educationalContent = generateEducationalContent(request, result);
-    result.physicsExplanation = educationalContent.detonationPhysics;
+    result.physicsExplanation = expertResult.physicsExplanation.empty() ? 
+                               educationalContent.detonationPhysics : expertResult.physicsExplanation;
     result.detonationTheory = educationalContent.chapmanJouguetTheory;
-    result.designGuidance = generateDesignNarrative(request, result);
+    result.designGuidance = expertResult.designPhilosophy.empty() ? 
+                           generateDesignNarrative(request, result) : expertResult.designPhilosophy;
     
-    // Phase 6: Generate insights and recommendations
-    result.keyInsights = {
-        "Detonation velocity is " + std::to_string((int)(result.detonationVelocity)) + " m/s, which is " + 
-        (result.detonationVelocity > 1800 ? "optimal" : "low") + " for " + request.fuelType + " combustion",
-        
-        "Pressure gain of " + std::to_string(result.pressureGain) + "x enables higher cycle efficiency than conventional gas turbines",
-        
-        "Wave frequency of " + std::to_string((int)result.waveFrequency) + " Hz creates " + 
-        (result.waveFrequency > 10000 ? "high" : "moderate") + " frequency pressure oscillations",
-        
-        "Combustion efficiency of " + std::to_string((int)(result.combustionEfficiency * 100)) + "% indicates " +
-        (result.combustionEfficiency > 0.9 ? "excellent" : result.combustionEfficiency > 0.8 ? "good" : "poor") + " fuel utilization"
-    };
+    // Phase 6: Generate insights and recommendations using expert workflow results
+    if (!expertResult.keyDesignDecisions.empty()) {
+        result.keyInsights = expertResult.keyDesignDecisions;
+    } else {
+        result.keyInsights = {
+            "Detonation velocity is " + std::to_string((int)(result.detonationVelocity)) + " m/s, which is " + 
+            (result.detonationVelocity > 1800 ? "optimal" : "low") + " for " + request.fuelType + " combustion",
+            
+            "Pressure gain of " + std::to_string(result.pressureGain) + "x enables higher cycle efficiency than conventional gas turbines",
+            
+            "Wave frequency of " + std::to_string((int)result.waveFrequency) + " Hz creates " + 
+            (result.waveFrequency > 10000 ? "high" : "moderate") + " frequency pressure oscillations",
+            
+            "Combustion efficiency of " + std::to_string((int)(result.combustionEfficiency * 100)) + "% indicates " +
+            (result.combustionEfficiency > 0.9 ? "excellent" : result.combustionEfficiency > 0.8 ? "good" : "poor") + " fuel utilization"
+        };
+    }
     
-    // Generate recommendations
-    if (result.combustionEfficiency < 0.85) {
-        result.recommendations.push_back("Consider increasing residence time or injection velocity for better mixing");
-    }
-    if (result.pressureOscillations > 0.15) {
-        result.recommendations.push_back("High pressure oscillations detected - review injection timing and geometry");
-    }
-    if (result.pressureGain < 2.0) {
-        result.recommendations.push_back("Low pressure gain suggests weak detonation - check equivalence ratio and chamber pressure");
-    }
-    if (request.equivalenceRatio > 1.3) {
-        result.recommendations.push_back("Rich mixture increases heat transfer and emissions - consider leaner operation");
+    // Generate recommendations using expert workflow results
+    if (!expertResult.recommendedNextSteps.empty()) {
+        result.recommendations = expertResult.recommendedNextSteps;
+    } else {
+        // Fallback recommendations
+        if (result.combustionEfficiency < 0.85) {
+            result.recommendations.push_back("Consider increasing residence time or injection velocity for better mixing");
+        }
+        if (result.pressureOscillations > 0.15) {
+            result.recommendations.push_back("High pressure oscillations detected - review injection timing and geometry");
+        }
+        if (result.pressureGain < 2.0) {
+            result.recommendations.push_back("Low pressure gain suggests weak detonation - check equivalence ratio and chamber pressure");
+        }
+        if (request.equivalenceRatio > 1.3) {
+            result.recommendations.push_back("Rich mixture increases heat transfer and emissions - consider leaner operation");
+        }
     }
     
     // Phase 7: Generate Socratic questions for different learning aspects
@@ -292,12 +299,11 @@ RDEAnalysisTool::RDEAnalysisResult RDEAnalysisTool::analyzeRDE(const RDEAnalysis
     result.designQuestions = generateSocraticQuestions("design", request);
     result.physicsQuestions = generateSocraticQuestions("physics", request);
     
-    // Phase 8: Validation against theory
-    double theoreticalCJVelocity = rdeEngine_->calculateChapmanJouguetVelocity(engineRequest.chemistry);
-    result.theoreticalAccuracy = std::abs(result.detonationVelocity - theoreticalCJVelocity) / theoreticalCJVelocity;
-    result.theoreticalAccuracy = 1.0 - result.theoreticalAccuracy; // Convert to accuracy
+    // Phase 8: Validation using expert workflow confidence scores
+    result.theoreticalAccuracy = expertResult.confidenceScore;
     
     // Phase 9: Visualization file paths
+    result.enableVisualization = request.enableVisualization;
     if (request.enableVisualization) {
         result.pressureContours = request.caseDirectory + "/postProcessing/pressure_contours.png";
         result.temperatureContours = request.caseDirectory + "/postProcessing/temperature_contours.png";
@@ -468,6 +474,117 @@ std::vector<std::string> RDEAnalysisTool::generateSocraticQuestions(const std::s
     return questions;
 }
 
+std::string RDEAnalysisTool::explainCombustionKinetics(const std::string& fuelType) {
+    std::ostringstream explanation;
+    explanation << "**Combustion Kinetics for " << fuelType << ":**\\n\\n";
+    explanation << "Chemical reaction mechanisms govern the rate of fuel consumption and heat release. ";
+    
+    if (fuelType == "hydrogen") {
+        explanation << "Hydrogen combustion involves relatively simple reaction pathways with fast kinetics, ";
+        explanation << "enabling rapid detonation initiation and propagation.";
+    } else if (fuelType == "methane") {
+        explanation << "Methane requires multi-step reaction mechanisms with intermediate species formation, ";
+        explanation << "affecting ignition delay and flame speeds.";
+    } else {
+        explanation << "Hydrocarbon fuels involve complex reaction networks with multiple intermediate species.";
+    }
+    
+    return explanation.str();
+}
+
+std::string RDEAnalysisTool::explainSpecificImpulse(double isp, const std::string& fuelType) {
+    std::ostringstream explanation;
+    explanation << "**Specific Impulse Analysis:**\\n\\n";
+    explanation << "Calculated specific impulse: " << (int)isp << " seconds\\n\\n";
+    explanation << "This represents the thrust produced per unit weight of propellant consumed. ";
+    explanation << "Higher values indicate more efficient propellant utilization. ";
+    explanation << "For " << fuelType << ", this value is ";
+    
+    if (isp > 300) {
+        explanation << "excellent, approaching theoretical limits.";
+    } else if (isp > 250) {
+        explanation << "good for practical propulsion applications.";
+    } else {
+        explanation << "moderate, with room for optimization.";
+    }
+    
+    return explanation.str();
+}
+
+std::string RDEAnalysisTool::explainCombustionEfficiency(double efficiency, double residenceTime) {
+    std::ostringstream explanation;
+    explanation << "**Combustion Efficiency Analysis:**\\n\\n";
+    explanation << "Efficiency: " << (int)(efficiency * 100) << "%\\n";
+    explanation << "Residence time: " << std::fixed << std::setprecision(3) << residenceTime * 1000 << " ms\\n\\n";
+    
+    explanation << "Combustion efficiency indicates the fraction of fuel successfully consumed. ";
+    explanation << "The residence time of " << (residenceTime * 1000) << " ms ";
+    
+    if (residenceTime > 0.001) {
+        explanation << "provides sufficient time for complete combustion.";
+    } else {
+        explanation << "may be too short for complete fuel consumption.";
+    }
+    
+    return explanation.str();
+}
+
+std::string RDEAnalysisTool::recommendGeometry(double outerRadius, double innerRadius, double chamberLength) {
+    std::ostringstream recommendation;
+    double annularGap = outerRadius - innerRadius;
+    
+    recommendation << "**Geometry Optimization:**\\n\\n";
+    recommendation << "Current annular gap: " << (annularGap * 1000) << " mm\\n";
+    recommendation << "Chamber length: " << (chamberLength * 1000) << " mm\\n\\n";
+    
+    if (annularGap < 0.01) {
+        recommendation << "⚠️  Narrow gap may limit wave stability - consider increasing to 10-30mm.";
+    } else if (annularGap > 0.05) {
+        recommendation << "⚠️  Wide gap may cause wave decay - consider reducing for better confinement.";
+    } else {
+        recommendation << "✅ Gap width is well-suited for stable detonation propagation.";
+    }
+    
+    return recommendation.str();
+}
+
+std::string RDEAnalysisTool::recommendInjection(const std::string& injectionType, double injectionVelocity, int numberOfInjectors) {
+    std::ostringstream recommendation;
+    recommendation << "**Injection System Optimization:**\\n\\n";
+    recommendation << "Type: " << injectionType << " injection\\n";
+    recommendation << "Velocity: " << (int)injectionVelocity << " m/s\\n";
+    recommendation << "Number of injectors: " << numberOfInjectors << "\\n\\n";
+    
+    if (injectionVelocity < 50) {
+        recommendation << "⚠️  Low injection velocity may cause poor mixing.";
+    } else if (injectionVelocity > 200) {
+        recommendation << "⚠️  High injection velocity increases pressure losses.";
+    } else {
+        recommendation << "✅ Injection velocity is well-balanced for mixing and efficiency.";
+    }
+    
+    return recommendation.str();
+}
+
+std::string RDEAnalysisTool::generateDesignNarrative(const RDEAnalysisRequest& request, const RDEAnalysisResult& result) {
+    std::ostringstream narrative;
+    narrative << "**RDE Design Philosophy:**\\n\\n";
+    narrative << "This " << request.fuelType << "-fueled RDE design achieves ";
+    narrative << (int)(result.combustionEfficiency * 100) << "% combustion efficiency ";
+    narrative << "with " << (int)result.detonationVelocity << " m/s detonation velocity. ";
+    
+    narrative << "The annular geometry promotes continuous detonation propagation while ";
+    narrative << "the injection system ensures proper fuel-air mixing. ";
+    
+    if (result.pressureGain > 2.5) {
+        narrative << "Excellent pressure gain characteristics make this design suitable for high-performance applications.";
+    } else {
+        narrative << "Moderate pressure gain suggests opportunities for further optimization.";
+    }
+    
+    return narrative.str();
+}
+
 bool RDEAnalysisTool::validateInputParameters(const RDEAnalysisRequest& request, std::vector<std::string>& warnings) {
     bool isValid = true;
     
@@ -533,6 +650,19 @@ std::string RDEAnalysisTool::generateTroubleshootingGuide(const std::vector<std:
     guide << "• Chamber pressure: 1-50 bar for practical operation\\n";
     
     return guide.str();
+}
+
+void registerRDEAnalysisTool(McpServer& server) {
+    auto tool = std::make_shared<RDEAnalysisTool>();
+
+    server.registerTool(
+        RDEAnalysisTool::getName(), 
+        RDEAnalysisTool::getDescription(), 
+        RDEAnalysisTool::getInputSchema(),
+        [tool](const json& arguments) -> ToolResult { 
+            return tool->execute(arguments); 
+        }
+    );
 }
 
 // C interface for MCP integration

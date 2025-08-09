@@ -4,7 +4,8 @@
 #include <vector>
 #include <memory>
 #include <nlohmann/json.hpp>
-#include "../openfoam/rotating_detonation_engine.hpp"
+#include "../mcp/server.hpp"
+#include "../openfoam/rde_expert_workflow.hpp"
 #include "context_engine.hpp"
 
 using json = nlohmann::json;
@@ -24,9 +25,21 @@ class RDEAnalysisTool {
 public:
     RDEAnalysisTool();
     
-    // MCP Tool Interface
+    // MCP Tool Interface (legacy)
     json handleRequest(const json& request);
     json getToolDefinition() const;
+    
+    // New MCP Tool Interface
+    static std::string getName() { return "rde_analysis"; }
+    
+    static std::string getDescription() {
+        return "Advanced rotating detonation engine analysis with comprehensive combustion physics education. "
+               "Analyzes detonation wave dynamics, pressure gain combustion, and performance optimization with "
+               "Chapman-Jouguet theory and detailed chemistry models.";
+    }
+    
+    static json getInputSchema();
+    ToolResult execute(const json& arguments);
     
     // Core RDE Analysis
     struct RDEAnalysisRequest {
@@ -98,12 +111,15 @@ public:
         // Validation data
         double theoreticalAccuracy;
         std::vector<std::string> validationWarnings;
+        
+        // Settings
+        bool enableVisualization;
     };
     
     RDEAnalysisResult analyzeRDE(const RDEAnalysisRequest& request);
     
 private:
-    std::unique_ptr<RotatingDetonationEngine> rdeEngine_;
+    std::unique_ptr<RDEExpertWorkflow> expertWorkflow_;
     std::unique_ptr<ContextEngine> contextEngine_;
     
     // Educational Content Generation
@@ -170,6 +186,8 @@ private:
 };
 
 // MCP Tool Registration
+void registerRDEAnalysisTool(McpServer& server);
+
 extern "C" {
     RDEAnalysisTool* createRDEAnalysisTool();
     void destroyRDEAnalysisTool(RDEAnalysisTool* tool);

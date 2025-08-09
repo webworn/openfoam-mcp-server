@@ -10,6 +10,9 @@
 #include <thread>
 #include <iomanip>
 #include <cmath>
+#include <limits>
+#include <functional>
+#include <list>
 
 using json = nlohmann::json;
 
@@ -41,9 +44,23 @@ CanteraWrapper::CanteraWrapper()
     failedCalls_(0),
     retryAttempts_(0),
     timeoutFailures_(0),
-    validationFailures_(0)
+    validationFailures_(0),
+    totalAccuracyScore_(0.0),
+    validationEnabled_(false),
+    cacheHits_(0),
+    cacheMisses_(0),
+    cachingEnabled_(false),
+    cacheFilePath_(DEFAULT_CACHE_FILE)
 {
     initializeDefaultPaths();
+    
+    // Initialize performance metrics
+    performanceMetrics_ = {};
+    performanceMetrics_.totalExecutions = 0;
+    performanceMetrics_.totalExecutionTime = 0.0;
+    performanceMetrics_.averageExecutionTime = 0.0;
+    performanceMetrics_.minExecutionTime = std::numeric_limits<double>::max();
+    performanceMetrics_.maxExecutionTime = 0.0;
     
     // Initialize standard validation benchmarks
     initializeStandardBenchmarks();
@@ -160,10 +177,24 @@ double CanteraWrapper::calculateCJSpeed(double pressure, double temperature,
                                        const std::string& mechanism)
 {
     totalCalls_++;
+    auto startTime = std::chrono::steady_clock::now();
     
     try {
         // Validate inputs
         validateThermodynamicInputs(pressure, temperature, composition);
+        
+        // Check cache first if enabled
+        if (cachingEnabled_) {
+            std::string cacheKey = generateCacheKey("CJspeed", pressure, temperature, composition, mechanism);
+            double cachedResult;
+            if (getCachedResult(cacheKey, cachedResult)) {
+                auto endTime = std::chrono::steady_clock::now();
+                double executionTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count() / 1000.0;
+                recordPerformance(executionTime);
+                logDebug("CJ speed retrieved from cache: " + std::to_string(cachedResult) + " m/s");
+                return cachedResult;
+            }
+        }
         
         // Prepare request
         json request;
@@ -191,8 +222,21 @@ double CanteraWrapper::calculateCJSpeed(double pressure, double temperature,
             throw ValidationException("CJ speed out of physical bounds: " + std::to_string(cjSpeed) + " m/s");
         }
         
+        // Cache result if enabled
+        if (cachingEnabled_) {
+            std::string cacheKey = generateCacheKey("CJspeed", pressure, temperature, composition, mechanism);
+            setCachedResult(cacheKey, cjSpeed);
+        }
+        
         successfulCalls_++;
-        logDebug("CJ speed calculated: " + std::to_string(cjSpeed) + " m/s");
+        
+        // Record performance
+        auto endTime = std::chrono::steady_clock::now();
+        double executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+        recordPerformance(executionTime);
+        
+        logDebug("CJ speed calculated: " + std::to_string(cjSpeed) + " m/s (" + 
+                std::to_string(executionTime) + "ms)");
         
         return cjSpeed;
         
@@ -870,7 +914,7 @@ void CanteraWrapper::logDebug(const std::string& message) const
     }
 }
 
-void CanteraWrapper::logError(const std::string& errorType, const std::string& message)
+void CanteraWrapper::logError(const std::string& errorType, const std::string& message) const
 {
     auto now = std::chrono::system_clock::now();
     auto time_t = std::chrono::system_clock::to_time_t(now);
@@ -1422,6 +1466,258 @@ void CanteraWrapper::updateAccuracyScore()
     }
     
     totalAccuracyScore_ = static_cast<double>(passedTests) / accuracyHistory_.size();
+}
+
+// Performance optimization implementation
+
+// JSON serialization for CachedResult
+json CanteraWrapper::CachedResult::toJson() const
+{
+    json j;
+    j["result"] = result;
+    j["inputHash"] = inputHash;
+    j["accessCount"] = accessCount;
+    
+    // Convert timestamp to ISO 8601 string
+    auto time_t = std::chrono::system_clock::to_time_t(timestamp);
+    std::ostringstream oss;
+    oss << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%SZ");
+    j["timestamp"] = oss.str();
+    
+    return j;
+}
+
+CanteraWrapper::CachedResult CanteraWrapper::CachedResult::fromJson(const json& j)
+{
+    CachedResult cached;
+    cached.result = j.at("result");
+    cached.inputHash = j.at("inputHash");
+    cached.accessCount = j.value("accessCount", 1);
+    
+    // Parse ISO 8601 timestamp (simplified)
+    cached.timestamp = std::chrono::system_clock::now();
+    
+    return cached;
+}
+
+// JSON serialization for PerformanceMetrics
+json CanteraWrapper::PerformanceMetrics::toJson() const
+{
+    json j;
+    j["totalExecutions"] = totalExecutions;
+    j["totalExecutionTime"] = totalExecutionTime;
+    j["averageExecutionTime"] = averageExecutionTime;
+    j["minExecutionTime"] = minExecutionTime;
+    j["maxExecutionTime"] = maxExecutionTime;
+    
+    // Convert timestamp to ISO 8601 string
+    auto time_t = std::chrono::system_clock::to_time_t(lastExecution);
+    std::ostringstream oss;
+    oss << std::put_time(std::gmtime(&time_t), "%Y-%m-%dT%H:%M:%SZ");
+    j["lastExecution"] = oss.str();
+    
+    return j;
+}
+
+CanteraWrapper::PerformanceMetrics CanteraWrapper::PerformanceMetrics::fromJson(const json& j)
+{
+    PerformanceMetrics metrics;
+    metrics.totalExecutions = j.value("totalExecutions", 0);
+    metrics.totalExecutionTime = j.value("totalExecutionTime", 0.0);
+    metrics.averageExecutionTime = j.value("averageExecutionTime", 0.0);
+    metrics.minExecutionTime = j.value("minExecutionTime", 0.0);
+    metrics.maxExecutionTime = j.value("maxExecutionTime", 0.0);
+    metrics.lastExecution = std::chrono::system_clock::now();
+    
+    return metrics;
+}
+
+void CanteraWrapper::enableCaching(bool enable, const std::string& cacheFile)
+{
+    cachingEnabled_ = enable;
+    if (!cacheFile.empty()) {
+        cacheFilePath_ = cacheFile;
+    }
+    
+    if (enable) {
+        loadCacheFromFile();
+        logDebug("Caching enabled with file: " + cacheFilePath_);
+    } else {
+        logDebug("Caching disabled");
+    }
+}
+
+void CanteraWrapper::clearCache()
+{
+    resultCache_.clear();
+    lruOrder_.clear();
+    cacheHits_ = 0;
+    cacheMisses_ = 0;
+    logDebug("Cache cleared");
+}
+
+void CanteraWrapper::saveCacheToFile() const
+{
+    try {
+        json cacheData;
+        cacheData["cache"] = json::object();
+        
+        for (const auto& pair : resultCache_) {
+            cacheData["cache"][pair.first] = pair.second.toJson();
+        }
+        
+        cacheData["statistics"] = json::object();
+        cacheData["statistics"]["cacheHits"] = cacheHits_;
+        cacheData["statistics"]["cacheMisses"] = cacheMisses_;
+        
+        cacheData["performance"] = performanceMetrics_.toJson();
+        
+        std::ofstream file(cacheFilePath_);
+        if (file.is_open()) {
+            file << std::setw(2) << cacheData << std::endl;
+            logDebug("Cache saved to: " + cacheFilePath_);
+        } else {
+            logError("CacheError", "Failed to save cache to: " + cacheFilePath_);
+        }
+        
+    } catch (const std::exception& e) {
+        logError("CacheError", "Cache save failed: " + std::string(e.what()));
+    }
+}
+
+void CanteraWrapper::loadCacheFromFile()
+{
+    try {
+        std::ifstream file(cacheFilePath_);
+        if (!file.is_open()) {
+            logDebug("Cache file not found, starting with empty cache: " + cacheFilePath_);
+            return;
+        }
+        
+        json cacheData;
+        file >> cacheData;
+        
+        // Load cached results
+        if (cacheData.contains("cache")) {
+            for (const auto& pair : cacheData["cache"].items()) {
+                resultCache_[pair.key()] = CachedResult::fromJson(pair.value());
+                lruOrder_.push_back(pair.key());
+            }
+        }
+        
+        // Load statistics
+        if (cacheData.contains("statistics")) {
+            cacheHits_ = cacheData["statistics"].value("cacheHits", 0);
+            cacheMisses_ = cacheData["statistics"].value("cacheMisses", 0);
+        }
+        
+        // Load performance metrics
+        if (cacheData.contains("performance")) {
+            performanceMetrics_ = PerformanceMetrics::fromJson(cacheData["performance"]);
+        }
+        
+        logDebug("Cache loaded: " + std::to_string(resultCache_.size()) + " entries from " + cacheFilePath_);
+        
+    } catch (const std::exception& e) {
+        logError("CacheError", "Cache load failed: " + std::string(e.what()));
+        clearCache();
+    }
+}
+
+void CanteraWrapper::resetPerformanceMetrics()
+{
+    performanceMetrics_ = {};
+    performanceMetrics_.totalExecutions = 0;
+    performanceMetrics_.totalExecutionTime = 0.0;
+    performanceMetrics_.averageExecutionTime = 0.0;
+    performanceMetrics_.minExecutionTime = std::numeric_limits<double>::max();
+    performanceMetrics_.maxExecutionTime = 0.0;
+    logDebug("Performance metrics reset");
+}
+
+std::string CanteraWrapper::generateCacheKey(const std::string& function, double pressure, 
+                                            double temperature, const std::string& composition,
+                                            const std::string& mechanism) const
+{
+    // Create a hash of the input parameters for cache key
+    std::ostringstream oss;
+    oss << function << "_";
+    oss << std::fixed << std::setprecision(6) << pressure << "_";
+    oss << std::fixed << std::setprecision(6) << temperature << "_";
+    oss << composition << "_";
+    oss << mechanism;
+    
+    // Use hash to create shorter key
+    std::hash<std::string> hasher;
+    size_t hashValue = hasher(oss.str());
+    
+    return std::to_string(hashValue);
+}
+
+bool CanteraWrapper::getCachedResult(const std::string& cacheKey, double& result) const
+{
+    auto it = resultCache_.find(cacheKey);
+    if (it != resultCache_.end()) {
+        result = it->second.result;
+        it->second.accessCount++;
+        updateLRU(cacheKey);
+        cacheHits_++;
+        return true;
+    }
+    
+    cacheMisses_++;
+    return false;
+}
+
+void CanteraWrapper::setCachedResult(const std::string& cacheKey, double result) const
+{
+    // Check if cache is full and evict LRU if necessary
+    if (resultCache_.size() >= MAX_CACHE_SIZE && resultCache_.find(cacheKey) == resultCache_.end()) {
+        evictLRU();
+    }
+    
+    CachedResult cached;
+    cached.result = result;
+    cached.timestamp = std::chrono::system_clock::now();
+    cached.inputHash = cacheKey;
+    cached.accessCount = 1;
+    
+    resultCache_[cacheKey] = cached;
+    updateLRU(cacheKey);
+}
+
+void CanteraWrapper::updateLRU(const std::string& cacheKey) const
+{
+    // Remove key if it exists in LRU list
+    lruOrder_.remove(cacheKey);
+    // Add to front (most recently used)
+    lruOrder_.push_front(cacheKey);
+}
+
+void CanteraWrapper::evictLRU() const
+{
+    if (!lruOrder_.empty()) {
+        std::string lruKey = lruOrder_.back();
+        lruOrder_.pop_back();
+        resultCache_.erase(lruKey);
+        logDebug("Evicted LRU cache entry: " + lruKey);
+    }
+}
+
+void CanteraWrapper::recordPerformance(double executionTime) const
+{
+    performanceMetrics_.totalExecutions++;
+    performanceMetrics_.totalExecutionTime += executionTime;
+    performanceMetrics_.averageExecutionTime = performanceMetrics_.totalExecutionTime / performanceMetrics_.totalExecutions;
+    
+    if (executionTime < performanceMetrics_.minExecutionTime) {
+        performanceMetrics_.minExecutionTime = executionTime;
+    }
+    if (executionTime > performanceMetrics_.maxExecutionTime) {
+        performanceMetrics_.maxExecutionTime = executionTime;
+    }
+    
+    performanceMetrics_.lastExecution = std::chrono::system_clock::now();
 }
 
 } // namespace Physics

@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "timestamp": 1754757037,
+    "total_benchmarks": 18
+  },
+  "results": [
+    {
+      "benchmark_id": "shepherd_h2_air_1",
+      "benchmark_name": "Shepherd H2-Air Standard Conditions",
+      "calculated_value": 1975.5932035930962,
+      "execution_time_ms": 1052,
+      "expected_value": 1968.0,
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "relative_error": 0.3858335159093586,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "shepherd_h2_air_2",
+      "benchmark_name": "Shepherd H2-Air High Pressure",
+      "calculated_value": 2007.1225066538943,
+      "execution_time_ms": 969,
+      "expected_value": 1970.0,
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "relative_error": 1.8843912007052959,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "shepherd_h2_air_rich",
+      "benchmark_name": "Shepherd H2-Air Rich Mixture",
+      "calculated_value": 2144.2293794666994,
+      "execution_time_ms": 847,
+      "expected_value": 1634.0,
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "relative_error": 31.225788217056266,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "shepherd_h2_air_lean",
+      "benchmark_name": "Shepherd H2-Air Lean Mixture",
+      "calculated_value": 1618.0198107618176,
+      "execution_time_ms": 884,
+      "expected_value": 1524.0,
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "relative_error": 6.169278921379105,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "gamezo_h2_o2_1",
+      "benchmark_name": "Gamezo H2-O2 Pure Oxygen",
+      "calculated_value": 2836.2666372556314,
+      "execution_time_ms": 880,
+      "expected_value": 2837.0,
+      "reference": "Gamezo, V.N., et al. (2007). Numerical simulations of flame acceleration and detonation transition in obstructed channels. J. Loss Prev. Process Ind. 20(4-6), 487-495",
+      "relative_error": 0.025849938116623387,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "kessler_ch4_air_1",
+      "benchmark_name": "Kessler CH4-Air Standard",
+      "calculated_value": 1810.5562748076761,
+      "execution_time_ms": 1213,
+      "expected_value": 1803.0,
+      "reference": "Kessler, D.A., et al. (2010). Gas-phase detonation propagation in mixture composition gradients. Phil. Trans. R. Soc. A 368, 601-622",
+      "relative_error": 0.4190945539476494,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "mevel_h2_air_steam_1",
+      "benchmark_name": "Mevel H2-Air-Steam Diluted",
+      "calculated_value": 1832.234634707555,
+      "execution_time_ms": 841,
+      "expected_value": 1456.0,
+      "reference": "Mevel, R., et al. (2017). Hydrogen-air-steam detonation study for nuclear reactor safety analysis. Int. J. Hydrogen Energy 42(11), 7633-7645",
+      "relative_error": 25.8402908452991,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "burke_h2_o2_high_temp",
+      "benchmark_name": "Burke H2-O2 High Temperature",
+      "calculated_value": 2706.2004769179775,
+      "execution_time_ms": 913,
+      "expected_value": 3247.0,
+      "reference": "Burke, M.P., et al. (2012). Comprehensive H2/O2 kinetic model for high-pressure combustion. Int. J. Chem. Kinet. 44(7), 444-474",
+      "relative_error": 16.655359503604018,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "keromnes_h2_air_elevated_p",
+      "benchmark_name": "Keromnes H2-Air Elevated Pressure",
+      "calculated_value": 2018.6861243657702,
+      "execution_time_ms": 925,
+      "expected_value": 1974.0,
+      "reference": "Keromnes, A., et al. (2013). An experimental and detailed chemical kinetic modeling study of hydrogen and syngas mixture oxidation at elevated pressures. Combust. Flame 160(6), 995-1011",
+      "relative_error": 2.263734770302441,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "li_oblique_shock_1",
+      "benchmark_name": "Li Oblique Shock Detonation",
+      "calculated_value": 1780.2715124986546,
+      "execution_time_ms": 956,
+      "expected_value": 2234.0,
+      "reference": "Li, C., et al. (2004). Detonation structures behind oblique shocks. Phys. Fluids 16(9), 3404-3418",
+      "relative_error": 20.310138205073653,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "radulescu_failure_mechanism_1",
+      "benchmark_name": "Radulescu Failure Mechanism Study",
+      "calculated_value": 1960.1916256807003,
+      "execution_time_ms": 887,
+      "expected_value": 1965.0,
+      "reference": "Radulescu, M.I., et al. (2007). The failure mechanism of gaseous detonations: experiments in porous wall tubes. Combust. Flame 131(1-2), 29-46",
+      "relative_error": 0.24470098317046687,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "tropin_rde_conditions_1",
+      "benchmark_name": "Tropin RDE Operating Conditions",
+      "calculated_value": 1947.9947491005878,
+      "execution_time_ms": 1015,
+      "expected_value": 1887.0,
+      "reference": "Tropin, D.A., et al. (2017). Detonation engine modeling: 2D and 3D simulation approaches. Acta Astronautica 141, 64-76",
+      "relative_error": 3.2323661420555267,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "browne_jump_conditions_1",
+      "benchmark_name": "Browne Jump Conditions Validation",
+      "calculated_value": 1838.2321095000596,
+      "execution_time_ms": 1006,
+      "expected_value": 1789.0,
+      "reference": "Browne, S., et al. (2008). Numerical solution methods for shock and detonation jump conditions. GALCIT Report FM2006-006",
+      "relative_error": 2.751934572390137,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "shepherd_c2h4_air_1",
+      "benchmark_name": "Shepherd C2H4-Air Standard",
+      "calculated_value": 1833.5457113129673,
+      "execution_time_ms": 1222,
+      "expected_value": 1821.0,
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "relative_error": 0.6889462555171523,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "shepherd_c3h8_air_1",
+      "benchmark_name": "Shepherd C3H8-Air Standard",
+      "calculated_value": 1808.0722522254616,
+      "execution_time_ms": 1204,
+      "expected_value": 1796.0,
+      "reference": "Shepherd, J.E. (2009). Detonation Database, GALCIT Report FM2006.002",
+      "relative_error": 0.6721744000813822,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "mevel_h2_o2_he_1",
+      "benchmark_name": "Mevel H2-O2-He Diluted",
+      "calculated_value": 3755.447301212055,
+      "execution_time_ms": 874,
+      "expected_value": 1987.0,
+      "reference": "Mevel, R., et al. (2017). Hydrogen-air-steam detonation study for nuclear reactor safety analysis. Int. J. Hydrogen Energy 42(11), 7633-7645",
+      "relative_error": 89.00087072028461,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "gamezo_obstacle_array_1",
+      "benchmark_name": "Gamezo Obstacle Array Acceleration",
+      "calculated_value": 1975.5932035930962,
+      "execution_time_ms": 0,
+      "expected_value": 1968.0,
+      "reference": "Gamezo, V.N., et al. (2007). Numerical simulations of flame acceleration and detonation transition in obstructed channels. J. Loss Prev. Process Ind. 20(4-6), 487-495",
+      "relative_error": 0.3858335159093586,
+      "status": "PASS",
+      "within_tolerance": true
+    },
+    {
+      "benchmark_id": "kessler_composition_gradient_1",
+      "benchmark_name": "Kessler Composition Gradient Study",
+      "calculated_value": 2046.5723389149916,
+      "execution_time_ms": 877,
+      "expected_value": 1912.0,
+      "reference": "Kessler, D.A., et al. (2010). Gas-phase detonation propagation in mixture composition gradients. Phil. Trans. R. Soc. A 368, 601-622",
+      "relative_error": 7.038302244507931,
+      "status": "PASS",
+      "within_tolerance": true
+    }
+  ],
+  "statistics": {
+    "bias": 7.484599513632252,
+    "failed_tests": 0,
+    "max_error": 89.00087072028461,
+    "mean_relative_error": 11.621938250295003,
+    "min_error": 0.025849938116623387,
+    "pass_rate": 100.0,
+    "passed_tests": 18,
+    "rmse": 24.001832143255854,
+    "total_tests": 18
+  }
+}

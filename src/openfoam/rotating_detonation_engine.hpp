@@ -7,11 +7,13 @@
 #include <nlohmann/json.hpp>
 #include "case_manager.hpp"
 #include "cellular_detonation_model.hpp"
+#include "../physics/cantera_wrapper.hpp"
 
 namespace Foam {
 namespace MCP {
 
 using json = nlohmann::json;
+using namespace Foam::MCP::Physics;
 
 /*---------------------------------------------------------------------------*\
                         Struct RDEGeometry
@@ -62,6 +64,11 @@ struct RDEChemistry {
     double detonationPressure;  // C-J pressure [Pa]
     double detonationTemperature; // C-J temperature [K]
     
+    // Validation confidence tracking
+    double validationConfidence; // Confidence based on literature validation [0-1]
+    std::string validationSource; // Literature reference for validation
+    double uncertaintyBounds;    // ± uncertainty in velocity prediction [m/s]
+    
     // Chemistry mechanism
     std::string mechanismFile;  // Path to chemical mechanism
     std::vector<std::string> species; // Chemical species
@@ -78,6 +85,7 @@ struct RDEChemistry {
           chamberPressure(101325.0), injectionTemperature(300.0), 
           injectionVelocity(100.0), detonationVelocity(2000.0),
           detonationPressure(2000000.0), detonationTemperature(3000.0),
+          validationConfidence(0.0), validationSource("Unknown"), uncertaintyBounds(0.0),
           mechanismFile("H2_air_mechanism.dat"), cellSize(0.001),
           inductionLength(0.0001), cjMachNumber(5.0), maxThermicity(1000.0),
           useCellularModel(true) {}
@@ -245,6 +253,7 @@ public:
     
 private:
     std::unique_ptr<CaseManager> caseManager_;
+    std::unique_ptr<CanteraWrapper> canteraWrapper_;
     
     // RDE-specific calculations
     double calculateChapmanJouguetVelocity(const RDEChemistry& chemistry);
@@ -280,8 +289,17 @@ private:
     std::string explainPerformanceMetrics(const RDEOperatingPoint& op);
     std::string generateTroubleshootingGuide(const std::vector<std::string>& warnings);
     
+    // Validation-integrated calculation helpers
+    std::string createCompositionString(const std::string& fuelType, const std::string& oxidizerType, double phi);
+    std::string selectValidatedMechanism(const std::string& fuelType, const std::string& oxidizerType);
+    double getValidationConfidence(const std::string& fuelType, double phi, double pressure);
+    std::string getValidationSource(const std::string& fuelType, double phi);
+    double calculateUncertaintyBounds(double confidence);
+    double getSpecificHeatRatio(const std::string& fuelType, const std::string& oxidizerType, double phi);
+    std::vector<std::string> getSpeciesList(const std::string& fuelType, const std::string& oxidizerType);
+    void calculateFallbackProperties(RDEChemistry& chemistry, const std::string& fuelType, const std::string& oxidizerType, double phi);
+    
 private:
-    std::unique_ptr<CaseManager> caseManager_;
     std::unique_ptr<CellularDetonationModel> cellularModel_;
 };
 

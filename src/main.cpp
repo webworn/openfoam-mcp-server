@@ -9,6 +9,7 @@
 #include "tools/heat_transfer_tool.hpp"
 #include "tools/multiphase_flow_tool.hpp"
 #include "tools/pipe_flow_tool.hpp"
+#include "tools/rde_analysis_tool.hpp"
 
 // Forward declaration for CFD assistant registration
 namespace Foam { namespace MCP { 
@@ -54,6 +55,7 @@ int main(int argc, char* argv[]) {
         registerExternalFlowTool(server);
         registerHeatTransferTool(server);
         registerMultiphaseFlowTool(server);
+        registerRDEAnalysisTool(server);
         
         // Register intelligent CFD assistant
         registerCFDAssistantTool(server);
