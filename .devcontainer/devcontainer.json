@@ -1,0 +1,79 @@
+{
+  "name": "OpenFOAM MCP Server Development",
+  "image": "ubuntu:22.04",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "os-provided"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.10",
+      "installTools": true
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cmake-tools", 
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-json",
+        "ms-vscode.hexeditor"
+      ],
+      "settings": {
+        "C_Cpp.default.cppStandard": "c++20",
+        "C_Cpp.default.intelliSenseMode": "gcc-x64",
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "cmake.buildDirectory": "${workspaceFolder}/build",
+        "files.associations": {
+          "*.H": "cpp",
+          "*.C": "cpp"
+        }
+      }
+    }
+  },
+
+  "forwardPorts": [8080, 11111, 5901, 6080],
+  
+  "runArgs": [
+    "--env=DISPLAY=:1",
+    "--volume=/tmp/.X11-unix:/tmp/.X11-unix:rw",
+    "--security-opt=seccomp:unconfined",
+    "--cap-add=SYS_PTRACE"
+  ],
+
+  "containerEnv": {
+    "FOAM_INST_DIR": "/usr/lib/openfoam/openfoam12",
+    "WM_PROJECT_DIR": "/usr/lib/openfoam/openfoam12", 
+    "DISPLAY": ":1",
+    "DEBIAN_FRONTEND": "noninteractive"
+  },
+
+  "postCreateCommand": [
+    "bash", "-c", 
+    "echo '🚀 Setting up OpenFOAM MCP development environment...' && chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh"
+  ],
+
+  "postStartCommand": [
+    "bash", "-c",
+    "echo '🔧 Starting X11 and ParaView services...' && Xvfb :1 -screen 0 1024x768x16 &> /dev/null & sleep 2 && export DISPLAY=:1 && echo '✅ X11 virtual framebuffer ready on DISPLAY=:1'"
+  ],
+
+  "mounts": [
+    "source=openfoam-cache,target=/home/vscode/.cache,type=volume"
+  ],
+
+  "remoteUser": "vscode",
+  
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/openfoam-mcp-server,type=bind,consistency=cached",
+  "workspaceFolder": "/workspaces/openfoam-mcp-server"
+}

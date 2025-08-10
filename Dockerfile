@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 # Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install system dependencies
+# Install system dependencies including X11 and ParaView support
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -20,6 +20,12 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     gnupg \
     ca-certificates \
+    paraview \
+    xauth \
+    xvfb \
+    x11-apps \
+    x11-utils \
+    mesa-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Install OpenFOAM 12
