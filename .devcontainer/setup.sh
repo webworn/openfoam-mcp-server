@@ -39,8 +39,35 @@ sudo apt-get install -y \
 
 # Install Claude Code (Anthropic's AI coding assistant)
 echo "🤖 Installing Claude Code..."
-curl -fsSL https://storage.googleapis.com/anthropic-claude-code/install.sh | bash
-echo 'export PATH="$HOME/.claude-code/bin:$PATH"' >> ~/.bashrc
+
+# Check if already installed to avoid reinstallation
+if [ ! -f "$HOME/.claude-code/bin/claude-code" ]; then
+    echo "Installing Claude Code for the first time..."
+    curl -fsSL https://storage.googleapis.com/anthropic-claude-code/install.sh | bash
+    
+    # Verify installation
+    if [ -f "$HOME/.claude-code/bin/claude-code" ]; then
+        echo "✅ Claude Code installed successfully"
+    else
+        echo "⚠️  Claude Code installation failed - check network connectivity"
+    fi
+else
+    echo "✅ Claude Code already installed, skipping..."
+fi
+
+# Ensure PATH is set (idempotent)
+if ! grep -q "claude-code/bin" ~/.bashrc; then
+    echo 'export PATH="$HOME/.claude-code/bin:$PATH"' >> ~/.bashrc
+fi
+
+# Create Claude config directory if it doesn't exist
+mkdir -p "$HOME/.claude"
+
+# Preserve existing configuration if present
+if [ -f "$HOME/.claude.json" ]; then
+    echo "📝 Preserving existing Claude configuration..."
+    cp "$HOME/.claude.json" "$HOME/.claude.json.backup"
+fi
 
 # Set up OpenFOAM environment
 echo 'source /usr/lib/openfoam/openfoam12/etc/bashrc' >> ~/.bashrc
@@ -168,9 +195,29 @@ export PATH="$HOME/.claude-code/bin:$PATH"
 if command -v claude-code &> /dev/null; then
     echo "✅ Claude Code installed successfully!"
     claude-code --version
+    
+    # Initialize Claude Code configuration if needed
+    if [ ! -f "$HOME/.claude.json" ]; then
+        echo "🔧 Initializing Claude Code configuration..."
+        # Let Claude Code create its default config
+        timeout 5s claude-code --help &>/dev/null || echo "Config initialization timeout (expected)"
+    fi
 else
     echo "⚠️  Claude Code installation pending - will be available after restart"
+    echo "💡 Run 'source ~/.bashrc && claude-code --version' to test manually"
 fi
+
+# Create a persistence check script
+cat > "$HOME/check-claude-persistence.sh" << 'EOF'
+#!/bin/bash
+echo "🔍 Checking Claude Code persistence..."
+echo "Claude Code binary: $(which claude-code 2>/dev/null || echo 'NOT FOUND')"
+echo "Claude config dir: $(ls -la ~/.claude 2>/dev/null || echo 'NOT FOUND')"
+echo "Claude config file: $(ls -la ~/.claude.json 2>/dev/null || echo 'NOT FOUND')"
+echo "Volume mounts:"
+mount | grep "claude\|vscode" || echo "No Claude-related mounts found"
+EOF
+chmod +x "$HOME/check-claude-persistence.sh"
 
 echo ""
 echo "✅ Setup complete! Your OpenFOAM MCP development environment is ready!"
