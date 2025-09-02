@@ -19,9 +19,54 @@ platforms/
 .DS_Store
 Thumbs.db
 
+# Large simulation files
+foamRun.log
+production_2d_rde/
+
+# Python cache and temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+
+# ParaView and visualization temporary files
+*.btr
+*.pvd
+*.pvtu
+*.vtu
+*.vtk
+
+# Node.js dependencies (if not needed for C++ project)
+node_modules/
+package-lock.json
+
+# Compiled test binaries
+test_*
+!test_*.cpp
+!test_*.hpp
+
+# MacOS and Windows system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+
 # IMP
 expert_advice.txt
 ULTRATHINK_SUMMARY.md
 ROADMAP.md
-comprehensive_openfoam_capabilities.mdfoamRun.log
-production_2d_rde/
+comprehensive_openfoam_capabilities.md
