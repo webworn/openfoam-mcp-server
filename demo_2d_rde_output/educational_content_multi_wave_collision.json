@@ -1,0 +1,20 @@
+{
+  "physics_concepts": [
+    "Multi-wave detonation modes in RDEs",
+    "Wave collision and energy redistribution",
+    "Pressure wave interactions and shock formation",
+    "System stability and performance implications"
+  ],
+  "key_equations": [
+    "Wave interaction: P_total = P\u2081 + P\u2082 + interaction term",
+    "Energy conservation: E\u2081 + E\u2082 = E_products + losses",
+    "Momentum transfer: \u0394p = \u03c1(V\u2082\u00b2 - V\u2081\u00b2)",
+    "Stability criterion: |V_wave - V_injection| < threshold"
+  ],
+  "learning_objectives": [
+    "Visualize complex wave interaction patterns",
+    "Understand energy redistribution mechanisms",
+    "Analyze stability conditions for multiple waves",
+    "Connect wave patterns to engine performance"
+  ]
+}

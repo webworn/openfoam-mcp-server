@@ -1,0 +1,103 @@
+{
+  "templates": {
+    "wave_propagation": {
+      "description": "Single detonation wave propagating around annular combustor",
+      "duration": 2.0,
+      "fps": 30,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "focus": "wave_dynamics"
+    },
+    "multi_wave_collision": {
+      "description": "Multiple waves colliding and interacting in confined geometry",
+      "duration": 3.0,
+      "fps": 24,
+      "resolution": [
+        1280,
+        720
+      ],
+      "focus": "wave_interactions"
+    },
+    "injection_coupling": {
+      "description": "Fresh reactant injection and wave interaction dynamics",
+      "duration": 2.5,
+      "fps": 30,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "focus": "injection_dynamics"
+    },
+    "cellular_evolution": {
+      "description": "Evolution of cellular detonation structure over time",
+      "duration": 4.0,
+      "fps": 24,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "focus": "cellular_physics"
+    },
+    "educational_sequence": {
+      "description": "Step-by-step educational explanation of RDE physics",
+      "duration": 5.0,
+      "fps": 24,
+      "resolution": [
+        1280,
+        720
+      ],
+      "focus": "education",
+      "difficulty": "beginner"
+    }
+  },
+  "visualization_settings": {
+    "color_schemes": {
+      "temperature": {
+        "range": [
+          300,
+          3500
+        ],
+        "colormap": "rainbow",
+        "wave_threshold": 2500.0
+      },
+      "pressure": {
+        "range": [
+          100000.0,
+          3000000.0
+        ],
+        "colormap": "viridis"
+      },
+      "velocity": {
+        "range": [
+          0,
+          2500
+        ],
+        "colormap": "jet"
+      }
+    },
+    "annotations": {
+      "enabled": true,
+      "physics_equations": true,
+      "cellular_overlay": true,
+      "injection_vectors": true,
+      "font_size": 16,
+      "educational_level": "university"
+    },
+    "camera_settings": {
+      "mode": "top_view",
+      "enable_zoom": true,
+      "highlight_fronts": true,
+      "auto_rotate": false
+    }
+  },
+  "output_settings": {
+    "format": "mp4",
+    "quality": "high",
+    "compression": "h264",
+    "export_frames": true,
+    "export_data": true,
+    "export_scripts": true
+  }
+}

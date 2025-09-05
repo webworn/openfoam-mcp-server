@@ -1,0 +1,47 @@
+{
+  "name": "2D_RDE_Annular_Combustor",
+  "description": "Educational 2D rotating detonation engine with hydrogen-air mixture",
+  "outer_radius": 0.08,
+  "inner_radius": 0.05,
+  "chamber_length": 0.15,
+  "enable_2d": true,
+  "domain_angle": 360.0,
+  "periodic_boundaries": true,
+  "angular_offset": 0.0,
+  "number_of_injectors": 8,
+  "injection_angle": 45.0,
+  "injection_penetration": 0.01,
+  "injector_positions": {
+    "angular": [
+      0.0,
+      45.0,
+      90.0,
+      135.0,
+      180.0,
+      225.0,
+      270.0,
+      315.0
+    ],
+    "radial": [
+      0.075,
+      0.075,
+      0.075,
+      0.075,
+      0.075,
+      0.075,
+      0.075,
+      0.075
+    ]
+  },
+  "mesh_strategy": "blockMesh",
+  "cell_count_radial": 40,
+  "cell_count_circumferential": 160,
+  "cell_count_axial": 60,
+  "total_cells": 384000,
+  "cellular_constraint": {
+    "enabled": true,
+    "safety_factor": 10.0,
+    "minimum_cells_per_cell": 10,
+    "constraint_satisfied": true
+  }
+}

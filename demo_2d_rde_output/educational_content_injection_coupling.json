@@ -1,0 +1,20 @@
+{
+  "physics_concepts": [
+    "Injection-wave momentum transfer mechanisms",
+    "Chemical energy addition and mixing enhancement",
+    "Flow blockage effects and recovery dynamics",
+    "Injection timing optimization for performance"
+  ],
+  "key_equations": [
+    "Momentum coupling: F = \u1e41_inj * V_inj * cos(\u03b8)",
+    "Mass addition: d\u03c1/dt = \u1e41_inj/V_control",
+    "Energy addition: dE/dt = \u1e41_inj * h_inj",
+    "Mixing rate: \u1e41_mixed \u221d Re^0.8 * Sc^0.33"
+  ],
+  "learning_objectives": [
+    "Understand injection-wave coupling physics",
+    "Visualize momentum and energy transfer",
+    "Analyze timing effects on wave stability",
+    "Design injection strategies for optimization"
+  ]
+}

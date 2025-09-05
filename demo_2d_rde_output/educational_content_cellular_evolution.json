@@ -1,0 +1,20 @@
+{
+  "physics_concepts": [
+    "Cellular detonation instability mechanisms",
+    "Pattern formation and evolution dynamics",
+    "Regularity criteria and stability analysis",
+    "Performance correlation with cellular structure"
+  ],
+  "key_equations": [
+    "Growth rate: \u03b3_c = (\u03c3\u0307_max * \u03bb) / V_CJ",
+    "Instability parameter: \u0394I = \u222b(\u03c3\u0307 - \u03c3\u0307_equilibrium)dt",
+    "Pattern wavelength: \u03bb \u221d (D_th/\u03c3\u0307_max)^0.5",
+    "Regularity index: R = \u03c3_pattern / \u03bc_pattern"
+  ],
+  "learning_objectives": [
+    "Observe cellular pattern formation mechanisms",
+    "Understand instability-driven pattern evolution",
+    "Connect cellular regularity to performance",
+    "Predict cellular behavior from mixture properties"
+  ]
+}

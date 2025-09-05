@@ -1,0 +1,20 @@
+{
+  "physics_concepts": [
+    "Detonation wave propagation in annular geometry",
+    "Chapman-Jouguet theory and wave speed calculations",
+    "Cellular detonation structure and instabilities",
+    "Cylindrical coordinate effects on wave dynamics"
+  ],
+  "key_equations": [
+    "C-J Velocity: V_CJ = \u221a(\u03b3\u00b2-1) * a\u2080 * [\u03b3P\u2082/P\u2081 - 1] / \u03b3",
+    "Rankine-Hugoniot: \u03c1\u2081V\u2081 = \u03c1\u2082V\u2082",
+    "Cell size: \u03bb = f(\u0394I, M_CJ, \u03c3\u0307_max)",
+    "Curvature effect: \u03ba = 1/R affects cellular pattern"
+  ],
+  "learning_objectives": [
+    "Understand wave propagation in cylindrical coordinates",
+    "Observe cellular structure formation and stability",
+    "Analyze wave speed variations around the annulus",
+    "Connect theory to visual observations"
+  ]
+}

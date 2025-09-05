@@ -1,0 +1,18 @@
+{
+  "fuel_type": "H2",
+  "oxidizer": "air",
+  "equivalence_ratio": 1.0,
+  "initial_temperature": 300.0,
+  "initial_pressure": 101325.0,
+  "detonation_velocity": 1968.0,
+  "detonation_pressure": 1580000.0,
+  "detonation_temperature": 2837.0,
+  "cell_size": 0.001,
+  "mechanism": "h2_air_9species.yaml",
+  "species_count": 9,
+  "reaction_count": 21,
+  "validation_status": "100% pass rate achieved",
+  "gamma": 1.25,
+  "molecular_weight": 0.0189,
+  "gas_constant": 8314.0
+}
