@@ -39,7 +39,11 @@ void to_json(json& j, const CaseParameters& params) {
              {"writeInterval", params.writeInterval},
              {"boundaryConditions", params.boundaryConditions},
              {"physicalProperties", params.physicalProperties},
-             {"numericalSchemes", params.numericalSchemes}};
+             {"numericalSchemes", params.numericalSchemes},
+             {"turbulenceModel", params.turbulenceModel},
+             {"turbulentIntensity", params.turbulentIntensity},
+             {"turbulentLengthScale", params.turbulentLengthScale},
+             {"pipeRoughness", params.pipeRoughness}};
 }
 
 void from_json(const json& j, CaseParameters& params) {
@@ -52,6 +56,11 @@ void from_json(const json& j, CaseParameters& params) {
     j.at("boundaryConditions").get_to(params.boundaryConditions);
     j.at("physicalProperties").get_to(params.physicalProperties);
     j.at("numericalSchemes").get_to(params.numericalSchemes);
+    // Optional turbulence parameters with defaults
+    if (j.contains("turbulenceModel")) j.at("turbulenceModel").get_to(params.turbulenceModel);
+    if (j.contains("turbulentIntensity")) j.at("turbulentIntensity").get_to(params.turbulentIntensity);
+    if (j.contains("turbulentLengthScale")) j.at("turbulentLengthScale").get_to(params.turbulentLengthScale);
+    if (j.contains("pipeRoughness")) j.at("pipeRoughness").get_to(params.pipeRoughness);
 }
 
 void to_json(json& j, const CaseResult& result) {
@@ -248,6 +257,7 @@ void CaseManager::writeFvSchemes(const fs::path& casePath, const CaseParameters&
          << "    div(phi,U)      bounded Gauss upwind;\n"
          << "    div(phi,k)      bounded Gauss upwind;\n"
          << "    div(phi,epsilon) bounded Gauss upwind;\n"
+         << "    div(phi,omega)  bounded Gauss upwind;\n"
          << "    div((nuEff*dev2(T(grad(U))))) Gauss linear;\n"
          << "}\n\n";
 
@@ -311,6 +321,14 @@ void CaseManager::writeFvSolution(const fs::path& casePath, const CaseParameters
          << "        smoother        GaussSeidel;\n"
          << "        tolerance       1e-05;\n"
          << "        relTol          0.1;\n"
+         << "    }\n\n";
+
+    file << "    omega\n"
+         << "    {\n"
+         << "        solver          smoothSolver;\n"
+         << "        smoother        GaussSeidel;\n"
+         << "        tolerance       1e-05;\n"
+         << "        relTol          0.1;\n"
          << "    }\n"
          << "}\n\n";
 
@@ -323,7 +341,7 @@ void CaseManager::writeFvSolution(const fs::path& casePath, const CaseParameters
          << "    {\n"
          << "        p               1e-5;\n"
          << "        U               1e-5;\n"
-         << "        \"(k|epsilon)\"   1e-5;\n"
+         << "        \"(k|epsilon|omega)\" 1e-5;\n"
          << "    }\n"
          << "}\n\n";
 
@@ -336,7 +354,7 @@ void CaseManager::writeFvSolution(const fs::path& casePath, const CaseParameters
          << "    equations\n"
          << "    {\n"
          << "        U               0.7;\n"
-         << "        \"(k|epsilon)\"   0.7;\n"
+         << "        \"(k|epsilon|omega)\" 0.7;\n"
          << "    }\n"
          << "}\n\n";
 }
@@ -376,13 +394,24 @@ void CaseManager::writeTurbulenceProperties(const fs::path& casePath,
          << "    object      turbulenceProperties;\n"
          << "}\n\n";
 
-    file << "simulationType  RAS;\n\n";
-    file << "RAS\n"
-         << "{\n"
-         << "    RASModel        kEpsilon;\n"
-         << "    turbulence      on;\n"
-         << "    printCoeffs     on;\n"
-         << "}\n\n";
+    if (params.turbulenceModel == "laminar") {
+        file << "simulationType  laminar;\n\n";
+    } else {
+        file << "simulationType  RAS;\n\n";
+        file << "RAS\n"
+             << "{\n";
+
+        if (params.turbulenceModel == "kOmegaSST") {
+            file << "    RASModel        kOmegaSST;\n";
+        } else {
+            // Default to k-epsilon
+            file << "    RASModel        kEpsilon;\n";
+        }
+
+        file << "    turbulence      on;\n"
+             << "    printCoeffs     on;\n"
+             << "}\n\n";
+    }
 }
 
 void CaseManager::setupMesh(const std::string& caseId, const CaseParameters& params) const {
@@ -816,6 +845,74 @@ void CaseManager::setupBoundaryConditions(const std::string& caseId,
                     << "        type            empty;\n"
                     << "    }\n"
                     << "}\n\n";
+    }
+
+    // Add specific turbulence dissipation rate field (omega) for k-omega SST
+    std::ofstream omegaFile(casePath / "0" / "omega");
+    omegaFile << "FoamFile\n"
+              << "{\n"
+              << "    version     2.0;\n"
+              << "    format      ascii;\n"
+              << "    class       volScalarField;\n"
+              << "    object      omega;\n"
+              << "}\n\n";
+
+    omegaFile << "dimensions      [0 0 -1 0 0 0 0];\n";
+    omegaFile << "internalField   uniform 1.0;\n\n";
+
+    if (isExternalFlow) {
+        omegaFile << "boundaryField\n"
+                  << "{\n"
+                  << "    inlet\n"
+                  << "    {\n"
+                  << "        type            fixedValue;\n"
+                  << "        value           uniform 1.0;\n"
+                  << "    }\n"
+                  << "    outlet\n"
+                  << "    {\n"
+                  << "        type            zeroGradient;\n"
+                  << "    }\n"
+                  << "    walls\n"
+                  << "    {\n"
+                  << "        type            omegaWallFunction;\n"
+                  << "        value           uniform 1.0;\n"
+                  << "    }\n"
+                  << "    symmetry\n"
+                  << "    {\n"
+                  << "        type            symmetryPlane;\n"
+                  << "    }\n"
+                  << "    farfield\n"
+                  << "    {\n"
+                  << "        type            fixedValue;\n"
+                  << "        value           uniform 1.0;\n"
+                  << "    }\n"
+                  << "    frontAndBack\n"
+                  << "    {\n"
+                  << "        type            empty;\n"
+                  << "    }\n"
+                  << "}\n\n";
+    } else {
+        omegaFile << "boundaryField\n"
+                  << "{\n"
+                  << "    inlet\n"
+                  << "    {\n"
+                  << "        type            fixedValue;\n"
+                  << "        value           uniform 1.0;\n"
+                  << "    }\n"
+                  << "    outlet\n"
+                  << "    {\n"
+                  << "        type            zeroGradient;\n"
+                  << "    }\n"
+                  << "    walls\n"
+                  << "    {\n"
+                  << "        type            omegaWallFunction;\n"
+                  << "        value           uniform 1.0;\n"
+                  << "    }\n"
+                  << "    frontAndBack\n"
+                  << "    {\n"
+                  << "        type            empty;\n"
+                  << "    }\n"
+                  << "}\n\n";
     }
 }
 

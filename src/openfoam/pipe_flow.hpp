@@ -16,9 +16,11 @@ Description
 #ifndef pipe_flow_H
 #define pipe_flow_H
 
+#include <cmath>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
+#include <vector>
 
 #include "case_manager.hpp"
 
@@ -26,6 +28,68 @@ namespace Foam {
 namespace MCP {
 
 using json = nlohmann::json;
+
+/*---------------------------------------------------------------------------*\
+                        Struct PipeRoughness - Standard Pipe Roughness Database
+\*---------------------------------------------------------------------------*/
+
+struct PipeRoughness {
+    // Absolute roughness values in meters (m)
+    static constexpr double SMOOTH_DRAWN_TUBING = 0.0000015;  // Drawn tubing, glass
+    static constexpr double COMMERCIAL_STEEL = 0.000045;      // Commercial steel, wrought iron
+    static constexpr double CAST_IRON = 0.00026;              // Cast iron
+    static constexpr double GALVANIZED_IRON = 0.00015;        // Galvanized iron
+    static constexpr double ASPHALTED_CAST_IRON = 0.00012;    // Asphalted cast iron
+    static constexpr double CONCRETE = 0.003;                 // Concrete (rough)
+    static constexpr double CONCRETE_SMOOTH = 0.0003;         // Concrete (smooth)
+    static constexpr double PVC = 0.0000015;                  // PVC, plastic pipes
+    static constexpr double COPPER = 0.0000015;               // Copper tubing
+    static constexpr double STAINLESS_STEEL = 0.000015;       // Stainless steel
+    static constexpr double RIVETED_STEEL = 0.003;            // Riveted steel
+    static constexpr double CORRUGATED_METAL = 0.045;         // Corrugated metal
+    static constexpr double WOOD_STAVE = 0.0006;              // Wood stave
+
+    // Get roughness by material name
+    static double getByName(const std::string& material) {
+        if (material == "smooth" || material == "drawn_tubing" || material == "glass")
+            return SMOOTH_DRAWN_TUBING;
+        if (material == "commercial_steel" || material == "steel" || material == "wrought_iron")
+            return COMMERCIAL_STEEL;
+        if (material == "cast_iron")
+            return CAST_IRON;
+        if (material == "galvanized_iron" || material == "galvanized")
+            return GALVANIZED_IRON;
+        if (material == "asphalted_cast_iron")
+            return ASPHALTED_CAST_IRON;
+        if (material == "concrete" || material == "concrete_rough")
+            return CONCRETE;
+        if (material == "concrete_smooth")
+            return CONCRETE_SMOOTH;
+        if (material == "pvc" || material == "plastic")
+            return PVC;
+        if (material == "copper")
+            return COPPER;
+        if (material == "stainless_steel" || material == "stainless")
+            return STAINLESS_STEEL;
+        if (material == "riveted_steel")
+            return RIVETED_STEEL;
+        if (material == "corrugated_metal" || material == "corrugated")
+            return CORRUGATED_METAL;
+        if (material == "wood_stave" || material == "wood")
+            return WOOD_STAVE;
+        return 0.0;  // Default smooth
+    }
+
+    // Get all available materials
+    static std::vector<std::string> getAvailableMaterials() {
+        return {
+            "smooth", "drawn_tubing", "glass", "commercial_steel", "steel",
+            "cast_iron", "galvanized_iron", "asphalted_cast_iron",
+            "concrete", "concrete_smooth", "pvc", "plastic", "copper",
+            "stainless_steel", "riveted_steel", "corrugated_metal", "wood_stave"
+        };
+    }
+};
 
 /*---------------------------------------------------------------------------*\
                         Struct PipeFlowInput
@@ -37,7 +101,9 @@ struct PipeFlowInput {
     double length;      // m
     double viscosity;   // m²/s
     double density;     // kg/m³
+    double roughness;   // Absolute pipe roughness (m), 0 = smooth
     std::string fluid;  // "air", "water", etc.
+    std::string pipeMaterial;  // Material name for roughness lookup
 
     PipeFlowInput()
         : velocity(1.0),
@@ -45,9 +111,15 @@ struct PipeFlowInput {
           length(1.0),
           viscosity(1e-5),
           density(1.225),
-          fluid("air") {}
+          roughness(0.0),
+          fluid("air"),
+          pipeMaterial("smooth") {}
 
     double getReynoldsNumber() const { return velocity * diameter / viscosity; }
+
+    double getRelativeRoughness() const {
+        return (roughness > 0.0) ? roughness / diameter : 0.0;
+    }
 
     bool isLaminar() const { return getReynoldsNumber() < 2300; }
 
@@ -56,6 +128,16 @@ struct PipeFlowInput {
     bool isTransitional() const {
         double Re = getReynoldsNumber();
         return Re >= 2300 && Re <= 4000;
+    }
+
+    bool isHydraulicallySmooth() const {
+        // Hydraulically smooth: roughness Reynolds number < 5
+        double Re = getReynoldsNumber();
+        if (Re < 2300 || roughness <= 0.0) return true;
+        double f = 0.316 / std::pow(Re, 0.25);  // Blasius approximation
+        double uStar = velocity * std::sqrt(f / 8.0);  // Friction velocity
+        double roughnessRe = uStar * roughness / (viscosity / density);
+        return roughnessRe < 5.0;
     }
 };
 
@@ -101,6 +183,20 @@ class PipeFlowAnalyzer {
     double calculateTheoreticalPressureDrop(const PipeFlowInput& input) const;
     double calculateLaminarFrictionFactor(double Re) const;
     double calculateTurbulentFrictionFactor(double Re) const;
+
+    // Colebrook-White equation solver for rough pipes (iterative)
+    double calculateColebrookWhiteFrictionFactor(double Re, double relativeRoughness,
+                                                  int maxIterations = 50,
+                                                  double tolerance = 1e-8) const;
+
+    // Swamee-Jain explicit approximation for rough pipes (faster, <1% error)
+    double calculateSwameeJainFrictionFactor(double Re, double relativeRoughness) const;
+
+    // Haaland explicit approximation (alternative to Swamee-Jain)
+    double calculateHaalandFrictionFactor(double Re, double relativeRoughness) const;
+
+    // Calculate friction factor with roughness consideration
+    double calculateFrictionFactorWithRoughness(const PipeFlowInput& input) const;
 
     std::string determineFlowRegime(const PipeFlowInput& input) const;
     std::string generateAnalysisReport(const PipeFlowInput& input,

@@ -25,8 +25,14 @@ namespace MCP {
 \*---------------------------------------------------------------------------*/
 
 void to_json(json& j, const PipeFlowInput& input) {
-    j = json{{"velocity", input.velocity},   {"diameter", input.diameter}, {"length", input.length},
-             {"viscosity", input.viscosity}, {"density", input.density},   {"fluid", input.fluid}};
+    j = json{{"velocity", input.velocity},
+             {"diameter", input.diameter},
+             {"length", input.length},
+             {"viscosity", input.viscosity},
+             {"density", input.density},
+             {"roughness", input.roughness},
+             {"fluid", input.fluid},
+             {"pipeMaterial", input.pipeMaterial}};
 }
 
 void from_json(const json& j, PipeFlowInput& input) {
@@ -37,6 +43,14 @@ void from_json(const json& j, PipeFlowInput& input) {
     if (j.contains("viscosity")) j.at("viscosity").get_to(input.viscosity);
     if (j.contains("density")) j.at("density").get_to(input.density);
     if (j.contains("fluid")) j.at("fluid").get_to(input.fluid);
+    if (j.contains("roughness")) j.at("roughness").get_to(input.roughness);
+    if (j.contains("pipeMaterial")) {
+        j.at("pipeMaterial").get_to(input.pipeMaterial);
+        // If roughness not explicitly set but material provided, use database
+        if (!j.contains("roughness") && !input.pipeMaterial.empty()) {
+            input.roughness = PipeRoughness::getByName(input.pipeMaterial);
+        }
+    }
 }
 
 void to_json(json& j, const PipeFlowResults& results) {
@@ -198,15 +212,19 @@ PipeFlowResults PipeFlowAnalyzer::processResults(const std::string& caseId,
 
     if (input.isLaminar()) {
         results.frictionFactor = calculateLaminarFrictionFactor(results.reynoldsNumber);
-        results.maxVelocity = 2.0 * input.velocity;
+        results.maxVelocity = 2.0 * input.velocity;  // Parabolic profile
     } else {
-        results.frictionFactor = calculateTurbulentFrictionFactor(results.reynoldsNumber);
-        results.maxVelocity = 1.2 * input.velocity;
+        // Use roughness-aware friction factor calculation
+        results.frictionFactor = calculateFrictionFactorWithRoughness(input);
+        // Turbulent profile: max velocity slightly higher than average
+        // Using 1/7th power law approximation: U_max/U_avg ≈ 1.224
+        results.maxVelocity = 1.224 * input.velocity;
     }
 
     results.pressureDrop = calculateTheoreticalPressureDrop(input);
+    // Wall shear stress from Darcy friction factor: τ_w = f * ρ * V² / 8
     results.wallShearStress =
-        results.frictionFactor * 0.5 * input.density * input.velocity * input.velocity;
+        results.frictionFactor * input.density * input.velocity * input.velocity / 8.0;
 
     results.success = true;
 
@@ -214,15 +232,10 @@ PipeFlowResults PipeFlowAnalyzer::processResults(const std::string& caseId,
 }
 
 double PipeFlowAnalyzer::calculateTheoreticalPressureDrop(const PipeFlowInput& input) const {
-    double Re = input.getReynoldsNumber();
-    double f;
+    // Use friction factor with roughness consideration
+    double f = calculateFrictionFactorWithRoughness(input);
 
-    if (Re < 2300) {
-        f = 64.0 / Re;
-    } else {
-        f = 0.316 / std::pow(Re, 0.25);
-    }
-
+    // Darcy-Weisbach equation: ΔP = f * (L/D) * (ρ*V²/2)
     return f * (input.length / input.diameter) * 0.5 * input.density * input.velocity *
            input.velocity;
 }
@@ -231,6 +244,99 @@ double PipeFlowAnalyzer::calculateLaminarFrictionFactor(double Re) const { retur
 
 double PipeFlowAnalyzer::calculateTurbulentFrictionFactor(double Re) const {
     return 0.316 / std::pow(Re, 0.25);
+}
+
+double PipeFlowAnalyzer::calculateColebrookWhiteFrictionFactor(double Re, double relativeRoughness,
+                                                                int maxIterations,
+                                                                double tolerance) const {
+    // Colebrook-White equation (implicit):
+    // 1/√f = -2.0 * log10(ε/D/3.7 + 2.51/(Re*√f))
+    // Solved iteratively using Newton-Raphson method
+
+    if (Re < 2300) {
+        return 64.0 / Re;  // Laminar flow
+    }
+
+    // Initial guess using Swamee-Jain for faster convergence
+    double f = calculateSwameeJainFrictionFactor(Re, relativeRoughness);
+    double sqrtF = std::sqrt(f);
+
+    for (int i = 0; i < maxIterations; ++i) {
+        double arg = relativeRoughness / 3.7 + 2.51 / (Re * sqrtF);
+        double F = 1.0 / sqrtF + 2.0 * std::log10(arg);
+
+        // Derivative: dF/d(sqrtF) = -1/sqrtF² + 2.51*2/(Re*arg*sqrtF²*ln(10))
+        double dF = -1.0 / (sqrtF * sqrtF) +
+                    (2.0 * 2.51) / (Re * arg * sqrtF * sqrtF * std::log(10.0));
+
+        double delta = F / dF;
+        sqrtF -= delta;
+
+        if (std::abs(delta) < tolerance * sqrtF) {
+            break;
+        }
+
+        // Ensure sqrtF stays positive
+        if (sqrtF <= 0) {
+            sqrtF = 0.01;
+        }
+    }
+
+    return sqrtF * sqrtF;
+}
+
+double PipeFlowAnalyzer::calculateSwameeJainFrictionFactor(double Re, double relativeRoughness) const {
+    // Swamee-Jain explicit approximation (1976)
+    // Valid for: 5000 ≤ Re ≤ 10^8 and 10^-6 ≤ ε/D ≤ 0.05
+    // f = 0.25 / [log10(ε/3.7D + 5.74/Re^0.9)]²
+    // Accuracy: within 1% of Colebrook-White
+
+    if (Re < 2300) {
+        return 64.0 / Re;  // Laminar flow
+    }
+
+    // Clamp relative roughness to valid range
+    double epsD = std::max(1e-8, std::min(relativeRoughness, 0.05));
+
+    double logArg = epsD / 3.7 + 5.74 / std::pow(Re, 0.9);
+    double logTerm = std::log10(logArg);
+
+    return 0.25 / (logTerm * logTerm);
+}
+
+double PipeFlowAnalyzer::calculateHaalandFrictionFactor(double Re, double relativeRoughness) const {
+    // Haaland explicit approximation (1983)
+    // 1/√f = -1.8 * log10[(ε/D/3.7)^1.11 + 6.9/Re]
+    // Accuracy: within 2% of Colebrook-White
+
+    if (Re < 2300) {
+        return 64.0 / Re;  // Laminar flow
+    }
+
+    double epsD = std::max(1e-8, relativeRoughness);
+    double logArg = std::pow(epsD / 3.7, 1.11) + 6.9 / Re;
+    double oneOverSqrtF = -1.8 * std::log10(logArg);
+
+    return 1.0 / (oneOverSqrtF * oneOverSqrtF);
+}
+
+double PipeFlowAnalyzer::calculateFrictionFactorWithRoughness(const PipeFlowInput& input) const {
+    double Re = input.getReynoldsNumber();
+
+    // Laminar flow: friction factor independent of roughness
+    if (Re < 2300) {
+        return 64.0 / Re;
+    }
+
+    double relativeRoughness = input.getRelativeRoughness();
+
+    // Smooth pipe (no roughness or hydraulically smooth)
+    if (relativeRoughness < 1e-8 || input.isHydraulicallySmooth()) {
+        return 0.316 / std::pow(Re, 0.25);  // Blasius for smooth pipes
+    }
+
+    // Rough pipe: use Colebrook-White (most accurate)
+    return calculateColebrookWhiteFrictionFactor(Re, relativeRoughness);
 }
 
 std::string PipeFlowAnalyzer::determineFlowRegime(const PipeFlowInput& input) const {

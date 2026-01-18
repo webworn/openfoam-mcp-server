@@ -11,6 +11,7 @@ namespace Foam { namespace MCP {
     void registerRDE3DGeometryTool(McpServer& server);
     void registerRDE3DWaveTool(McpServer& server);
     void registerRDE3DPerformanceTool(McpServer& server);
+    void registerTurbulentFlowTool(McpServer& server);
 }}
 
 using namespace Foam;
@@ -86,6 +87,13 @@ int main(int argc, char* argv[]) {
             registerRDE3DPerformanceTool(server);
         } catch (const std::exception& e) {
             std::cerr << "Warning: Could not register RDE 3D performance tool: " << e.what() << std::endl;
+        }
+
+        // Register turbulent flow analysis tool
+        try {
+            registerTurbulentFlowTool(server);
+        } catch (const std::exception& e) {
+            std::cerr << "Warning: Could not register turbulent flow tool: " << e.what() << std::endl;
         }
 
         std::cerr << "🔧 Registered tools: ";

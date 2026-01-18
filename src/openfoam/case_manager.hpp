@@ -45,13 +45,23 @@ struct CaseParameters {
     std::map<std::string, std::string> physicalProperties;
     std::map<std::string, std::string> numericalSchemes;
 
+    // Turbulence modeling parameters
+    std::string turbulenceModel;      // "laminar", "kEpsilon", "kOmegaSST"
+    double turbulentIntensity;        // Turbulent intensity (0-1), default 5%
+    double turbulentLengthScale;      // Turbulent length scale (m)
+    double pipeRoughness;             // Absolute pipe roughness (m), 0 = smooth
+
     CaseParameters()
         : caseName("case"),
           solver("simpleFoam"),
           caseType("steady"),
           endTime(1000.0),
           deltaTime(1.0),
-          writeInterval(100) {}
+          writeInterval(100),
+          turbulenceModel("kEpsilon"),
+          turbulentIntensity(0.05),
+          turbulentLengthScale(0.01),
+          pipeRoughness(0.0) {}
 };
 
 /*---------------------------------------------------------------------------*\
