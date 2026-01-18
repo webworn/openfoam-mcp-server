@@ -11,7 +11,7 @@
 
 | Component | Status | Details |
 |-----------|--------|---------|
-| **MCP Server** | ✅ **Working** | JSON-RPC 2.0, 11 registered tools, Claude Code integration |
+| **MCP Server** | ✅ **Working** | JSON-RPC 2.0, 12 registered tools, Claude Code integration |
 | **OpenFOAM Integration** | ⚠️ **Partial** | Basic connectivity, solver migration needed for OF12 |
 | **Educational AI** | ✅ **Working** | Context engine, Socratic questioning, adaptive learning |
 | **Mesh & Geometry Tools** | ✅ **Complete** | Mesh quality assessment, STL analysis with snappyHexMesh guidance |
@@ -85,7 +85,7 @@ This revolutionary MCP transforms CFD learning and problem-solving through:
 
 ### 📋 Available MCP Tools
 
-The server provides **11 registered tools** across different CFD domains:
+The server provides **12 registered tools** across different CFD domains:
 
 | Tool | Description | Status |
 |------|-------------|--------|
@@ -96,6 +96,7 @@ The server provides **11 registered tools** across different CFD domains:
 | `get_cfd_learning_guidance` | Get personalized CFD learning recommendations | ✅ Working |
 | `assess_mesh_quality` | Mesh quality analysis with solver compatibility assessment | ✅ Working |
 | `analyze_stl_geometry` | STL preprocessing and snappyHexMesh readiness analysis | ✅ Working |
+| `analyze_turbulent_flow` | Comprehensive turbulent flow analysis with model recommendations | ✅ Working |
 | `analyze_rde_waves_2d` | 2D RDE wave detection and performance metrics | ✅ Working |
 | `generate_rde_3d_geometry` | 3D RDE annular geometry generation with blockMesh | ✅ Working |
 | `analyze_rde_waves_3d` | 3D RDE wave propagation and interaction analysis | ✅ Working |
@@ -109,7 +110,23 @@ The server provides **11 registered tools** across different CFD domains:
 - **Applications**: Hydraulic systems, pipeline design, HVAC analysis
 - **Solvers**: `icoFoam` (laminar), `foamRun -solver incompressibleFluid` (in development)
 - **Status**: ✅ **Working** - Complete implementation with mesh generation
-- **Current Limitations**: Turbulent flows require solver configuration updates
+- **Current Limitations**: For advanced turbulent analysis, use `analyze_turbulent_flow`
+
+#### 1b. 🌀 **Turbulent Flow Analysis** (`analyze_turbulent_flow`)
+**Physics**: Comprehensive turbulent flow analysis for pipes, channels, and external flows
+- **Turbulence Models**: Automatic selection between k-epsilon and k-omega SST with justification
+- **Friction Factors**: Smooth pipes (Blasius) and rough pipes (Colebrook-White/Swamee-Jain)
+- **Pipe Roughness**: Built-in database with 13 standard materials (steel, cast iron, PVC, etc.)
+- **Calculates**:
+  - Reynolds number and flow regime classification
+  - Friction factor (smooth and rough pipes)
+  - Pressure drop and head loss (Darcy-Weisbach)
+  - Wall shear stress and friction velocity
+  - y+ estimation and first cell height recommendations
+  - Turbulent inlet conditions (k, ε, ω, νt)
+- **Mesh Guidance**: y+ validation for wall functions, first cell height calculator
+- **Educational Content**: Socratic questions, physics explanations, model comparisons
+- **Status**: ✅ **Working** - Complete implementation with validation
 
 #### 2. ✈️ **External Flow Analysis** (`analyze_external_flow`)
 **Physics**: Basic aerodynamics analysis (simplified implementation)
@@ -525,7 +542,7 @@ int main() {
 ```
 ┌─────────────────┐    JSON-RPC 2.0    ┌──────────────────┐
 │   Claude Code   │ ◄──────────────── │  MCP Server      │
-│   AI Assistant  │                   │  (11 Tools)      │
+│   AI Assistant  │                   │  (12 Tools)      │
 └─────────────────┘                   └──────────────────┘
                                                │
                                                ▼
@@ -613,7 +630,7 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details.
 #### **OpenFOAM 12 Compatibility** (Priority: High)
 - 🔄 **Solver Migration**: Updating from legacy solver names to `foamRun` framework
 - 🔄 **Configuration Updates**: Modern OpenFOAM 12 solver dictionaries
-- 🔄 **Turbulence Models**: k-ε integration for realistic flow analysis
+- ✅ **Turbulence Models**: k-ε and k-ω SST integration complete with `analyze_turbulent_flow` tool
 - 🔄 **JSON Response Fixes**: Resolving 2/5 tool output formatting issues
 
 #### **Enhanced Physics Domains** (Priority: Medium)
@@ -669,7 +686,7 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details.
 | **RDE 2D Waves** | ✅ **Working** | `analyze_rde_waves_2d` tool | Wave detection, collision analysis, performance metrics |
 | **RDE 3D Suite** | ✅ **Working** | 3 tools (geometry, waves, performance) | Complete 3D RDE analysis workflow |
 | **Laminar Flow** | ✅ **Working** | `icoFoam` integration | Pipe flow analysis complete |
-| **Turbulent Flow** | ⚠️ **Partial** | `foamRun` framework | Configuration updates needed |
+| **Turbulent Flow** | ✅ **Working** | `analyze_turbulent_flow` tool | k-ε, k-ω SST, Colebrook-White, y+ calculations |
 | **External Flow** | ⚠️ **Framework** | Basic structure | Solver integration in progress |
 | **Heat Transfer** | ⚠️ **Framework** | Tool skeleton | Requires solver implementation |
 | **Multiphase** | ⚠️ **Framework** | Basic structure | VOF integration planned |
@@ -710,7 +727,7 @@ We welcome contributions across all domains! Here's how you can help:
 
 #### **Medium-term Development** (6-12 months)
 1. **Advanced Physics**: Complete heat transfer and multiphase flow implementations
-2. **Turbulence Models**: Full k-ε and k-ω SST integration for realistic flows
+2. ~~**Turbulence Models**~~: ✅ Completed - k-ε and k-ω SST with `analyze_turbulent_flow` tool
 3. **Mesh Quality**: Implement intelligent mesh adaptation and quality assessment
 4. **Industry Applications**: Basic automotive and aerospace analysis tools
 
