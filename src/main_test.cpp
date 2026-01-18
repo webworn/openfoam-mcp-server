@@ -1,0 +1,63 @@
+#include <exception>
+#include <iostream>
+#include "mcp/server.hpp"
+
+// Forward declaration for CFD assistant registration
+namespace Foam { namespace MCP { 
+    void registerCFDAssistantTool(McpServer& server);
+}}
+
+using namespace Foam;
+using namespace Foam::MCP;
+
+int main(int argc, char* argv[]) {
+    std::cerr << "🚀 OpenFOAM MCP Server v1.0.0 (Test Mode)" << std::endl;
+    std::cerr << "🎯 Initializing MCP server without OpenFOAM dependencies..." << std::endl;
+
+    try {
+        // Initialize MCP server
+        McpServer server;
+
+        // Set server information
+        ServerInfo info;
+        info.name = "OpenFOAM MCP Server (Test)";
+        info.version = "1.0.0";
+        info.description = "Test version of OpenFOAM MCP server";
+        info.author = "OpenFOAM Community";
+        info.homepage = "https://github.com/openfoam/mcp-server";
+        server.setServerInfo(info);
+
+        // Register minimal tools (skip OpenFOAM-dependent ones for now)
+        // registerPipeFlowTool(server);
+        // registerExternalFlowTool(server);
+        // registerHeatTransferTool(server);
+        // registerMultiphaseFlowTool(server);
+        
+        // Register intelligent CFD assistant (if it doesn't require OpenFOAM)
+        try {
+            registerCFDAssistantTool(server);
+        } catch (const std::exception& e) {
+            std::cerr << "⚠️ Could not register CFD assistant: " << e.what() << std::endl;
+        }
+
+        std::cerr << "🔧 Registered tools: ";
+        auto tools = server.getRegisteredTools();
+        for (size_t i = 0; i < tools.size(); ++i) {
+            std::cerr << tools[i];
+            if (i < tools.size() - 1) std::cerr << ", ";
+        }
+        std::cerr << std::endl;
+
+        std::cerr << "🌟 OpenFOAM MCP Server ready!" << std::endl;
+        std::cerr << "📡 Listening on stdin for MCP protocol messages..." << std::endl;
+
+        // Start server (blocking)
+        server.start();
+
+    } catch (const std::exception& e) {
+        std::cerr << "❌ Error starting MCP server: " << e.what() << std::endl;
+        return 1;
+    }
+
+    return 0;
+}

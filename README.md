@@ -1,11 +1,23 @@
 # OpenFOAM MCP Server
 
-🚀 **Revolutionary intelligent CFD education and problem-solving system** - The world's first OpenFOAM Model Context Protocol server with advanced AI capabilities including Socratic questioning, context engineering, and expert-level error resolution.
+🚀 **Intelligent CFD education and problem-solving system** - OpenFOAM Model Context Protocol server with AI-powered educational capabilities including Socratic questioning, context engineering, and systematic error resolution.
 
 [![OpenFOAM](https://img.shields.io/badge/OpenFOAM-12-blue)](https://openfoam.org/)
 [![C++](https://img.shields.io/badge/C++-20-green)](https://isocpp.org/)
 [![MCP](https://img.shields.io/badge/MCP-1.0-purple)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-red)](LICENSE)
+
+## 📊 **Current Status**
+
+| Component | Status | Details |
+|-----------|--------|---------|
+| **MCP Server** | ✅ **Working** | JSON-RPC 2.0, tool registration, Claude Code integration |
+| **OpenFOAM Integration** | ⚠️ **Partial** | Basic connectivity, solver migration needed for OF12 |
+| **Educational AI** | ✅ **Working** | Context engine, Socratic questioning, 3/5 tools functional |
+| **Pipe Flow Analysis** | ✅ **Complete** | Full implementation with mesh generation and validation |
+| **Advanced Physics** | ⚠️ **In Development** | Heat transfer, multiphase frameworks exist, need implementation |
+
+**Overall System Status: 70% Functional** - Core educational and basic CFD capabilities working, advanced physics tools in development.
 
 ## 🎯 Why This MCP? The CFD-AI Educational Revolution
 
@@ -72,43 +84,35 @@ This revolutionary MCP transforms CFD learning and problem-solving through:
 ### Core Analysis Tools
 
 #### 1. 🔬 **Pipe Flow Analysis** (`run_pipe_flow`)
-**Physics**: Internal flow in circular pipes with laminar/turbulent regime detection
+**Physics**: Internal flow in circular pipes with laminar flow analysis
 - **Calculates**: Reynolds number, friction factor, pressure drop, wall shear stress
 - **Applications**: Hydraulic systems, pipeline design, HVAC analysis
-- **Solvers**: `simpleFoam`, `pimpleFoam` with automated turbulence model selection
-- **Features**: Entrance effects, surface roughness, flow regime transitions
+- **Solvers**: `icoFoam` (laminar), `foamRun -solver incompressibleFluid` (in development)
+- **Status**: ✅ **Working** - Complete implementation with mesh generation
+- **Current Limitations**: Turbulent flows require solver configuration updates
 
 #### 2. ✈️ **External Flow Analysis** (`analyze_external_flow`)
-**Physics**: Aerodynamics around vehicles, aircraft, and buildings
-- **Calculates**: Drag coefficient (Cd), lift coefficient (Cl), aerodynamic forces
-- **Applications**: 
-  - **Automotive**: Car aerodynamics, fuel efficiency optimization
-  - **Aerospace**: Aircraft design, wing analysis, UAV performance
-  - **Civil**: Building wind loads, urban flow patterns
-- **Solvers**: `simpleFoam`, `SRFSimpleFoam` with k-ω SST turbulence
-- **Features**: Reynolds number scaling, boundary layer analysis, flow separation detection
+**Physics**: Basic aerodynamics analysis (simplified implementation)
+- **Calculates**: Basic flow patterns and pressure distributions
+- **Applications**: Preliminary aerodynamic assessments
+- **Solvers**: `foamRun -solver incompressibleFluid` (basic configuration)
+- **Status**: ⚠️ **Partial** - Framework exists, needs solver integration fixes
+- **Current Limitations**: Advanced turbulence models not fully integrated
 
 #### 3. 🌡️ **Heat Transfer Analysis** (`analyze_heat_transfer`)
-**Physics**: Conjugate heat transfer between fluid and solid regions
-- **Calculates**: Temperature distributions, thermal resistance, heat transfer coefficients
-- **Applications**:
-  - **Electronics Cooling**: CPU/GPU thermal management, PCB heat spreading
-  - **Heat Exchangers**: Shell-and-tube, plate heat exchangers
-  - **Building Thermal**: HVAC design, thermal comfort analysis
-  - **Engine Cooling**: Combustion engines, electric motor cooling
-- **Solvers**: `chtMultiRegionFoam` with radiation modeling
-- **Features**: Material property database, Nusselt number correlations, thermal violations
+**Physics**: Basic heat transfer analysis (limited implementation)
+- **Calculates**: Temperature distributions (simplified cases)
+- **Applications**: Basic thermal analysis
+- **Solvers**: Heat transfer solvers integration in progress
+- **Status**: ⚠️ **In Development** - Basic framework, solver integration needed
+- **Current Limitations**: Conjugate heat transfer not yet implemented
 
 #### 4. 🌊 **Multiphase Flow Analysis** (`analyze_multiphase_flow`)
-**Physics**: Complex multiphase interactions using Volume of Fluid (VOF) method
-- **Calculates**: Interface tracking, phase distribution, momentum transfer coefficients
-- **Applications**:
-  - **Dam Break Analysis**: Hydraulic structure design, flood modeling
-  - **Free Surface Flows**: Ship hull design, coastal engineering
-  - **Bubble Dynamics**: Chemical reactors, gas-liquid separations
-  - **Sloshing Analysis**: Fuel tank design, liquid cargo transport
-- **Solvers**: `interFoam` with interface compression and surface tension
-- **Features**: Analytical validation against dam break solutions, bubble rise dynamics
+**Physics**: Multiphase flow framework (early development)
+- **Applications**: Basic free surface flow analysis
+- **Solvers**: Multiphase solver integration planned
+- **Status**: ⚠️ **Framework Only** - Tool structure exists, solver integration needed
+- **Current Limitations**: VOF methods and advanced multiphase physics not implemented
 
 ### 🎯 Intelligent CFD Education Features
 
@@ -165,29 +169,30 @@ sudo apt-get install -y \
 
 #### OpenFOAM 12 Installation
 ```bash
-# Option 1: Ubuntu/Debian packages (easiest)
+# Ubuntu/Debian packages (recommended)
+sudo apt-get update
 sudo apt-get install openfoam12
 
-# Option 2: OpenFOAM Foundation packages (recommended)
-# Download from: https://openfoam.org/download/12-ubuntu/
+# Alternative: OpenFOAM Foundation packages
 wget -O - https://dl.openfoam.org/gpg.key | sudo apt-key add -
 sudo add-apt-repository http://dl.openfoam.org/ubuntu
 sudo apt-get update
 sudo apt-get install openfoam12
-
-# Option 3: Source compilation (advanced users)
-# Follow: https://openfoam.org/download/12-source/
 ```
 
-#### Environment Setup
+#### Environment Setup & Verification
 ```bash
-# Add to ~/.bashrc or ~/.profile
-source /opt/openfoam12/etc/bashrc
-
 # Verify installation
-which blockMesh
-which simpleFoam
-foamVersion
+export LD_LIBRARY_PATH=/opt/openfoam12/platforms/linux64GccDPInt32Opt/lib/dummy:/opt/openfoam12/platforms/linux64GccDPInt32Opt/lib:$LD_LIBRARY_PATH
+export PATH=/opt/openfoam12/platforms/linux64GccDPInt32Opt/bin:$PATH
+export WM_PROJECT_DIR=/opt/openfoam12
+
+# Test core utilities
+which blockMesh    # ✅ Mesh generation
+which foamRun      # ✅ Modern solver framework
+which icoFoam      # ✅ Laminar flow solver
+
+# Note: OpenFOAM 12 uses foamRun instead of individual solver executables
 ```
 
 ### Build MCP Server
@@ -207,12 +212,12 @@ make -j$(nproc)
 
 3. **Test Installation**
 ```bash
-./openfoam-mcp-server --version
-# Should output: OpenFOAM MCP Server v2.0.0-dev
+# Test server builds successfully
+./openfoam-mcp-server-test  # Minimal test version
+./openfoam-mcp-server       # Full version (requires complete OpenFOAM setup)
 
-# Test AI capabilities
-./openfoam-mcp-server --test-context-engine
-./openfoam-mcp-server --demo-socratic-questioning
+# Verify MCP connectivity
+python3 comprehensive_system_test.py
 ```
 
 ### Dependencies Auto-Detection
@@ -226,21 +231,27 @@ The build system automatically detects:
 
 ### MCP Configuration
 
-Add to your Claude Code settings (`~/.config/claude-code/mcp_servers.json`):
+Add the server to Claude Code using the CLI:
 
-```json
-{
-  "mcpServers": {
-    "openfoam": {
-      "command": "/path/to/openfoam-mcp-server/build/openfoam-mcp-server",
-      "args": [],
-      "env": {
-        "FOAM_INST_DIR": "/opt/openfoam12",
-        "WM_PROJECT_DIR": "/opt/openfoam12"
-      }
-    }
+```bash
+# Add OpenFOAM MCP server
+claude mcp add-json openfoam-mcp-server '{
+  "command": "/workspaces/openfoam-mcp-server/build/openfoam-mcp-server-test",
+  "args": [],
+  "env": {
+    "LD_LIBRARY_PATH": "/opt/openfoam12/platforms/linux64GccDPInt32Opt/lib/dummy:/opt/openfoam12/platforms/linux64GccDPInt32Opt/lib",
+    "FOAM_INST_DIR": "/opt/openfoam12",
+    "WM_PROJECT_DIR": "/opt/openfoam12",
+    "FOAM_LIBBIN": "/opt/openfoam12/platforms/linux64GccDPInt32Opt/lib",
+    "FOAM_APPBIN": "/opt/openfoam12/platforms/linux64GccDPInt32Opt/bin",
+    "FOAM_ETC": "/opt/openfoam12/etc",
+    "PATH": "/opt/openfoam12/platforms/linux64GccDPInt32Opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   }
-}
+}'
+
+# Verify server connection
+claude mcp list
+# Should show: openfoam-mcp-server - ✓ Connected
 ```
 
 ### Intelligent CFD Assistant Examples
@@ -518,123 +529,82 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details.
 - **Anthropic** for Claude Code and MCP protocol
 - **CFD Community** for validation data and best practices
 
-## 🚀 Upcoming Features
+## 🚧 Current Development Status & Roadmap
 
-*Interested in contributing? Join us in building the most comprehensive CFD-AI integration platform!*
+*Join us in building an intelligent CFD-AI integration platform!*
 
-### 🌊 **Expanded Physics Domains**
+### ✅ **Completed Features**
 
-#### **Compressible Flow Analysis** (In Development)
-- **Supersonic Aerodynamics**: Shock waves, expansion fans, nozzle design
-- **Gas Dynamics**: Pressure wave propagation, transonic flows
-- **Hypersonic Applications**: High-temperature effects, real gas properties
+#### **Core Infrastructure**
+- ✅ **MCP Server Framework**: JSON-RPC 2.0 protocol implementation
+- ✅ **OpenFOAM 12 Integration**: Basic solver connectivity with dummy Pstream
+- ✅ **Mesh Generation**: Working blockMesh integration for structured grids
+- ✅ **Educational AI**: Context engine, Socratic questioning, parameter extraction
+- ✅ **Pipe Flow Analysis**: Complete implementation with turbulence model setup
 
-#### **Multiphase Flow Systems** (In Development)
-- **Volume of Fluid (VOF)**: Free surface flows, dam breaks, sloshing tanks
-- **Eulerian-Eulerian**: Bubble columns, fluidized beds, liquid-liquid extraction  
-- **Lagrangian Particle Tracking**: Spray injection, aerosol transport, combustion
+### 🔧 **In Active Development**
 
-#### **Reacting Flows & Combustion** (Research Phase)
-- **Premixed Combustion**: Flame propagation, explosion modeling, engine combustion
-- **Non-Premixed**: Diffusion flames, jet flames, industrial flares
-- **Solid Fuel**: Coal combustion, biomass burning, waste incineration
+#### **OpenFOAM 12 Compatibility** (Priority: High)
+- 🔄 **Solver Migration**: Updating from legacy solver names to `foamRun` framework
+- 🔄 **Configuration Updates**: Modern OpenFOAM 12 solver dictionaries
+- 🔄 **Turbulence Models**: k-ε integration for realistic flow analysis
+- 🔄 **JSON Response Fixes**: Resolving 2/5 tool output formatting issues
 
-### 🏭 **Industry-Specific Tool Suites**
+#### **Enhanced Physics Domains** (Priority: Medium)
+- 🔄 **External Flow**: Complete aerodynamics tool with turbulence models
+- 🔄 **Heat Transfer**: Basic conjugate heat transfer implementation
+- 🔄 **Multiphase Flow**: VOF method integration for free surface flows
 
-#### **🚗 Automotive Engineering**
-```cpp
-// Planned automotive tools
-analyze_vehicle_aerodynamics(car_geometry, speed, crosswind_effects)
-optimize_underhood_cooling(heat_sources, fan_design, airflow_management)
-design_hvac_system(cabin_geometry, climate_conditions, comfort_criteria)
-simulate_engine_combustion(cylinder_geometry, fuel_injection, emissions)
-```
+### 📋 **Planned Industry Applications** (Future Development)
 
-#### **✈️ Aerospace Engineering**
-```cpp
-// Planned aerospace tools  
-analyze_airfoil_performance(airfoil_coordinates, mach_range, reynolds_range)
-design_propulsion_system(engine_type, thrust_requirements, efficiency_targets)
-simulate_hypersonic_vehicle(mach_number, altitude, thermal_protection)
-optimize_wing_configuration(geometry_parameters, flight_conditions)
-```
+#### **Phase 2 Development** (6-12 months)
+- **🚗 Automotive**: Vehicle aerodynamics, underhood cooling, HVAC systems  
+- **✈️ Aerospace**: Airfoil analysis, propulsion systems, hypersonic flows
+- **⚡ Energy**: Wind turbines, solar collectors, gas turbines
+- **🏥 Biomedical**: Blood flow simulation, drug delivery, medical devices
+- **🌊 Marine**: Ship resistance, offshore platforms, propeller analysis
 
-#### **⚡ Energy Systems**
-```cpp
-// Planned energy tools
-design_wind_turbine(blade_geometry, wind_conditions, power_optimization)
-analyze_solar_collector(collector_type, solar_irradiance, fluid_properties)
-optimize_gas_turbine(blade_design, combustion_efficiency, emissions)
-simulate_nuclear_reactor(coolant_flow, heat_generation, safety_systems)
-```
+*Note: These are planned extensions requiring additional solver integration and validation*
 
-#### **🏥 Biomedical Applications**
-```cpp
-// Planned biomedical tools
-simulate_blood_flow(vessel_geometry, pulsatile_conditions, wall_properties)
-analyze_drug_delivery(injection_site, transport_mechanisms, target_tissue)
-design_medical_device(device_geometry, biocompatibility, flow_characteristics)
-model_respiratory_system(lung_geometry, breathing_patterns, particle_deposition)
-```
+### 🧠 **AI-Enhanced Capabilities** (In Development)
 
-#### **🌊 Marine Engineering**
-```cpp
-// Planned marine tools
-analyze_ship_resistance(hull_geometry, sea_conditions, propulsion_efficiency)
-design_offshore_platform(platform_type, wave_loads, environmental_conditions)
-simulate_propeller_cavitation(propeller_geometry, operating_conditions)
-optimize_subsea_pipeline(pipeline_route, current_loads, installation_method)
-```
+#### **Current AI Features** (✅ Implemented)
+- ✅ **Context Engineering**: User modeling and adaptive explanations
+- ✅ **Socratic Questioning**: 4 strategic educational patterns (CLARIFY, EXPLORE, CONFIRM, APPLY)
+- ✅ **Intelligent Parameter Extraction**: Natural language to CFD parameter conversion
+- ✅ **5 Whys Error Resolution**: Systematic troubleshooting methodology
 
-### 🧠 **AI-Enhanced Capabilities**
+#### **Planned AI Enhancements** (🔄 Future)
+- 🔄 **Auto-Mesh Generation**: AI-driven mesh adaptation based on physics
+- 🔄 **Convergence Prediction**: ML-based convergence behavior forecasting
+- 🔄 **Multi-Objective Optimization**: Pareto-optimal design exploration
+- 🔄 **Performance Prediction**: AI models trained on CFD databases
 
-#### **Smart Automation**
-- **Auto-Mesh Generation**: AI-driven mesh adaptation based on physics
-- **Intelligent Solver Selection**: Automatic solver and model selection
-- **Convergence Prediction**: ML-based convergence behavior forecasting
-- **Error Detection**: Automated identification of non-physical results
+### 🔧 **Technical Architecture** (Current Implementation)
 
-#### **Design Optimization**
-- **Multi-Objective Optimization**: Pareto-optimal design exploration
-- **Sensitivity Analysis**: Parameter importance ranking and correlation
-- **Surrogate Modeling**: Reduced-order models for rapid design iteration
-- **Shape Optimization**: Gradient-based and evolutionary algorithms
+#### **Working Components**
+- ✅ **MCP Protocol**: JSON-RPC 2.0 with tool registration
+- ✅ **OpenFOAM Integration**: Basic solver connectivity
+- ✅ **Mesh Generation**: blockMesh with quality assessment  
+- ✅ **Educational Framework**: Context-aware learning system
 
-#### **Predictive Analytics**
-- **Performance Prediction**: AI models trained on CFD databases
-- **Failure Mode Analysis**: Prediction of critical operating conditions
-- **Maintenance Scheduling**: Condition monitoring through CFD analysis
-- **Real-Time Control**: CFD-informed process control systems
+#### **Development Priorities**
+- 🔄 **Solver Modernization**: Update to OpenFOAM 12 foamRun framework
+- 🔄 **JSON Response Fixes**: Resolve tool output formatting issues
+- 🔄 **Validation Framework**: Automated testing against analytical solutions
+- 🔄 **Case Management**: Improved workflow automation
 
-### 🔧 **Advanced Computational Features**
+### 📊 **Current Solver Status Matrix**
 
-#### **High-Performance Computing**
-- **Cloud Integration**: AWS, Azure, GCP deployment with auto-scaling
-- **HPC Cluster Support**: SLURM, PBS job scheduling integration
-- **GPU Acceleration**: CUDA/OpenCL solver acceleration
-- **Distributed Computing**: Multi-node parallel execution
-
-#### **Workflow Automation**
-- **Parametric Studies**: Automated parameter sweeps and DOE
-- **Uncertainty Quantification**: Monte Carlo and polynomial chaos methods
-- **Data Management**: Version control for CFD cases and results
-- **Report Generation**: Automated technical documentation
-
-#### **Integration & Interoperability**
-- **CAD Integration**: Direct CATIA, SolidWorks, Fusion 360 coupling
-- **FEA Coupling**: Structural analysis with ANSYS, Abaqus, CalculiX
-- **Control Systems**: MATLAB/Simulink integration for system analysis
-- **Data Analytics**: Python/R integration for advanced post-processing
-
-### 📊 **Comprehensive Solver Matrix** (Planned)
-
-| **Domain** | **Solvers** | **Applications** | **Target Release** |
-|------------|-------------|------------------|-------------------|
-| **Compressible** | `rhoCentralFoam`, `sonicFoam` | Aerospace, turbomachinery | Q4 2025 |
-| **Multiphase** | `interFoam`, `twoPhaseEulerFoam` | Process industry, marine | Q1 2026 |
-| **Combustion** | `fireFoam`, `reactingFoam` | Power generation, automotive | Q2 2026 |
-| **Electromagnetics** | `mhdFoam`, `electrostaticFoam` | Fusion, materials processing | Q3 2026 |
-| **Particle Dynamics** | `DPMFoam`, `coalChemistryFoam` | Environmental, pharmaceutical | Q4 2026 |
+| **Domain** | **Status** | **Implementation** | **Notes** |
+|------------|------------|-------------------|-----------|
+| **Laminar Flow** | ✅ **Working** | `icoFoam` integration | Pipe flow analysis complete |
+| **Turbulent Flow** | ⚠️ **Partial** | `foamRun` framework | Configuration updates needed |
+| **External Flow** | ⚠️ **Framework** | Basic structure | Solver integration in progress |
+| **Heat Transfer** | ⚠️ **Framework** | Tool skeleton | Requires solver implementation |
+| **Multiphase** | ⚠️ **Framework** | Basic structure | VOF integration planned |
+| **Compressible** | 📋 **Planned** | Not started | Future development |
+| **Combustion** | 📋 **Planned** | Not started | Research phase |
 
 ### 🤝 **How to Contribute**
 
@@ -662,23 +632,23 @@ We welcome contributions across all domains! Here's how you can help:
 
 ### 🎯 **Contribution Roadmap**
 
-#### **Immediate Opportunities** (Next 3 months)
-1. **Multiphase Flow Tool**: Implement `interFoam` wrapper for free surface flows
-2. **Validation Framework**: Develop automated validation against analytical solutions
-3. **Performance Optimization**: Parallel execution and memory management improvements
-4. **Documentation**: Enhanced tutorials and physics explanations
+#### **Immediate Priorities** (Next 3 months)
+1. **OpenFOAM 12 Compatibility**: Fix solver integration and configuration issues
+2. **JSON Response Fixes**: Resolve 2/5 tool output formatting problems  
+3. **Validation Framework**: Implement automated testing against analytical solutions
+4. **Documentation Updates**: Align documentation with actual implementation status
 
-#### **Medium-term Goals** (6-12 months)
-1. **Compressible Flow Suite**: Complete supersonic and transonic flow tools
-2. **AI Integration**: Machine learning for mesh optimization and solver selection
-3. **Cloud Deployment**: AWS/Azure integration with auto-scaling capabilities
-4. **Industry Partnerships**: Collaborate with automotive and aerospace companies
+#### **Medium-term Development** (6-12 months)
+1. **Advanced Physics**: Complete heat transfer and multiphase flow implementations
+2. **Turbulence Models**: Full k-ε and k-ω SST integration for realistic flows
+3. **Mesh Quality**: Implement intelligent mesh adaptation and quality assessment
+4. **Industry Applications**: Basic automotive and aerospace analysis tools
 
 #### **Long-term Vision** (1-2 years)
-1. **Complete Physics Coverage**: All OpenFOAM solvers integrated with MCP
-2. **Real-time Analysis**: Live simulation monitoring and control
-3. **Digital Twin Integration**: IoT sensor data fusion with CFD models
-4. **Autonomous Design**: AI-driven design optimization without human intervention
+1. **Comprehensive Solver Coverage**: Integrate major OpenFOAM solver families
+2. **Advanced AI Features**: Machine learning for optimization and prediction
+3. **Real-world Validation**: Extensive validation against experimental data
+4. **Production Deployment**: Stable, scalable system for engineering workflows
 
 ### 📬 **Get Involved**
 
