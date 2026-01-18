@@ -112,7 +112,7 @@ std::vector<RDE2DWaveAnalyzer::WaveFront> RDE2DWaveAnalyzer::detectWaveFronts(co
         std::vector<std::vector<double>> pressureField = readScalarField(pressurePath);
         
         // Read mesh coordinates
-        std::string meshPath = std::filesystem::path(timeDirectory).parent_path() / "constant/polyMesh";
+        std::filesystem::path meshPath = std::filesystem::path(timeDirectory).parent_path() / "constant/polyMesh";
         std::vector<std::pair<double, double>> coordinates = readMeshCoordinates(meshPath.string());
         
         // Calculate temperature gradient
@@ -526,8 +526,33 @@ std::string RDE2DWaveAnalyzer::generateDesignGuidance(const WaveAnalysisResult& 
     
     guidance << "• Monitor wave collision frequency to ensure structural design margins\n";
     guidance << "• Validate all design changes through computational analysis before implementation\n";
-    
+
     return guidance.str();
+}
+
+std::vector<std::string> RDE2DWaveAnalyzer::generateDesignRecommendations(const WaveAnalysisResult& result) {
+    std::vector<std::string> recommendations;
+
+    if (result.avgWaveCount > 2.5) {
+        recommendations.push_back("Consider reducing injection pressure to limit wave count for improved stability");
+    }
+
+    if (result.systemStability < 0.8) {
+        recommendations.push_back("Optimize injection timing to improve wave propagation consistency");
+    }
+
+    if (result.avgWaveSpeed < 1800) {
+        recommendations.push_back("Increase equivalence ratio or injection temperature to enhance detonation strength");
+    }
+
+    if (result.combustionEfficiency < 0.85) {
+        recommendations.push_back("Improve fuel-air mixing for higher combustion efficiency");
+    }
+
+    recommendations.push_back("Monitor wave collision frequency to ensure structural design margins");
+    recommendations.push_back("Validate all design changes through computational analysis before implementation");
+
+    return recommendations;
 }
 
 std::vector<std::vector<double>> RDE2DWaveAnalyzer::calculateTemperatureGradient(const std::vector<std::vector<double>>& temperatureField,
@@ -769,6 +794,130 @@ std::string RDE2DWaveAnalyzer::assessSafetyImplications(const WaveAnalysisResult
     }
     
     return safety.str();
+}
+
+double RDE2DWaveAnalyzer::calculateCombustionEfficiency(const std::vector<WaveSystemSnapshot>& timeHistory,
+                                                        const RDEChemistry& chemistry) {
+    // Calculate combustion efficiency based on wave characteristics
+    (void)chemistry; // Mark as intentionally unused for this simplified model
+
+    if (timeHistory.empty()) return 0.85; // Default efficiency
+
+    // Calculate efficiency based on average wave count and stability
+    double avgWaveCount = 0.0;
+    for (const auto& snapshot : timeHistory) {
+        avgWaveCount += snapshot.activeWaveCount;
+    }
+    avgWaveCount /= timeHistory.size();
+
+    // Multi-wave systems generally have higher efficiency
+    double baseEfficiency = 0.75;
+    double waveBonus = std::min(0.10, avgWaveCount * 0.02);
+
+    return baseEfficiency + waveBonus;
+}
+
+// Free function implementations for helper utilities
+double calculateRMSPressureOscillation(const std::vector<RDE2DWaveAnalyzer::WaveSystemSnapshot>& timeHistory) {
+    if (timeHistory.empty()) return 0.0;
+
+    double sumSquares = 0.0;
+    for (const auto& snapshot : timeHistory) {
+        sumSquares += snapshot.pressureOscillation * snapshot.pressureOscillation;
+    }
+
+    return std::sqrt(sumSquares / timeHistory.size());
+}
+
+double calculateSystemStability(const std::vector<RDE2DWaveAnalyzer::WaveSystemSnapshot>& timeHistory) {
+    if (timeHistory.size() < 2) return 1.0;
+
+    // Calculate stability based on wave count consistency
+    double meanWaveCount = 0.0;
+    for (const auto& snapshot : timeHistory) {
+        meanWaveCount += snapshot.activeWaveCount;
+    }
+    meanWaveCount /= timeHistory.size();
+
+    double variance = 0.0;
+    for (const auto& snapshot : timeHistory) {
+        double diff = snapshot.activeWaveCount - meanWaveCount;
+        variance += diff * diff;
+    }
+    variance /= timeHistory.size();
+
+    // Stability is inversely related to variance (normalized 0-1 scale)
+    double stdDev = std::sqrt(variance);
+    double stability = 1.0 / (1.0 + stdDev);
+
+    return stability;
+}
+
+double calculateDetonationCellSize(const RDEChemistry& chemistry, double temperature, double pressure) {
+    // Simplified cell size calculation for H2-air
+    // In reality, this depends on detailed chemistry
+    (void)chemistry;
+    (void)temperature;
+    (void)pressure;
+    return 0.015; // m for H2-air at standard conditions
+}
+
+double estimateWaveStrength(double maxTemperature, double maxPressure, const RDEChemistry& chemistry) {
+    // Calculate wave strength based on temperature and pressure rise
+    (void)chemistry;
+    double tempRatio = maxTemperature / 300.0; // Ratio to ambient
+    double pressureRatio = maxPressure / 101325.0; // Ratio to atmospheric
+    return (tempRatio + pressureRatio) / 2.0;
+}
+
+std::string explainMultiWavePhysics(int waveCount, const std::string& pattern) {
+    std::ostringstream explanation;
+    explanation << "The RDE is operating with " << waveCount << " active detonation wave(s) ";
+    explanation << "in a " << pattern << " pattern. ";
+
+    if (waveCount == 1) {
+        explanation << "Single-wave operation provides stable combustion with predictable performance.";
+    } else if (waveCount == 2) {
+        explanation << "Dual-wave operation can increase mass flow rate and thrust, but requires careful spacing.";
+    } else {
+        explanation << "Multi-wave operation maximizes throughput but increases complexity and collision frequency.";
+    }
+
+    return explanation.str();
+}
+
+std::string explainWaveCollisionPhysics(const std::string& collisionType) {
+    if (collisionType == "head-on") {
+        return "Head-on collisions produce the highest pressure spikes and can enhance local combustion.";
+    } else if (collisionType == "oblique") {
+        return "Oblique collisions result in wave reflection and can cause mode changes.";
+    } else if (collisionType == "merging") {
+        return "Wave merging reduces wave count and can stabilize the system.";
+    } else {
+        return "This collision type affects wave propagation dynamics.";
+    }
+}
+
+std::string explainPerformanceImplications(double thrust, double specificImpulse, double efficiency) {
+    std::ostringstream explanation;
+    explanation << std::fixed << std::setprecision(0);
+    explanation << "Performance Analysis:\n";
+    explanation << "- Thrust: " << thrust << " N ";
+    if (thrust > 10000) explanation << "(Excellent)";
+    else if (thrust > 5000) explanation << "(Good)";
+    else explanation << "(Moderate)";
+
+    explanation << "\n- Specific Impulse: " << specificImpulse << " s ";
+    if (specificImpulse > 1500) explanation << "(Excellent for H2-air)";
+    else if (specificImpulse > 1200) explanation << "(Good)";
+    else explanation << "(Below optimal)";
+
+    explanation << "\n- Efficiency: " << std::setprecision(1) << efficiency * 100 << "% ";
+    if (efficiency > 0.85) explanation << "(Excellent)";
+    else if (efficiency > 0.70) explanation << "(Good)";
+    else explanation << "(Needs improvement)";
+
+    return explanation.str();
 }
 
 } // namespace MCP

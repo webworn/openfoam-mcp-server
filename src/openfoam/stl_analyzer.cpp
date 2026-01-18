@@ -768,6 +768,63 @@ void from_json(const json& j, RefinementRegion& region) {
     j.at("priority").get_to(region.priority);
 }
 
+std::vector<GeometryFeature> STLAnalyzer::extractFeatureLines(const std::string& stlFile,
+                                                               double featureAngle) {
+    std::vector<GeometryFeature> features;
+
+    // Create placeholder features based on feature angle
+    GeometryFeature feature;
+    feature.featureType = "edge";
+    feature.angle = featureAngle;
+    feature.length = 0.1;
+    feature.importance = featureAngle < 30.0 ? "critical" : "important";
+    feature.location = {0.0, 0.0, 0.0};
+    features.push_back(feature);
+
+    // Log analysis info
+    (void)stlFile; // Mark as intentionally unused for this stub
+
+    return features;
+}
+
+std::vector<RefinementRegion> STLAnalyzer::suggestRefinementRegions(const STLQualityReport& report,
+                                                                     const std::string& flowType) {
+    std::vector<RefinementRegion> regions;
+
+    // Create default regions based on flow type
+    RefinementRegion nearWallRegion;
+    nearWallRegion.regionName = "nearWall";
+    nearWallRegion.regionType = "surface";
+    nearWallRegion.refinementLevel = 3;
+    nearWallRegion.reason = "Capture boundary layer for " + flowType + " flow";
+    nearWallRegion.priority = "essential";
+    regions.push_back(nearWallRegion);
+
+    // Add wake region for external flows
+    if (flowType == "external") {
+        RefinementRegion wakeRegion;
+        wakeRegion.regionName = "wake";
+        wakeRegion.regionType = "box";
+        wakeRegion.refinementLevel = 2;
+        wakeRegion.reason = "Capture flow separation and wake dynamics";
+        wakeRegion.priority = "recommended";
+        regions.push_back(wakeRegion);
+    }
+
+    // Add feature-based refinement if sharp features exist
+    if (report.complexity.hasSharpFeatures) {
+        RefinementRegion featureRegion;
+        featureRegion.regionName = "featureEdges";
+        featureRegion.regionType = "distance";
+        featureRegion.refinementLevel = 4;
+        featureRegion.reason = "Resolve sharp geometric features";
+        featureRegion.priority = "essential";
+        regions.push_back(featureRegion);
+    }
+
+    return regions;
+}
+
 }  // End namespace MCP
 }  // End namespace Foam
 

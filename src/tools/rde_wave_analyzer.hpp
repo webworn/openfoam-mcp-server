@@ -9,6 +9,10 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <filesystem>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace Foam {
 namespace MCP {
@@ -133,6 +137,7 @@ public:
     std::string explainWaveInteractionPhysics(const WaveAnalysisResult& result);
     std::string explainCollisionMechanisms(const std::vector<WaveCollision>& collisions);
     std::string generateDesignGuidance(const WaveAnalysisResult& result);
+    std::vector<std::string> generateDesignRecommendations(const WaveAnalysisResult& result);
     std::string assessSafetyImplications(const WaveAnalysisResult& result);
     
     // Visualization support
@@ -179,6 +184,17 @@ private:
                                       double time,
                                       const std::vector<std::vector<double>>& pressureField,
                                       const std::vector<std::vector<double>>& temperatureField);
+    std::string classifyCollisionType(const WaveFront& wave1, const WaveFront& wave2);
+    double estimateCollisionEnergy(const WaveFront& wave1, const WaveFront& wave2);
+
+    // Performance and system analysis
+    std::string generatePerformanceAssessment(const WaveAnalysisResult& result);
+    double calculateSystemFrequency(const std::vector<WaveFront>& waves);
+    std::string classifyWavePattern(int activeWaveCount);
+    double calculateTotalEnergy(const std::vector<WaveFront>& waves);
+    double calculatePressureOscillation(const std::string& timeDirectory);
+    double calculateAverageWaveCount(const std::vector<WaveSystemSnapshot>& timeHistory);
+    std::pair<double, double> calculateCollisionLocation(const WaveFront& wave1, const WaveFront& wave2);
     
     // Performance calculation helpers
     double integrateThrust(const std::vector<std::vector<double>>& pressureField,
@@ -222,9 +238,9 @@ double calculateDetonationCellSize(const RDEChemistry& chemistry, double tempera
 double estimateWaveStrength(double maxTemperature, double maxPressure, const RDEChemistry& chemistry);
 
 // Statistical analysis utilities
-double calculateRMSPressureOscillation(const std::vector<WaveSystemSnapshot>& timeHistory);
-double calculateSystemStability(const std::vector<WaveSystemSnapshot>& timeHistory);
-double calculateAverageWaveSpeed(const std::vector<WaveSystemSnapshot>& timeHistory);
+double calculateRMSPressureOscillation(const std::vector<RDE2DWaveAnalyzer::WaveSystemSnapshot>& timeHistory);
+double calculateSystemStability(const std::vector<RDE2DWaveAnalyzer::WaveSystemSnapshot>& timeHistory);
+double calculateAverageWaveSpeed(const std::vector<RDE2DWaveAnalyzer::WaveSystemSnapshot>& timeHistory);
 
 // Educational content generators
 std::string explainMultiWavePhysics(int waveCount, const std::string& pattern);

@@ -2,9 +2,15 @@
 #include <iostream>
 #include "mcp/server.hpp"
 
-// Forward declaration for CFD assistant registration
-namespace Foam { namespace MCP { 
+// Forward declarations for tool registration
+namespace Foam { namespace MCP {
     void registerCFDAssistantTool(McpServer& server);
+    void registerMeshQualityTool(McpServer& server);
+    void registerSTLAnalyzerTool(McpServer& server);
+    void registerRDEWaveTool(McpServer& server);
+    void registerRDE3DGeometryTool(McpServer& server);
+    void registerRDE3DWaveTool(McpServer& server);
+    void registerRDE3DPerformanceTool(McpServer& server);
 }}
 
 using namespace Foam;
@@ -37,7 +43,49 @@ int main(int argc, char* argv[]) {
         try {
             registerCFDAssistantTool(server);
         } catch (const std::exception& e) {
-            std::cerr << "⚠️ Could not register CFD assistant: " << e.what() << std::endl;
+            std::cerr << "Warning: Could not register CFD assistant: " << e.what() << std::endl;
+        }
+
+        // Register mesh quality assessment tool
+        try {
+            registerMeshQualityTool(server);
+        } catch (const std::exception& e) {
+            std::cerr << "Warning: Could not register mesh quality tool: " << e.what() << std::endl;
+        }
+
+        // Register STL geometry analyzer tool
+        try {
+            registerSTLAnalyzerTool(server);
+        } catch (const std::exception& e) {
+            std::cerr << "Warning: Could not register STL analyzer tool: " << e.what() << std::endl;
+        }
+
+        // Register RDE 2D wave analyzer tool
+        try {
+            registerRDEWaveTool(server);
+        } catch (const std::exception& e) {
+            std::cerr << "Warning: Could not register RDE wave tool: " << e.what() << std::endl;
+        }
+
+        // Register RDE 3D geometry generator tool
+        try {
+            registerRDE3DGeometryTool(server);
+        } catch (const std::exception& e) {
+            std::cerr << "Warning: Could not register RDE 3D geometry tool: " << e.what() << std::endl;
+        }
+
+        // Register RDE 3D wave analyzer tool
+        try {
+            registerRDE3DWaveTool(server);
+        } catch (const std::exception& e) {
+            std::cerr << "Warning: Could not register RDE 3D wave tool: " << e.what() << std::endl;
+        }
+
+        // Register RDE 3D performance calculator tool
+        try {
+            registerRDE3DPerformanceTool(server);
+        } catch (const std::exception& e) {
+            std::cerr << "Warning: Could not register RDE 3D performance tool: " << e.what() << std::endl;
         }
 
         std::cerr << "🔧 Registered tools: ";
