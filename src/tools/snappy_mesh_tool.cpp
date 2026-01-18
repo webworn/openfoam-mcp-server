@@ -463,7 +463,8 @@ std::string SnappyMeshTool::formatExpertRecommendation(const ExpertGuidance& gui
 }
 
 void SnappyMeshTool::reportProgress(const std::string& stage, const std::string& message) {
-    std::cout << "[" << stage << "] " << message << std::endl;
+    // Use stderr to not break JSON-RPC protocol on stdout
+    std::cerr << "[" << stage << "] " << message << std::endl;
 }
 
 void SnappyMeshTool::logUserInteraction(const MeshGenerationRequest& request, const MeshGenerationResult& result) {

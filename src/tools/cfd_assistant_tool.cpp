@@ -68,8 +68,8 @@ CFDAssistantTool::CFDAssistantTool()
     });
     
     terminalManager_->setStatusCallback([this](const std::string& status) {
-        // Handle status updates in Claude terminal
-        std::cout << "Claude Terminal: " << status << std::endl;
+        // Handle status updates in Claude terminal (use stderr to not break JSON-RPC)
+        std::cerr << "Claude Terminal: " << status << std::endl;
     });
     
     // Initialize conversation state

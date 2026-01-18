@@ -25,6 +25,32 @@ RDE3DWaveAnalyzer::Wave3DAnalysisResult RDE3DWaveAnalyzer::analyze3DWaves(const 
             result.wave3DPhysicsExplanation = "Error: Case directory not specified";
             return result;
         }
+
+        // Check if case directory exists - if not, return early with informative message
+        // This prevents timeout from running 1000 synthetic iterations
+        std::ifstream caseCheck(request.caseDirectory + "/system/controlDict");
+        if (!caseCheck.is_open()) {
+            result.wave3DPhysicsExplanation = "Case directory not found or invalid OpenFOAM case: " + request.caseDirectory;
+            result.detonation3DTheory = "Please provide a valid OpenFOAM RDE case directory with time directories containing field data.";
+            result.wave3DInteractionAnalysis = "Required files: T (temperature), p (pressure), U (velocity) fields in time directories.";
+            result.performance3DCorrelation = "Run an RDE simulation first using generate_rde_3d_geometry and OpenFOAM solvers.";
+            result.optimization3DGuidance = "Use the execute_openfoam_operation tool to run the simulation.";
+            result.validationAgainst2D = "No simulation data available for 3D validation.";
+            result.performance3Dto2DRatio = 0.0;
+            result.advantages3D = {"Provides comprehensive 3D wave analysis when simulation data is available"};
+            result.recommendations3D = {"Run RDE simulation first", "Ensure time directories contain field data", "Check mesh quality before running"};
+
+            // Set default performance metrics
+            result.performanceMetrics3D.thrust3D = 0.0;
+            result.performanceMetrics3D.specificImpulse3D = 0.0;
+            result.performanceMetrics3D.efficiency3D = 0.0;
+            result.performanceMetrics3D.performanceRating3D = "No Data";
+            result.performanceMetrics3D.performanceScore3D = 0.0;
+
+            result.success = false;
+            return result;
+        }
+        caseCheck.close();
         
         // Time-stepping loop for 3D wave analysis
         for (double time = request.analysisStartTime; time <= request.analysisEndTime; 
