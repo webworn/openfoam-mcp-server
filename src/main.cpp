@@ -1,12 +1,11 @@
 #include <exception>
+#include <cstdlib>
 #include <iostream>
 
-#include "Time.H"
-#include "argList.H"
-#include "foamVersion.H"
 #include "mcp/server.hpp"
 #include "tools/external_flow_tool.hpp"
 #include "tools/heat_transfer_tool.hpp"
+#include "tools/run_case_tool.hpp"
 #include "tools/multiphase_flow_tool.hpp"
 #include "tools/pipe_flow_tool.hpp"
 
@@ -18,21 +17,12 @@ namespace Foam { namespace MCP {
 using namespace Foam;
 using namespace Foam::MCP;
 
-int main(int argc, char* argv[]) {
+int main() {
     std::cerr << "🚀 OpenFOAM MCP Server v1.0.0" << std::endl;
-    std::cerr << "OpenFOAM version: " << Foam::FOAMversion << std::endl;
-
-    // Test OpenFOAM integration
-    Foam::Info << "✅ OpenFOAM integration: Working!" << Foam::endl;
-
-    // Show environment variables
-    if (const char* foam_src = std::getenv("FOAM_SRC")) {
-        Foam::Info << "FOAM_SRC: " << foam_src << Foam::endl;
-    }
-
-    if (const char* foam_tutorials = std::getenv("FOAM_TUTORIALS")) {
-        Foam::Info << "FOAM_TUTORIALS: " << foam_tutorials << Foam::endl;
-    }
+    const char* foam_version = std::getenv("WM_PROJECT_VERSION");
+    std::cerr << "OpenFOAM runtime version: "
+              << (foam_version ? foam_version : "not detected (source etc/bashrc before launch)")
+              << std::endl;
 
     std::cerr << "🎯 Initializing MCP server with OpenFOAM tools..." << std::endl;
 
@@ -53,6 +43,7 @@ int main(int argc, char* argv[]) {
         registerPipeFlowTool(server);
         registerExternalFlowTool(server);
         registerHeatTransferTool(server);
+        registerRunCaseTool(server);
         registerMultiphaseFlowTool(server);
         
         // Register intelligent CFD assistant

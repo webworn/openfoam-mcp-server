@@ -17,6 +17,7 @@ Description
 #include <unistd.h>
 
 #include <cstdlib>
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -100,11 +101,7 @@ CaseManager::CaseManager(const fs::path& workingDir) : workingDirectory_(working
     }
 }
 
-CaseManager::~CaseManager() {
-    for (const auto& [caseId, result] : caseResults_) {
-        cleanup(caseId);
-    }
-}
+CaseManager::~CaseManager() = default;
 
 int CaseManager::executeCommand(const std::string& command, const std::string& workingDir,
                                 const std::string& logFile) {
@@ -182,6 +179,7 @@ std::string CaseManager::createCase(const CaseParameters& params) {
     result->status = "created";
 
     caseResults_[caseId] = std::move(result);
+    caseParameters_[caseId] = params;
 
     return caseId;
 }
@@ -212,7 +210,10 @@ void CaseManager::writeControlDict(const fs::path& casePath, const CaseParameter
          << "    object      controlDict;\n"
          << "}\n\n";
 
-    file << "application     " << params.solver << ";\n\n";
+    // OpenFOAM 11+ uses foamRun with a solver module. Keep the executable in
+    // application and pass module selection on the command line at run time.
+    const std::string application = params.solver.substr(0, params.solver.find(' '));
+    file << "application     " << application << ";\n\n";
     file << "startFrom       startTime;\n";
     file << "startTime       0;\n";
     file << "stopAt          endTime;\n";
@@ -944,9 +945,26 @@ bool CaseManager::runCase(const std::string& caseId) {
         return false;
     }
 
-    CaseParameters params;
-    // Execute solver safely
-    int solverResult = executeCommand(params.solver, casePath.string(), "solver.log");
+    const auto paramsIt = caseParameters_.find(caseId);
+    if (paramsIt == caseParameters_.end()) {
+        it->second->status = "failed";
+        it->second->errorOutput = "Case parameters were not retained for this case";
+        return false;
+    }
+
+    // Check the generated mesh before spending time in the solver. Some
+    // installations do not expose checkMesh on PATH, so report that failure.
+    int checkResult = executeCommand("checkMesh", casePath.string(), "checkMesh.log");
+    if (checkResult != 0) {
+        it->second->status = "failed";
+        it->second->exitCode = checkResult;
+        it->second->errorOutput = "checkMesh failed; inspect checkMesh.log";
+        return false;
+    }
+
+    // Honor the solver selected when the case was created (including v11+
+    // module invocations such as `foamRun -solver fluid`).
+    int solverResult = executeCommand(paramsIt->second.solver, casePath.string(), "solver.log");
 
     auto endTime = std::chrono::steady_clock::now();
     it->second->executionTime =
@@ -969,6 +987,56 @@ bool CaseManager::runCase(const std::string& caseId) {
     }
 
     return it->second->isSuccess();
+}
+
+bool CaseManager::runCaseDirectory(const fs::path& requestedPath, const std::string& solver,
+                                   std::string& output) {
+    const auto solvers = getAvailableSolvers();
+    if (std::find(solvers.begin(), solvers.end(), solver) == solvers.end()) {
+        output = "Unsupported solver command. Choose one of the advertised solver options.";
+        return false;
+    }
+
+    std::error_code ec;
+    const fs::path casePath = fs::canonical(requestedPath, ec);
+    if (ec || !fs::is_directory(casePath) || !fs::exists(casePath / "system" / "controlDict")) {
+        output = "Case path must be an existing directory containing system/controlDict.";
+        return false;
+    }
+
+    auto runStep = [&](const std::string& command, const std::string& logName) {
+        const int result = executeCommand(command, casePath.string(), logName);
+        std::ifstream log(casePath / logName);
+        std::stringstream contents;
+        if (log) contents << log.rdbuf();
+        output += "\n--- " + command + " (exit " + std::to_string(result) + ") ---\n";
+        const std::string logText = contents.str();
+        constexpr std::size_t maxLogBytes = 20000;
+        if (logText.size() > maxLogBytes) {
+            output += "[Earlier log output omitted; full log: " + (casePath / logName).string() + "]\n";
+            output += logText.substr(logText.size() - maxLogBytes);
+        } else {
+            output += logText;
+        }
+        return result == 0;
+    };
+
+    if (fs::exists(casePath / "system" / "blockMeshDict") &&
+        !runStep("blockMesh", "blockMesh.log")) {
+        return false;
+    }
+
+    if (fs::exists(casePath / "system" / "snappyHexMeshDict") &&
+        !runStep("snappyHexMesh -overwrite", "snappyHexMesh.log")) {
+        return false;
+    }
+
+    if (!fs::exists(casePath / "constant" / "polyMesh" / "points")) {
+        output += "\nNo constant/polyMesh/points found; provide a mesh or system/blockMeshDict.\n";
+        return false;
+    }
+    if (!runStep("checkMesh", "checkMesh.log")) return false;
+    return runStep(solver, "solver.log");
 }
 
 void CaseManager::extractResults(const std::string& caseId) {
@@ -1051,6 +1119,7 @@ bool CaseManager::deleteCaseData(const std::string& caseId) {
     auto it = caseResults_.find(caseId);
     if (it != caseResults_.end()) {
         caseResults_.erase(it);
+        caseParameters_.erase(caseId);
         return true;
     }
 
@@ -1083,6 +1152,11 @@ bool CaseManager::validateCaseParameters(const CaseParameters& params) const {
         return false;
     }
 
+    const auto solvers = getAvailableSolvers();
+    if (std::find(solvers.begin(), solvers.end(), params.solver) == solvers.end()) {
+        return false;
+    }
+
     if (params.endTime <= 0) {
         return false;
     }
@@ -1095,7 +1169,16 @@ bool CaseManager::validateCaseParameters(const CaseParameters& params) const {
 }
 
 std::vector<std::string> CaseManager::getAvailableSolvers() const {
-    return {"simpleFoam", "pimpleFoam", "icoFoam", "pisoFoam", "rhoPimpleFoam"};
+    return {"simpleFoam",
+            "pimpleFoam",
+            "icoFoam",
+            "pisoFoam",
+            "rhoPimpleFoam",
+            "interFoam",
+            "foamRun -solver incompressibleFluid",
+            "foamRun -solver fluid",
+            "foamRun -solver multiphaseEuler",
+            "foamMultiRun"};
 }
 
 json CaseManager::getCaseParametersSchema() const {

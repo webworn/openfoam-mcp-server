@@ -5,66 +5,18 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Full OpenFOAM integration with proper Pstream library
-message(STATUS "🔧 Building full OpenFOAM MCP server with dummy Pstream")
-
-# OpenFOAM Configuration
-set(OPENFOAM_DIR "/opt/openfoam12" CACHE PATH "OpenFOAM installation directory")
-set(OPENFOAM_ARCH "linux64GccDPInt32Opt" CACHE STRING "OpenFOAM architecture")
-
-# OpenFOAM Library Detection
-set(OPENFOAM_LIB_DIR "${OPENFOAM_DIR}/platforms/${OPENFOAM_ARCH}/lib")
-set(OPENFOAM_SRC_DIR "${OPENFOAM_DIR}/src")
-
-# Core OpenFOAM Libraries
-find_library(OPENFOAM_LIB OpenFOAM PATHS ${OPENFOAM_LIB_DIR} NO_DEFAULT_PATH)
-find_library(FINITE_VOLUME_LIB finiteVolume PATHS ${OPENFOAM_LIB_DIR} NO_DEFAULT_PATH)
-find_library(MESH_TOOLS_LIB meshTools PATHS ${OPENFOAM_LIB_DIR} NO_DEFAULT_PATH)
-
-# Use dummy Pstream for single-processor mode (avoids MPI dependencies)
-find_library(PSTREAM_DUMMY_LIB Pstream PATHS ${OPENFOAM_LIB_DIR}/dummy NO_DEFAULT_PATH)
-
+# OpenFOAM is invoked as an external application. Build the MCP server without
+# binding it to one OpenFOAM release's C++ ABI or installation path.
+message(STATUS "Building OpenFOAM MCP server with runtime OpenFOAM discovery")
 # Find dependencies
-find_package(PkgConfig REQUIRED)
 find_package(nlohmann_json QUIET)
 find_package(SQLite3 QUIET)
 find_package(Boost COMPONENTS system thread QUIET)
 
-# Status reporting
-if(OPENFOAM_LIB)
-    message(STATUS "✅ Found OpenFOAM: ${OPENFOAM_LIB}")
-else()
-    message(FATAL_ERROR "❌ OpenFOAM library not found at ${OPENFOAM_LIB_DIR}")
-endif()
+# The server only needs the OpenFOAM command line tools at runtime. This keeps
+# the MCP executable buildable against both OpenFOAM Foundation and OpenCFD.
 
-if(PSTREAM_DUMMY_LIB)
-    message(STATUS "✅ Found Pstream (dummy): ${PSTREAM_DUMMY_LIB}")
-else()
-    message(WARNING "⚠️  Dummy Pstream library not found")
-endif()
-
-# OpenFOAM Include Directories
-if(EXISTS "${OPENFOAM_SRC_DIR}")
-    include_directories(${OPENFOAM_SRC_DIR})
-    include_directories(${OPENFOAM_SRC_DIR}/OpenFOAM/lnInclude)
-    include_directories(${OPENFOAM_SRC_DIR}/OSspecific/POSIX/lnInclude)
-    include_directories(${OPENFOAM_SRC_DIR}/finiteVolume/lnInclude)
-    include_directories(${OPENFOAM_SRC_DIR}/meshTools/lnInclude)
-    message(STATUS "✅ OpenFOAM headers: ${OPENFOAM_SRC_DIR}")
-else()
-    message(FATAL_ERROR "❌ OpenFOAM source directory not found: ${OPENFOAM_SRC_DIR}")
-endif()
-
-# OpenFOAM Compiler Configuration
-add_compile_definitions(
-    WM_DP                    # Double precision
-    WM_LABEL_SIZE=32        # 32-bit labels
-    NoRepository            # Disable template repository
-    linux64
-    WM_ARCH_OPTION=64
-)
-
-# Core Source Files (full OpenFOAM integration)
+# MCP tools and runtime case management
 set(CORE_SOURCES 
     "src/mcp/json_rpc.cpp"
     "src/mcp/server.cpp"
@@ -77,6 +29,7 @@ set(CORE_SOURCES
     "src/openfoam/stl_analyzer.cpp"
     "src/tools/external_flow_tool.cpp"
     "src/tools/heat_transfer_tool.cpp"
+    "src/tools/run_case_tool.cpp"
     "src/tools/multiphase_flow_tool.cpp"
     "src/tools/pipe_flow_tool.cpp"
     "src/tools/cfd_assistant_tool.cpp"
@@ -135,34 +88,11 @@ add_executable(openfoam-mcp-server-test
     "src/utils/terminal_manager.cpp"
 )
 
-# Core libraries (required)
-set(REQUIRED_LIBS)
-if(OPENFOAM_LIB)
-    list(APPEND REQUIRED_LIBS ${OPENFOAM_LIB})
-endif()
-if(FINITE_VOLUME_LIB)
-    list(APPEND REQUIRED_LIBS ${FINITE_VOLUME_LIB})
-endif()
-if(MESH_TOOLS_LIB)
-    list(APPEND REQUIRED_LIBS ${MESH_TOOLS_LIB})
-endif()
-if(PSTREAM_DUMMY_LIB)
-    list(APPEND REQUIRED_LIBS ${PSTREAM_DUMMY_LIB})
-endif()
-
 # System libraries
 set(SYSTEM_LIBS pthread dl m stdc++)
 
-# Set runtime library paths for OpenFOAM libraries
-set_target_properties(openfoam-mcp-server PROPERTIES
-    INSTALL_RPATH "${OPENFOAM_LIB_DIR};${OPENFOAM_LIB_DIR}/dummy"
-    BUILD_WITH_INSTALL_RPATH TRUE
-    INSTALL_RPATH_USE_LINK_PATH TRUE
-)
-
 # Link all libraries
 target_link_libraries(openfoam-mcp-server
-    ${REQUIRED_LIBS}
     ${SYSTEM_LIBS}
 )
 
@@ -172,9 +102,7 @@ target_link_libraries(openfoam-mcp-server-test
 )
 
 # Report linking status
-message(STATUS "🔗 Linking libraries:")
-message(STATUS "   Required: ${REQUIRED_LIBS}")
-message(STATUS "   System: ${SYSTEM_LIBS}")
+message(STATUS "System libraries: ${SYSTEM_LIBS}")
 
 # Add nlohmann_json if found
 if(nlohmann_json_FOUND)
@@ -194,7 +122,7 @@ if(Boost_FOUND)
     message(STATUS "✅ Using Boost")
 endif()
 
-message(STATUS "🎯 Full OpenFOAM build configured successfully")
+message(STATUS "MCP server build configured; source OpenFOAM's etc/bashrc before running simulations")
 
 # Installation
 install(TARGETS openfoam-mcp-server 

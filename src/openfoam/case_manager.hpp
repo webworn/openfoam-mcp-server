@@ -93,6 +93,7 @@ class CaseManager {
    private:
     fs::path workingDirectory_;
     std::map<std::string, std::unique_ptr<CaseResult>> caseResults_;
+    std::map<std::string, CaseParameters> caseParameters_;
 
     std::string generateCaseId() const;
     fs::path getCasePath(const std::string& caseId) const;
@@ -125,6 +126,11 @@ class CaseManager {
     std::string createCase(const CaseParameters& params);
 
     bool runCase(const std::string& caseId);
+
+    // Run an already prepared OpenFOAM case directory. The command is selected
+    // from the server's allowlist; meshing utilities are inferred from dicts.
+    bool runCaseDirectory(const fs::path& casePath, const std::string& solver,
+                          std::string& output);
 
     CaseResult getCaseResult(const std::string& caseId) const;
 

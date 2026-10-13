@@ -18,7 +18,7 @@ namespace MCP {
                       HeatTransferTool Implementation
 \*---------------------------------------------------------------------------*/
 
-HeatTransferTool::HeatTransferTool() : caseManager_(std::make_unique<CaseManager>()) {}
+HeatTransferTool::HeatTransferTool() = default;
 
 ToolResult HeatTransferTool::execute(const json& arguments) {
     ToolResult result;
@@ -35,25 +35,12 @@ ToolResult HeatTransferTool::execute(const json& arguments) {
         // Perform heat transfer analysis
         HeatTransferResults results = analyzer_.analyze(input);
 
-        // Setup and run OpenFOAM case if analysis was successful
+        // These calculations are correlation-based estimates, not CFD.
         if (results.success) {
-            try {
-                std::string caseId = setupOpenFOAMCase(input);
-                results.caseId = caseId;
-
-                // Run the case
-                CaseParameters caseParams = createCaseParameters(input);
-                if (caseManager_->runCase(caseId)) {
-                    results.success = true;
-                } else {
-                    // Analysis succeeded but OpenFOAM failed - still provide theoretical results
-                    CaseResult caseResult = caseManager_->getCaseResult(caseId);
-                    results.errorMessage = "OpenFOAM simulation failed: " + caseResult.errorOutput;
-                }
-            } catch (const std::exception& e) {
-                results.errorMessage = "OpenFOAM case setup failed: " + std::string(e.what());
-                // Keep theoretical results even if OpenFOAM fails
-            }
+            results.success = false;
+            results.errorMessage =
+                "These are correlation-based estimates; no OpenFOAM case was generated or run. "
+                "Use run_openfoam_case to run a complete, prepared thermal case.";
         }
 
         // Format and return results
@@ -103,29 +90,6 @@ bool HeatTransferTool::validateInputParameters(const HeatTransferInput& input) c
     return analyzer_.validateInput(input);
 }
 
-std::string HeatTransferTool::setupOpenFOAMCase(const HeatTransferInput& input) {
-    CaseParameters params = createCaseParameters(input);
-    return caseManager_->createCase(params);
-}
-
-CaseParameters HeatTransferTool::createCaseParameters(const HeatTransferInput& input) const {
-    CaseParameters params;
-    params.caseName = "heat_transfer_analysis";
-    params.solver = "chtMultiRegionFoam";
-    params.endTime = input.steadyState ? 1000.0 : input.endTime;
-    params.deltaTime = input.steadyState ? 1.0 : input.timeStep;
-    params.writeInterval = 100;
-
-    // Physical properties
-    params.physicalProperties["heatGeneration"] = std::to_string(input.heatGeneration);
-    params.physicalProperties["ambientTemperature"] = std::to_string(input.ambientTemperature);
-    params.physicalProperties["inletVelocity"] = std::to_string(input.inletVelocity);
-    params.physicalProperties["inletTemperature"] = std::to_string(input.inletTemperature);
-    params.physicalProperties["coolantType"] = input.coolantType;
-
-    return params;
-}
-
 std::vector<json> HeatTransferTool::formatResults(const HeatTransferInput& input,
                                                   const HeatTransferResults& results) const {
     std::vector<json> content;
@@ -156,10 +120,7 @@ std::vector<json> HeatTransferTool::formatResults(const HeatTransferInput& input
             << results.radiativeHeatTransfer << " W (" << std::setprecision(0)
             << (results.radiativeHeatTransfer / results.totalHeatTransferRate) * 100 << "%)\n\n";
 
-    summary << (results.success ? "✅" : "❌") << " **OpenFOAM Simulation Status:** ";
-    summary << (results.success ? "Completed successfully"
-                                : "Failed - using theoretical calculations")
-            << "\n";
+    summary << "ℹ️ **OpenFOAM Simulation Status:** Not run (correlation-based estimate)\n";
     if (!results.caseId.empty()) {
         summary << "📁 **Case ID:** " << results.caseId << "\n";
     }
@@ -182,7 +143,7 @@ std::vector<json> HeatTransferTool::formatResults(const HeatTransferInput& input
         json warning;
         warning["type"] = "text";
         warning["text"] =
-            "⚠️  OpenFOAM simulation failed, but theoretical calculations were provided.";
+            "⚠️  OpenFOAM was not run; these values are correlation-based estimates.";
         content.push_back(warning);
 
         json error;
@@ -200,7 +161,7 @@ std::vector<json> HeatTransferTool::formatResults(const HeatTransferInput& input
              {"resource",
               json{{"uri", resourceUri},
                    {"name", "Heat Transfer Analysis Results"},
-                   {"description", "Complete OpenFOAM conjugate heat transfer analysis results"},
+                   {"description", "Correlation-based heat-transfer estimate; not CFD output"},
                    {"mimeType", "application/json"}}},
              {"text", analyzer_.toJson(results).dump(2)}});
 

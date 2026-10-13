@@ -2,7 +2,7 @@
 
 🚀 **Intelligent CFD education and problem-solving system** - OpenFOAM Model Context Protocol server with AI-powered educational capabilities including Socratic questioning, context engineering, and systematic error resolution.
 
-[![OpenFOAM](https://img.shields.io/badge/OpenFOAM-12-blue)](https://openfoam.org/)
+[![OpenFOAM](https://img.shields.io/badge/OpenFOAM-13-compatible-blue)](https://openfoam.org/)
 [![C++](https://img.shields.io/badge/C++-20-green)](https://isocpp.org/)
 [![MCP](https://img.shields.io/badge/MCP-1.0-purple)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-red)](LICENSE)
@@ -11,8 +11,8 @@
 
 | Component | Status | Details |
 |-----------|--------|---------|
-| **MCP Server** | ✅ **Working** | JSON-RPC 2.0, 12 registered tools, Claude Code integration |
-| **OpenFOAM Integration** | ⚠️ **Partial** | Basic connectivity, solver migration needed for OF12 |
+| **MCP Server** | ✅ **Working** | JSON-RPC 2.0, 13 registered tools, Claude Code integration |
+| **OpenFOAM Integration** | ✅ **Runtime CLI** | Version-independent build; run prepared cases with OpenFOAM v13 solver modules |
 | **Educational AI** | ✅ **Working** | Context engine, Socratic questioning, adaptive learning |
 | **Mesh & Geometry Tools** | ✅ **Complete** | Mesh quality assessment, STL analysis with snappyHexMesh guidance |
 | **RDE Analysis Suite** | ✅ **Complete** | 2D/3D wave analysis, geometry generation, performance calculation |
@@ -85,7 +85,7 @@ This revolutionary MCP transforms CFD learning and problem-solving through:
 
 ### 📋 Available MCP Tools
 
-The server provides **12 registered tools** across different CFD domains:
+The server provides **13 registered tools** across different CFD domains:
 
 | Tool | Description | Status |
 |------|-------------|--------|
@@ -95,6 +95,7 @@ The server provides **12 registered tools** across different CFD domains:
 | `analyze_cfd_results` | Analyze CFD results with educational explanations | ✅ Working |
 | `get_cfd_learning_guidance` | Get personalized CFD learning recommendations | ✅ Working |
 | `assess_mesh_quality` | Mesh quality analysis with solver compatibility assessment | ✅ Working |
+| `run_openfoam_case` | Run an existing case through meshing, mesh validation, and a selected solver | ✅ OpenFOAM v13 `foamRun` modules |
 | `analyze_stl_geometry` | STL preprocessing and snappyHexMesh readiness analysis | ✅ Working |
 | `analyze_turbulent_flow` | Comprehensive turbulent flow analysis with model recommendations | ✅ Working |
 | `analyze_rde_waves_2d` | 2D RDE wave detection and performance metrics | ✅ Working |
@@ -137,12 +138,28 @@ The server provides **12 registered tools** across different CFD domains:
 - **Current Limitations**: Advanced turbulence models not fully integrated
 
 #### 3. 🌡️ **Heat Transfer Analysis** (`analyze_heat_transfer`)
-**Physics**: Basic heat transfer analysis (limited implementation)
-- **Calculates**: Temperature distributions (simplified cases)
-- **Applications**: Basic thermal analysis
-- **Solvers**: Heat transfer solvers integration in progress
-- **Status**: ⚠️ **In Development** - Basic framework, solver integration needed
-- **Current Limitations**: Conjugate heat transfer not yet implemented
+**Physics**: Preliminary heat-transfer estimates using engineering correlations
+- **Calculates**: Approximate temperatures, heat-transfer coefficients, and thermal resistance
+- **Status**: ⚠️ **Estimate only** - this tool does not generate or run an OpenFOAM case
+- **For CFD**: Prepare a complete case and use `run_openfoam_case` with a supported solver
+- **Current Limitations**: Fog evaporation, evaporator coupling, and conjugate heat transfer case generation are not implemented
+
+### Run an existing OpenFOAM case (`run_openfoam_case`)
+
+Use this tool when you already have a complete case directory, including its
+geometry/mesh and physics dictionaries. It runs `blockMesh` when
+`system/blockMeshDict` exists, then `snappyHexMesh` when
+`system/snappyHexMeshDict` exists, checks the resulting mesh, and launches the
+selected solver. For an OpenFOAM Foundation v13 heat-transfer case, select
+`foamRun -solver fluid`. The MCP process must be launched from a shell where
+OpenFOAM's `etc/bashrc` has been sourced, and `case_path` must be an absolute
+path visible from that process (for example, a `/home/...` or `/mnt/c/...`
+path when the server runs inside WSL).
+
+This is a case runner: it does not convert an STL into a complete thermal case.
+The existing `analyze_heat_transfer` tool still provides simplified analytical
+estimates; automatic fog/aerosol evaporation, evaporator heat exchange, and
+conjugate heat transfer case generation are not implemented.
 
 #### 4. 🌊 **Multiphase Flow Analysis** (`analyze_multiphase_flow`)
 **Physics**: Multiphase flow framework (early development)
@@ -250,32 +267,18 @@ sudo apt-get install -y \
     libsqlite3-dev
 ```
 
-#### OpenFOAM 12 Installation
+#### OpenFOAM Runtime
+
+The MCP server invokes OpenFOAM command-line utilities at runtime; CMake does
+not link against OpenFOAM libraries. Install the distribution you intend to
+use and source its environment before launching the MCP server. For OpenFOAM
+Foundation v13 in WSL:
 ```bash
-# Ubuntu/Debian packages (recommended)
-sudo apt-get update
-sudo apt-get install openfoam12
+source /opt/openfoam13/etc/bashrc
 
-# Alternative: OpenFOAM Foundation packages
-wget -O - https://dl.openfoam.org/gpg.key | sudo apt-key add -
-sudo add-apt-repository http://dl.openfoam.org/ubuntu
-sudo apt-get update
-sudo apt-get install openfoam12
-```
-
-#### Environment Setup & Verification
-```bash
-# Verify installation
-export LD_LIBRARY_PATH=/opt/openfoam12/platforms/linux64GccDPInt32Opt/lib/dummy:/opt/openfoam12/platforms/linux64GccDPInt32Opt/lib:$LD_LIBRARY_PATH
-export PATH=/opt/openfoam12/platforms/linux64GccDPInt32Opt/bin:$PATH
-export WM_PROJECT_DIR=/opt/openfoam12
-
-# Test core utilities
-which blockMesh    # ✅ Mesh generation
-which foamRun      # ✅ Modern solver framework
-which icoFoam      # ✅ Laminar flow solver
-
-# Note: OpenFOAM 12 uses foamRun instead of individual solver executables
+command -v blockMesh
+command -v checkMesh
+command -v foamRun
 ```
 
 ### Build MCP Server
@@ -446,7 +449,7 @@ The boundary conditions show a 500K temperature difference across a thin wall.
 
 **GitHub Codespaces** (Recommended):
 1. Fork the repository
-2. Open in Codespaces (auto-configures OpenFOAM 12)
+2. Open in Codespaces (auto-configures the repository environment)
 3. VS Code Desktop integration with full IntelliSense
 4. Cloud development with 4-32 core machines
 
@@ -620,16 +623,16 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details.
 
 #### **Core Infrastructure**
 - ✅ **MCP Server Framework**: JSON-RPC 2.0 protocol implementation
-- ✅ **OpenFOAM 12 Integration**: Basic solver connectivity with dummy Pstream
+- ✅ **OpenFOAM runtime CLI**: Prepared-case execution with v13 solver-module options
 - ✅ **Mesh Generation**: Working blockMesh integration for structured grids
 - ✅ **Educational AI**: Context engine, Socratic questioning, parameter extraction
 - ✅ **Pipe Flow Analysis**: Complete implementation with turbulence model setup
 
 ### 🔧 **In Active Development**
 
-#### **OpenFOAM 12 Compatibility** (Priority: High)
-- 🔄 **Solver Migration**: Updating from legacy solver names to `foamRun` framework
-- 🔄 **Configuration Updates**: Modern OpenFOAM 12 solver dictionaries
+#### **OpenFOAM v13 Compatibility**
+- ✅ **Runtime Solver Routing**: Prepared cases can run through `foamRun` modules
+- 🔄 **Case Generation**: Migrate generated cases to v13 dictionaries and validate against tutorials
 - ✅ **Turbulence Models**: k-ε and k-ω SST integration complete with `analyze_turbulent_flow` tool
 - 🔄 **JSON Response Fixes**: Resolving 2/5 tool output formatting issues
 
@@ -672,7 +675,7 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details.
 - ✅ **Educational Framework**: Context-aware learning system
 
 #### **Development Priorities**
-- 🔄 **Solver Modernization**: Update to OpenFOAM 12 foamRun framework
+- 🔄 **Solver Modernization**: Update remaining generated cases to OpenFOAM v13 dictionaries
 - 🔄 **JSON Response Fixes**: Resolve tool output formatting issues
 - 🔄 **Validation Framework**: Automated testing against analytical solutions
 - 🔄 **Case Management**: Improved workflow automation
@@ -720,7 +723,7 @@ We welcome contributions across all domains! Here's how you can help:
 ### 🎯 **Contribution Roadmap**
 
 #### **Immediate Priorities** (Next 3 months)
-1. **OpenFOAM 12 Compatibility**: Fix solver integration and configuration issues
+1. **Thermal Case Generation**: Build and validate OpenFOAM v13 heat-transfer cases from geometry and boundary-condition inputs
 2. **JSON Response Fixes**: Resolve 2/5 tool output formatting problems  
 3. **Validation Framework**: Implement automated testing against analytical solutions
 4. **Documentation Updates**: Align documentation with actual implementation status
